@@ -104,7 +104,7 @@ def _user_from_token():
     except jwt.PyJWTError:
         return None
     user = db.session.get(User, payload.get("sub"))
-    if user and user.tokenVersion == payload.get("tv"):
+    if user and user.tokenVersion == payload.get("tv") and not user.deletedAt:
         return user
     return None
 

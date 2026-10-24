@@ -3,13 +3,27 @@ import { useEffect, useState } from "react";
 import { api, live, seg, toMillis, formatDate } from "../api";
 import { onAuthStateChanged, login, logout, sendPasswordReset } from "../auth";
 import { Link } from "react-router-dom";
-import { mentorTypeLabel } from "../utils/mentorVerification";
 import MentorApplicationsAdmin, { needsAdminAction } from "./MentorApplicationsAdmin";
-import { loadStudentRegistrations } from "../utils/studentData";
+import AdminToday from "./admin/AdminToday";
+import AdminPeople from "./admin/AdminPeople";
+import AdminEmailLog from "./admin/AdminEmailLog";
+import AdminSearch from "./admin/AdminSearch";
 import {
   approveStudentApplication,
   rejectStudentApplication,
 } from "../utils/registration";
+
+function useNarrowScreen() {
+  const query = "(max-width: 800px)";
+  const [narrow, setNarrow] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const update = () => setNarrow(mq.matches);
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return narrow;
+}
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -19,9 +33,11 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
-  const [tab, setTab] = useState("overview");
+  const [tab, setTab] = useState("today");
+  const narrow = useNarrowScreen();
+  const [personId, setPersonId] = useState(null); // People side panel
+  const [searchText, setSearchText] = useState("");
 
-  const [students, setStudents] = useState([]);
   const [research, setResearch] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [registrations, setRegistrations] = useState([]);
@@ -47,24 +63,10 @@ export default function AdminDashboard() {
   const [imagePreview, setImagePreview] = useState(null);
   const [imageUploading, setImageUploading] = useState(false);
 
-  // Filters & sorting for each tab (client-side, data is already loaded)
-  const [studentSearch, setStudentSearch] = useState("");
-  const [studentSort, setStudentSort] = useState("name");
-
-  const [studentDetail, setStudentDetail] = useState(null); // selected student or null
-  const [studentRegistrations, setStudentRegistrations] = useState([]);
-  const [studentRegsLoading, setStudentRegsLoading] = useState(false);
-
+  // Filters & sorting for the list tabs (client-side, data is already loaded)
   const [researchSearch, setResearchSearch] = useState("");
   const [researchStatusFilter, setResearchStatusFilter] = useState("all");
   const [researchSort, setResearchSort] = useState("newest");
-
-  const [mentorSearch, setMentorSearch] = useState("");
-  const [mentorStatusFilter, setMentorStatusFilter] = useState("all");
-  const [mentorVerificationFilter, setMentorVerificationFilter] =
-    useState("all");
-  const [mentorSort, setMentorSort] = useState("name");
-
 
   const [studentAppSearch, setStudentAppSearch] = useState("");
   const [studentAppKindFilter, setStudentAppKindFilter] = useState("all");
@@ -76,12 +78,6 @@ export default function AdminDashboard() {
     const unsub = onAuthStateChanged((u) => setUser(u?.isAdmin ? u : null));
     return () => unsub();
   }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    const unsub = live(() => api.get("/admin/students"), setStudents);
-    return () => unsub();
-  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -213,18 +209,33 @@ export default function AdminDashboard() {
     }
   }
 
-  async function openStudentDetail(student) {
-    setStudentDetail(student);
-    setStudentRegsLoading(true);
-    try {
-      const rows = await loadStudentRegistrations(student.id);
-      setStudentRegistrations(rows);
-    } catch (err) {
-      console.error(err);
-      alert("Couldn't load this student's activity. Please try again.");
-    } finally {
-      setStudentRegsLoading(false);
+  function openPerson(id) {
+    setPersonId(id);
+    setTab("people");
+  }
+
+  // From the email log: find the account behind an address and open it.
+  async function findPersonByEmail(address) {
+    const found = await api.get(`/admin/search?q=${encodeURIComponent(address)}`);
+    const match = found.people.find((p) => p.email.toLowerCase() === address.toLowerCase());
+    if (match) openPerson(match.id);
+    else alert(`No account uses ${address} (it may be the team inbox or a deleted account).`);
+  }
+
+  function openContent(kind, item) {
+    if (kind === "research") {
+      setResearchSearch(item.title);
+      setTab("research");
+    } else {
+      window.open(`/projects/${item.id}`, "_blank", "noopener");
     }
+  }
+
+  function editMentor(mentor) {
+    setEditItem({ major: "", ...mentor });
+    setEditType("teachers");
+    setImageFile(null);
+    setImagePreview(null);
   }
 
   async function handleDisable(collection_, id, currentStatus) {
@@ -427,22 +438,6 @@ export default function AdminDashboard() {
     });
   }
 
-  let visibleStudents = students.filter((s) => {
-    const q = studentSearch.trim().toLowerCase();
-    if (!q) return true;
-    return [s.name, s.email].filter(Boolean).some((v) => v.toLowerCase().includes(q));
-  });
-  visibleStudents =
-    studentSort === "name"
-      ? [...visibleStudents].sort((a, b) =>
-          (a.name || "").localeCompare(b.name || ""),
-        )
-      : studentSort === "grade"
-        ? [...visibleStudents].sort((a, b) =>
-            (a.grade || "").localeCompare(b.grade || ""),
-          )
-        : sortByDate(visibleStudents, "createdAt", studentSort);
-
   let visibleResearch = research.filter((r) => {
     if (
       researchStatusFilter === "active" &&
@@ -463,31 +458,6 @@ export default function AdminDashboard() {
           (a.title || "").localeCompare(b.title || ""),
         )
       : sortByDate(visibleResearch, "createdAt", researchSort);
-
-  let visibleMentors = mentors.filter((m) => {
-    if (mentorStatusFilter === "active" && m.disabled) return false;
-    if (mentorStatusFilter === "disabled" && !m.disabled) return false;
-    if (
-      mentorVerificationFilter !== "all" &&
-      (m.verificationStatus || "started") !== mentorVerificationFilter
-    )
-      return false;
-    const q = mentorSearch.trim().toLowerCase();
-    if (!q) return true;
-    return [m.name, m.university, m.expertise]
-      .filter(Boolean)
-      .some((s) => s.toLowerCase().includes(q));
-  });
-  visibleMentors =
-    mentorSort === "name"
-      ? [...visibleMentors].sort((a, b) =>
-          (a.name || "").localeCompare(b.name || ""),
-        )
-      : mentorSort === "university"
-        ? [...visibleMentors].sort((a, b) =>
-            (a.university || "").localeCompare(b.university || ""),
-          )
-        : sortByDate(visibleMentors, "createdAt", mentorSort);
 
   let visibleStudentApplications = pendingStudentApplications.filter((r) => {
     if (studentAppKindFilter !== "all" && r.kind !== studentAppKindFilter)
@@ -510,20 +480,20 @@ export default function AdminDashboard() {
         });
 
   const navItemsRaw = [
-    { id: "overview", label: "🏠 Overview" },
-    { id: "students", label: "🎓 Students", group: "People" },
-    { id: "mentors", label: "👩‍🏫 Mentors", group: "People" },
+    { id: "today", label: "🏠 Today" },
+    { id: "people", label: "👥 People", group: "People" },
     {
       id: "applications",
-      label: `✅ Mentor Applications${pendingApplications.length > 0 ? ` (${pendingApplications.length})` : ""}`,
+      label: `🧑‍🏫 Mentor applications${pendingApplications.length > 0 ? ` (${pendingApplications.length})` : ""}`,
       group: "People",
     },
     {
       id: "student-applications",
-      label: `📋 Student Applications${pendingStudentApplications.length > 0 ? ` (${pendingStudentApplications.length})` : ""}`,
-      group: "People",
+      label: `🎓 Enrollments${pendingStudentApplications.length > 0 ? ` (${pendingStudentApplications.length})` : ""}`,
+      group: "Activity",
     },
-    { id: "research", label: "🔬 Research", group: "Content" },
+    { id: "research", label: "📚 Content", group: "Content" },
+    { id: "emails", label: "📨 Email log", group: "System" },
   ];
   let lastNavGroup = null;
   const navItems = navItemsRaw.map((item) => {
@@ -534,14 +504,16 @@ export default function AdminDashboard() {
 
   // ── Admin dashboard ──
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb", padding: 32 }}>
+    <div style={{ minHeight: "100vh", background: "#f9fafb", padding: narrow ? 16 : 32 }}>
       {/* Header */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: 32,
+          gap: 16,
+          flexWrap: "wrap",
+          marginBottom: narrow ? 16 : 32,
         }}
       >
         <div>
@@ -550,31 +522,45 @@ export default function AdminDashboard() {
             Logged in as {user.email}
           </p>
         </div>
+        <AdminSearch
+          value={searchText}
+          onChange={setSearchText}
+          onOpenPerson={openPerson}
+          onOpenContent={openContent}
+        />
         <button onClick={handleLogout} style={btnStyle("#a01f13")}>
           Logout
         </button>
       </div>
 
-      <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-        {/* Sidebar nav */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: narrow ? "column" : "row",
+          gap: narrow ? 12 : 24,
+          alignItems: narrow ? "stretch" : "flex-start",
+        }}
+      >
+        {/* Sidebar nav - a scrollable row of tabs on small screens */}
         <nav
           style={{
-            width: 200,
+            width: narrow ? "auto" : 200,
             flexShrink: 0,
             background: "white",
             borderRadius: 12,
             border: "1px solid #eee",
-            padding: "16px 12px",
+            padding: narrow ? 6 : "16px 12px",
             display: "flex",
-            flexDirection: "column",
+            flexDirection: narrow ? "row" : "column",
+            overflowX: narrow ? "auto" : "visible",
             gap: 2,
-            position: "sticky",
+            position: narrow ? "static" : "sticky",
             top: 24,
           }}
         >
           {navItems.map((item) => (
-            <div key={item.id}>
-              {item.showGroupLabel && (
+            <div key={item.id} style={{ flexShrink: 0 }}>
+              {item.showGroupLabel && !narrow && (
                 <p
                   style={{
                     fontSize: 11,
@@ -603,6 +589,7 @@ export default function AdminDashboard() {
                   cursor: "pointer",
                   fontWeight: 600,
                   fontSize: 14,
+                  whiteSpace: narrow ? "nowrap" : "normal",
                 }}
               >
                 {item.label}
@@ -612,168 +599,21 @@ export default function AdminDashboard() {
         </nav>
 
         <main style={{ flex: 1, minWidth: 0 }}>
-          {/* ── Overview Tab ── */}
-          {tab === "overview" && (
-            <div>
-              <h3 style={{ marginTop: 0 }}>Overview</h3>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 16,
-                  flexWrap: "wrap",
-                  marginBottom: 8,
-                }}
-              >
-                {[
-                  { label: "Students", count: students.length, go: "students" },
-                  { label: "Mentors", count: mentors.length, go: "mentors" },
-                  {
-                    label: "Pending Mentor Applications",
-                    count: pendingApplications.length,
-                    go: "applications",
-                  },
-                  {
-                    label: "Pending Student Applications",
-                    count: pendingStudentApplications.length,
-                    go: "student-applications",
-                  },
-                  { label: "Research", count: research.length, go: "research" },
-                ].map((stat) => (
-                  <button
-                    key={stat.label}
-                    onClick={() => setTab(stat.go)}
-                    style={{
-                      background: "white",
-                      borderRadius: 12,
-                      border: "1px solid #eee",
-                      padding: "20px 24px",
-                      minWidth: 140,
-                      textAlign: "left",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <p style={{ margin: 0, fontSize: 28, fontWeight: 700 }}>
-                      {stat.count}
-                    </p>
-                    <p style={{ margin: "4px 0 0", color: "#888", fontSize: 13 }}>
-                      {stat.label}
-                    </p>
-                  </button>
-                ))}
-              </div>
-              {pendingApplications.length > 0 && (
-                <p style={{ color: "#888", fontSize: 14 }}>
-                  {pendingApplications.length} mentor application
-                  {pendingApplications.length === 1 ? "" : "s"} waiting on
-                  review —{" "}
-                  <button
-                    onClick={() => setTab("applications")}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "#2f6175",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                      padding: 0,
-                      fontSize: 14,
-                    }}
-                  >
-                    Review now →
-                  </button>
-                </p>
-              )}
-            </div>
+          {tab === "today" && <AdminToday onOpenPerson={openPerson} onGo={setTab} />}
+
+          {tab === "people" && (
+            <AdminPeople
+              openId={personId}
+              onOpen={setPersonId}
+              onEditMentor={editMentor}
+              onGo={(t) => {
+                setPersonId(null);
+                setTab(t);
+              }}
+            />
           )}
 
-          {/* ── Students Tab ── */}
-          {tab === "students" && (
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: 16,
-                }}
-              >
-                <p style={{ color: "#888", margin: 0 }}>
-                  {visibleStudents.length} of {students.length} students
-                </p>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 10,
-                  marginBottom: 16,
-                  flexWrap: "wrap",
-                }}
-              >
-                <input
-                  type='text'
-                  placeholder='Search name or email...'
-                  value={studentSearch}
-                  onChange={(e) => setStudentSearch(e.target.value)}
-                  style={{ ...filterInputStyle, flex: "1 1 220px" }}
-                />
-                <select
-                  value={studentSort}
-                  onChange={(e) => setStudentSort(e.target.value)}
-                  style={filterInputStyle}
-                >
-                  <option value='name'>Name (A-Z)</option>
-                  <option value='grade'>Grade (A-Z)</option>
-                  <option value='newest'>Newest first</option>
-                  <option value='oldest'>Oldest first</option>
-                </select>
-              </div>
-              {visibleStudents.length === 0 ? (
-                <p style={{ color: "#aaa" }}>No students match these filters.</p>
-              ) : (
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-                    gap: 16,
-                  }}
-                >
-                  {visibleStudents.map((s) => (
-                    <div
-                      key={s.id}
-                      style={{
-                        background: "white",
-                        borderRadius: 12,
-                        padding: 20,
-                        border: "1px solid #eee",
-                      }}
-                    >
-                      <h3 style={{ margin: "0 0 4px", fontSize: 15 }}>
-                        {s.name || "(no name)"}
-                      </h3>
-                      <p style={{ fontSize: 13, color: "#888", marginBottom: 8 }}>
-                        {s.email}
-                      </p>
-                      <p style={{ fontSize: 12, color: "#888", marginBottom: 4 }}>
-                        🎓 {s.grade || "—"}
-                      </p>
-                      {s.phone && (
-                        <p
-                          style={{ fontSize: 12, color: "#888", marginBottom: 12 }}
-                        >
-                          📞 {s.phone}
-                        </p>
-                      )}
-                      <button
-                        onClick={() => openStudentDetail(s)}
-                        style={{ ...btnStyle("#2f6175"), width: "100%" }}
-                      >
-                        View Activity
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          {tab === "emails" && <AdminEmailLog onFindPerson={findPersonByEmail} />}
 
           {/* ── Research Tab ── */}
       {tab === "research" && (
@@ -1032,199 +872,6 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {tab === "mentors" && (
-        <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 16,
-            }}
-          >
-            <p style={{ color: "#888", margin: 0 }}>
-              {visibleMentors.length} of {mentors.length} mentors
-            </p>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              marginBottom: 16,
-              flexWrap: "wrap",
-            }}
-          >
-            <input
-              type='text'
-              placeholder='Search name, university, expertise...'
-              value={mentorSearch}
-              onChange={(e) => setMentorSearch(e.target.value)}
-              style={{ ...filterInputStyle, flex: "1 1 220px" }}
-            />
-            <select
-              value={mentorStatusFilter}
-              onChange={(e) => setMentorStatusFilter(e.target.value)}
-              style={filterInputStyle}
-            >
-              <option value='all'>All statuses</option>
-              <option value='active'>Active</option>
-              <option value='disabled'>Disabled</option>
-            </select>
-            <select
-              value={mentorVerificationFilter}
-              onChange={(e) => setMentorVerificationFilter(e.target.value)}
-              style={filterInputStyle}
-            >
-              <option value='all'>All statuses</option>
-              <option value='approved'>Live</option>
-              <option value='onboarding'>Onboarding</option>
-              <option value='submitted'>In review</option>
-              <option value='interview_requested'>Interview</option>
-              <option value='changes_requested'>Changes requested</option>
-              <option value='started'>Started</option>
-              <option value='declined'>Declined</option>
-            </select>
-            <select
-              value={mentorSort}
-              onChange={(e) => setMentorSort(e.target.value)}
-              style={filterInputStyle}
-            >
-              <option value='name'>Name (A-Z)</option>
-              <option value='university'>University (A-Z)</option>
-              <option value='newest'>Newest first</option>
-              <option value='oldest'>Oldest first</option>
-            </select>
-          </div>
-          {visibleMentors.length === 0 ? (
-            <p style={{ color: "#aaa" }}>No mentors match these filters.</p>
-          ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-                gap: 16,
-              }}
-            >
-              {visibleMentors.map((mentor) => (
-                <div
-                  key={mentor.id}
-                  style={{
-                    background: "white",
-                    borderRadius: 12,
-                    padding: 20,
-                    border: `1px solid ${mentor.disabled ? "#fca5a5" : "#eee"}`,
-                    opacity: mentor.disabled ? 0.7 : 1,
-                  }}
-                >
-                  {mentor.disabled && (
-                    <span
-                      style={{
-                        fontSize: 11,
-                        background: "#fee2e2",
-                        color: "#a01f13",
-                        padding: "2px 8px",
-                        borderRadius: 20,
-                        marginBottom: 8,
-                        display: "inline-block",
-                      }}
-                    >
-                      Disabled
-                    </span>
-                  )}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                      marginBottom: 12,
-                      flexDirection: "column",
-                      textAlign: "center",
-                    }}
-                  >
-                    {mentor.photoURL ? (
-                      <img
-                        src={mentor.photoURL}
-                        alt={mentor.name}
-                        style={{
-                          width: 96,
-                          height: 96,
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                          flexShrink: 0,
-                        }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: 96,
-                          height: 96,
-                          borderRadius: "50%",
-                          background:
-                            "linear-gradient(135deg, #2f6175, #427e94)",
-                          color: "white",
-                          fontSize: 36,
-                          fontWeight: 700,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {mentor.name
-                          ?.split(" ")
-                          .slice(-1)[0]
-                          ?.charAt(0)
-                          .toUpperCase() || "T"}
-                      </div>
-                    )}
-                    <div>
-                      <h3 style={{ margin: 0, fontSize: 15 }}>{mentor.name}</h3>
-                      <p style={{ margin: 0, fontSize: 12, color: "#2f6175" }}>
-                        {mentor.expertise}
-                      </p>
-                    </div>
-                  </div>
-                  <p style={{ fontSize: 12, color: "#888", marginBottom: 4 }}>
-                    🎓 {mentor.degree}
-                  </p>
-                  <p style={{ fontSize: 12, color: "#888", marginBottom: 12 }}>
-                    🏛 {mentor.university}
-                  </p>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    <button
-                      onClick={() => {
-                        setEditItem({ major: "", ...mentor });
-                        setEditType("teachers");
-                        setImageFile(null);
-                        setImagePreview(null);
-                      }}
-                      style={btnStyle("#2f6175")}
-                    >
-                      ✏️ Edit
-                    </button>
-                    <button
-                      onClick={async () => {
-                        await api.patch(`/admin/teachers/${seg(mentor.id)}`, {
-                          disabled: !mentor.disabled,
-                        });
-                      }}
-                      style={btnStyle(mentor.disabled ? "#1f6f4a" : "#f59e0b")}
-                    >
-                      {mentor.disabled ? "✅ Enable" : "⏸ Disable"}
-                    </button>
-                    <button
-                      onClick={() => handleDelete("teachers", mentor.id)}
-                      style={btnStyle("#a01f13")}
-                    >
-                      🗑 Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
         </main>
       </div>
 
@@ -1325,179 +972,6 @@ export default function AdminDashboard() {
                 {actionBusy ? "Submitting..." : "Reject Application"}
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Student Detail Modal ── */}
-      {studentDetail && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 200,
-            padding: 16,
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              borderRadius: 16,
-              padding: 32,
-              width: "100%",
-              maxWidth: 560,
-              maxHeight: "90vh",
-              overflowY: "auto",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 12,
-              }}
-            >
-              <h3 style={{ margin: 0 }}>{studentDetail.name || "(no name)"}</h3>
-              <button
-                onClick={() => {
-                  setStudentDetail(null);
-                  setStudentRegistrations([]);
-                }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  fontSize: 20,
-                  cursor: "pointer",
-                }}
-              >
-                ✕
-              </button>
-            </div>
-            <div
-              style={{
-                borderBottom: "1px solid #f0f0f0",
-                paddingBottom: 12,
-                marginBottom: 16,
-              }}
-            >
-              <p style={{ fontSize: 13, color: "#555", margin: "0 0 4px" }}>
-                📧 {studentDetail.email}
-              </p>
-              <p style={{ fontSize: 13, color: "#555", margin: "0 0 4px" }}>
-                🎓 {studentDetail.grade || "—"}
-              </p>
-              {studentDetail.phone && (
-                <p style={{ fontSize: 13, color: "#555", margin: "0 0 4px" }}>
-                  📞 {studentDetail.phone}
-                </p>
-              )}
-              {studentDetail.createdAt && (
-                <p style={{ fontSize: 12, color: "#aaa", margin: 0 }}>
-                  Member since{" "}
-                  {formatDate(studentDetail.createdAt)}
-                </p>
-              )}
-            </div>
-
-            {studentRegsLoading ? (
-              <p style={{ color: "#aaa" }}>Loading activity...</p>
-            ) : (
-              <>
-                {["research", "project"].map((kind) => {
-                  const rows = studentRegistrations.filter(
-                    (r) => r.reg.kind === kind,
-                  );
-                  return (
-                    <div key={kind} style={{ marginBottom: 20 }}>
-                      <h4 style={{ margin: "0 0 10px", fontSize: 14 }}>
-                        {kind === "research" ? "🔬 Research" : "💡 Projects"}
-                      </h4>
-                      {rows.length === 0 ? (
-                        <p style={{ color: "#aaa", fontSize: 13 }}>
-                          No {kind === "research" ? "research" : "project"}{" "}
-                          registrations.
-                        </p>
-                      ) : (
-                        rows.map(({ reg, item, mentorName }) => (
-                          <div
-                            key={reg.id}
-                            style={{
-                              background: "#f9fafb",
-                              borderRadius: 8,
-                              padding: 12,
-                              marginBottom: 8,
-                              border: "1px solid #eee",
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "flex-start",
-                                gap: 8,
-                                marginBottom: 4,
-                              }}
-                            >
-                              <Link
-                                to={`/${kind === "research" ? "research" : "projects"}/${reg.itemId}`}
-                                style={{
-                                  fontSize: 13,
-                                  fontWeight: 700,
-                                  color: "#2f6175",
-                                }}
-                              >
-                                {reg.itemTitle}
-                              </Link>
-                              {item && (
-                                <span
-                                  style={{
-                                    fontSize: 11,
-                                    fontWeight: 700,
-                                    color:
-                                      item.stage === "completed"
-                                        ? "#64748b"
-                                        : "#14532d",
-                                    background:
-                                      item.stage === "completed"
-                                        ? "#f1f5f9"
-                                        : "rgba(22,101,52,0.08)",
-                                    padding: "2px 8px",
-                                    borderRadius: 20,
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {item.stage === "completed"
-                                    ? "Completed"
-                                    : "Active"}
-                                </span>
-                              )}
-                            </div>
-                            <p
-                              style={{
-                                fontSize: 12,
-                                color: "#888",
-                                margin: "0 0 2px",
-                              }}
-                            >
-                              👩‍🏫 {mentorName || "Unknown mentor"}
-                            </p>
-                            <p style={{ fontSize: 11, color: "#aaa", margin: 0 }}>
-                              Registered{" "}
-                              {formatDate(reg.createdAt)}
-                            </p>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  );
-                })}
-              </>
-            )}
           </div>
         </div>
       )}

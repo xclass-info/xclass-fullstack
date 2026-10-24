@@ -4,7 +4,8 @@ from html import escape
 from flask import current_app
 from flask_mail import Message
 
-from .extensions import mail
+from .extensions import db, mail
+from .models import EmailLog, new_id, utcnow
 
 _SIGNOFF = """
   <p>Best regards,<br/>The HappyResearch Team<br/><a href="https://happyresearch.org">www.happyresearch.org</a></p>
@@ -28,10 +29,36 @@ def _button(href, label):
   </p>"""
 
 
-def send(subject, to, html, reply_to=None):
+def send(subject, to, html, reply_to=None, kind=None):
+    """Send one email and record the attempt in the email log (admin
+    dashboard). Raises if sending fails, after logging the failure."""
     msg = Message(subject, recipients=[to], reply_to=reply_to)
     msg.html = html
-    mail.send(msg)
+    status, error = "sent", None
+    if current_app.config.get("MAIL_SUPPRESS_SEND"):
+        status = "suppressed"
+    try:
+        mail.send(msg)
+    except Exception as exc:
+        status, error = "failed", str(exc)[:1000]
+        raise
+    finally:
+        _log(to, subject, kind, status, error)
+
+
+def _log(to, subject, kind, status, error):
+    # Own connection, so logging never commits (or rolls back) the caller's
+    # unfinished database changes.
+    try:
+        with db.engine.begin() as conn:
+            conn.execute(
+                EmailLog.__table__.insert().values(
+                    id=new_id(), to_email=to, subject=subject, kind=kind,
+                    status=status, error=error, created_at=utcnow(),
+                )
+            )
+    except Exception:
+        current_app.logger.exception("could not write email log")
 
 
 def _frontend(path):
@@ -52,6 +79,7 @@ def send_account_verification(to_email, to_name, verify_link):
   <p style="font-size:13px; color:#666;">If you did not create a HappyResearch account, you can safely ignore this email.</p>
   <p>We look forward to supporting your research journey!</p>
   {_SIGNOFF}"""),
+        kind="account_verification",
     )
 
 
@@ -71,6 +99,7 @@ def send_password_reset(to_email, token):
   <p style="font-size:13px; color:#666;">This link expires in 1 hour and can only be used once.</p>
   <p style="font-size:13px; color:#666;">If you didn't ask to reset your password, you can safely ignore this email - your password won't change.</p>
   {_SIGNOFF}"""),
+        kind="password_reset",
     )
 
 
@@ -85,6 +114,7 @@ def send_work_email_verification(to_email, mentor_name, uid, token):
   {_button(link, "Verify University Email")}
   <p style="font-size:13px; color:#666;">If you didn't request this, you can ignore this email.</p>
   {_SIGNOFF}"""),
+        kind="work_email_verification",
     )
 
 
@@ -111,6 +141,7 @@ def send_mentor_continue_link(to_email, mentor_name, token, reminder=False):
   <p style="font-size:13px; color:#666;">This link signs you in and works for 14 days. Don't forward it.</p>
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
+        kind="mentor_continue_link",
     )
 
 
@@ -124,6 +155,7 @@ def send_mentor_submitted(to_email, mentor_name):
   {_button(_frontend("/mentor/application"), "View My Application")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
+        kind="mentor_submitted",
     )
 
 
@@ -135,6 +167,7 @@ def send_team_new_mentor_application(mentor_name, mentor_email):
   <p><strong>{escape(mentor_name or "")}</strong> &lt;{escape(mentor_email)}&gt; submitted a mentor application.</p>
   {_button(_frontend("/admin"), "Review in Admin")}"""),
         reply_to=mentor_email,
+        kind="team_new_mentor_application",
     )
 
 
@@ -150,6 +183,7 @@ def send_mentor_changes_requested(to_email, mentor_name, note):
   {_button(_frontend("/mentor/application"), "Update My Application")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
+        kind="mentor_changes_requested",
     )
 
 
@@ -167,6 +201,7 @@ def send_mentor_review_passed(to_email, mentor_name):
   {_button(_frontend("/mentor/application"), "Finish Onboarding")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
+        kind="mentor_review_passed",
     )
 
 
@@ -182,6 +217,7 @@ def send_mentor_declined(to_email, mentor_name, reason):
   <p>We truly appreciate the time you took to apply.</p>
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
+        kind="mentor_declined",
     )
 
 
@@ -195,6 +231,7 @@ def send_mentor_live(to_email, mentor_name):
   {_button(_frontend("/teacher/dashboard"), "Go to My Dashboard")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
+        kind="mentor_live",
     )
 
 
@@ -211,6 +248,7 @@ def send_interview_request(to_email, mentor_name, message):
   <p style="font-size:13px; color:#666;">You can reply to this email with any questions.</p>
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
+        kind="interview_request",
     )
 
 
@@ -237,6 +275,7 @@ def send_booking_confirmation(to_email, to_name, booking):
   {_button(booking.meeting_link, "Join the Session") if booking.meeting_link else ""}
   <p style="font-size:13px; color:#666;">Use the same link at the scheduled time. It works in any modern browser - no download needed.</p>
   {_SIGNOFF}"""),
+        kind="booking_confirmation",
     )
 
 
@@ -253,4 +292,5 @@ def send_team_message(subject, from_name, from_email, message):
   <hr style="border:none; border-top:1px solid #eee;"/>
   <p>{body}</p>"""),
         reply_to=from_email,
+        kind="team_message",
     )

@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify
 from .. import emails, storage
 from ..errors import ApiError
 from ..extensions import db
-from ..models import Registration, Research, Student, Teacher, utcnow
+from ..models import Registration, Research, Student, Teacher, User, utcnow
 from ..security import admin_required
 from ..serializers import teacher_json
 from ..uploads import read_upload
@@ -23,6 +23,10 @@ NOT_EDITABLE = {
 }
 
 
+def _deleted_ids():
+    return db.session.query(User.id).filter(User.deletedAt.isnot(None))
+
+
 def _row(collection, row_id):
     model = EDITABLE.get(collection)
     row = model and db.session.get(model, row_id)
@@ -38,7 +42,7 @@ def _json(row):
 @bp.get("/students")
 @admin_required
 def students():
-    return jsonify([s.to_dict() for s in Student.query.all()])
+    return jsonify([s.to_dict() for s in Student.query.filter(Student.id.notin_(_deleted_ids())).all()])
 
 
 @bp.get("/students/<student_id>/registrations")
@@ -53,7 +57,8 @@ def student_activity(student_id):
 @bp.get("/teachers")
 @admin_required
 def teachers():
-    return jsonify([teacher_json(t, "admin") for t in Teacher.query.all()])
+    rows = Teacher.query.filter(Teacher.id.notin_(_deleted_ids())).all()
+    return jsonify([teacher_json(t, "admin") for t in rows])
 
 
 @bp.get("/research")

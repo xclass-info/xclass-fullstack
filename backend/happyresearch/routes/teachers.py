@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify
 
 from ..errors import ApiError
 from ..extensions import db, limiter
-from ..models import Availability, Teacher, utcnow
+from ..models import Availability, Teacher, User, utcnow
 from ..security import current_teacher, current_user
 from ..serializers import rows, teacher_json
 from . import body, text
@@ -18,8 +18,24 @@ MENTOR_TYPES = ("phd_student", "phd_graduate", "faculty")
 # ── Public ────────────────────────────────────────────────────────────────
 
 
+def _deleted_user_ids():
+    return db.session.query(User.id).filter(User.deletedAt.isnot(None))
+
+
+def live_teachers():
+    """Mentors the public can see: live, not hidden, account not deleted."""
+    return Teacher.query.filter(
+        Teacher.verificationStatus == "approved",
+        Teacher.disabled.isnot(True),
+        Teacher.id.notin_(_deleted_user_ids()),
+    )
+
+
 def is_live(teacher):
-    return bool(teacher) and teacher.verificationStatus == "approved" and not teacher.disabled
+    if not teacher or teacher.verificationStatus != "approved" or teacher.disabled:
+        return False
+    user = db.session.get(User, teacher.id)
+    return not (user and user.deletedAt)
 
 
 def can_see_mentor(teacher):
@@ -30,10 +46,7 @@ def can_see_mentor(teacher):
 
 @bp.get("")
 def list_teachers():
-    live = Teacher.query.filter(
-        Teacher.verificationStatus == "approved", Teacher.disabled.isnot(True)
-    )
-    return jsonify([teacher_json(t) for t in live.all()])
+    return jsonify([teacher_json(t) for t in live_teachers().all()])
 
 
 @bp.get("/<teacher_id>")

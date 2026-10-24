@@ -84,3 +84,11 @@ def register(app):
             emails.send_mentor_continue_link(teacher.email, teacher.name, token, reminder=True)
             click.echo(f"reminded {teacher.email}")
         click.echo(f"done - {len(stale)} reminder(s).")
+
+    @app.cli.command("purge-deleted-accounts")
+    def purge_deleted_accounts():
+        """Permanently remove accounts deleted more than 30 days ago. Also
+        runs whenever an admin opens People."""
+        from .accounts import purge_expired
+
+        click.echo(f"done - {purge_expired()} account(s) purged.")

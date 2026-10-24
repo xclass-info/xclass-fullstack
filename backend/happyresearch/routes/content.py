@@ -10,7 +10,7 @@ from ..security import current_teacher, current_user
 from ..serializers import showcase_json
 from ..uploads import read_upload
 from . import body
-from .teachers import is_live
+from .teachers import is_live, live_teachers
 
 bp = Blueprint("content", __name__, url_prefix="/api")
 
@@ -85,9 +85,7 @@ def _owned(model, item_id, teacher):
 
 
 def _live_teacher_ids():
-    return db.session.query(Teacher.id).filter(
-        Teacher.verificationStatus == "approved", Teacher.disabled.isnot(True)
-    )
+    return live_teachers().with_entities(Teacher.id)
 
 
 def _register(kind, model):

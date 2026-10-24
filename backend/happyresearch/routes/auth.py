@@ -38,7 +38,7 @@ def me_json(user):
 
 
 def _find_user(email):
-    return User.query.filter_by(email=email.strip().lower()).first()
+    return User.query.filter_by(email=email.strip().lower(), deletedAt=None).first()
 
 
 @bp.post("/register")

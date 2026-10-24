@@ -100,6 +100,11 @@ class User(Model):
     # (no password until they submit) - see routes/mentor_application.py.
     continueTokenHash = col("continue_token_hash", db.String(64), index=True)
     continueTokenExpires = col("continue_token_expires", db.DateTime(timezone=True))
+    # Soft delete: a deleted account can't log in and is hidden everywhere,
+    # but an admin can restore it for 30 days (then it's purged). Its email
+    # is parked in deletedEmail so the address is free to sign up again.
+    deletedAt = col("deleted_at", db.DateTime(timezone=True), index=True)
+    deletedEmail = col("deleted_email", db.String(320))
     createdAt = col("created_at", db.DateTime(timezone=True), default=utcnow)
 
 
@@ -341,6 +346,22 @@ class StoredFile(Model):
     size = col("size", db.Integer, nullable=False)
     data = col("data", db.LargeBinary, nullable=False)
     createdAt = col("created_at", db.DateTime(timezone=True), default=utcnow)
+
+
+class EmailLog(Model):
+    """One row per email the site tried to send (see emails.send). Only
+    metadata - never the body, which can contain sign-in links."""
+
+    __tablename__ = "email_log"
+
+    id = col("id", db.String(64), primary_key=True, default=new_id)
+    toEmail = col("to_email", db.String(320), nullable=False, index=True)
+    subject = col("subject", db.Text)
+    kind = col("kind", db.String(64))
+    # sent | failed | suppressed (email sending switched off, e.g. locally)
+    status = col("status", db.String(16), nullable=False)
+    error = col("error", db.Text)
+    createdAt = col("created_at", db.DateTime(timezone=True), default=utcnow, index=True)
 
 
 ITEM_MODELS = {"research": Research, "project": Project}
