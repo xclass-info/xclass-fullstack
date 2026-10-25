@@ -38,15 +38,12 @@ export default function MentorContinue() {
               <p style={{ fontSize: 48, margin: "0 0 8px" }}>⚠️</p>
               <h2 style={{ margin: "0 0 8px" }}>This link has expired</h2>
               <p style={{ color: "#666", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
-                Enter your email on the Become a Mentor page and we'll send you
-                a fresh link. If you've already submitted your application, log
-                in with your password instead.
+                No problem - log in with the email and password you signed up
+                with to continue your application. If your email isn't
+                confirmed yet, the login page lets you resend the link.
               </p>
               <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
-                <Link to='/become-a-mentor#apply' style={{ padding: "12px 20px", borderRadius: 8, background: "#2f6175", color: "white", fontWeight: 700, textDecoration: "none" }}>
-                  Get a new link
-                </Link>
-                <Link to='/teacher/login' style={{ padding: "12px 20px", borderRadius: 8, border: "1px solid #2f6175", color: "#2f6175", fontWeight: 700, textDecoration: "none" }}>
+                <Link to='/teacher/login' style={{ padding: "12px 20px", borderRadius: 8, background: "#2f6175", color: "white", fontWeight: 700, textDecoration: "none" }}>
                   Mentor Login
                 </Link>
               </div>

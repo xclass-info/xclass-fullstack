@@ -17,7 +17,7 @@ def _continue_token(outbox):
 def _start(client, outbox, email="mentor@example.com", role="phd_graduate"):
     res = client.post(
         f"{BASE}/start",
-        json={"name": "Ada Lovelace", "email": email, "mentorType": role,
+        json={"name": "Ada Lovelace", "email": email, "mentorType": role, "password": "secret123",
               "university": "MIT", "researchArea": "Computing", "website": "https://scholar.example"},
     )
     assert res.status_code in (200, 201), res.json
@@ -47,14 +47,14 @@ def _complete(client, headers):
 
 
 def test_quick_start_rejects_below_phd(client, outbox):
-    res = client.post(f"{BASE}/start", json={"name": "M", "email": "m@example.com", "mentorType": "masters"})
+    res = client.post(f"{BASE}/start", json={"name": "M", "email": "m@example.com", "mentorType": "masters", "password": "secret123"})
     assert res.json["code"] == "NOT_ELIGIBLE" and not outbox
 
 
 def test_full_pipeline_to_live(client, outbox):
     headers = _start(client, outbox)
     app_ = client.get(BASE, headers=headers).json
-    assert app_["verificationStatus"] == "started" and app_["hasPassword"] is False
+    assert app_["verificationStatus"] == "started" and app_["hasPassword"] is True
     assert {"photo", "cv", "credential", "bio"} <= set(app_["missing"])
     # Nothing about projects/research can be written before approval.
     client.patch(BASE, json={"projectIdea": {"title": "Sneaky"}}, headers=headers)
@@ -68,12 +68,12 @@ def test_full_pipeline_to_live(client, outbox):
     _complete(client, headers)
     assert client.get(BASE, headers=headers).json["missing"] == []
 
-    # Submitting needs the agreements and a password.
+    # Submitting needs both agreements (the password was set at sign-up).
     res = client.post(f"{BASE}/submit", json={"agreeTerms": True}, headers=headers)
     assert res.json["code"] == "INCOMPLETE"
-    assert {"consentBackgroundCheck", "password"} <= set(res.json["missing"])
+    assert res.json["missing"] == ["consentBackgroundCheck"]
     outbox.clear()
-    res = client.post(f"{BASE}/submit", json={"agreeTerms": True, "consentBackgroundCheck": True, "password": "secret123"}, headers=headers)
+    res = client.post(f"{BASE}/submit", json={"agreeTerms": True, "consentBackgroundCheck": True}, headers=headers)
     assert res.json["verificationStatus"] == "submitted"
     assert {m.recipients[0] for m in outbox} == {"mentor@example.com", "happyprogramming.us@gmail.com"}
     # No more edits once submitted; normal password login works now.
@@ -115,17 +115,22 @@ def test_full_pipeline_to_live(client, outbox):
     assert client.get(f"/api/research/{post.json['id']}").status_code == 200
 
 
-def test_restarting_with_same_email_resends_link(client, outbox):
+def test_quick_start_needs_password_and_never_restarts_an_application(client, outbox):
+    res = client.post(f"{BASE}/start", json={"name": "A", "email": "a@example.com", "mentorType": "faculty", "password": "123"})
+    assert res.json["code"] == "WEAK_PASSWORD"
     _start(client, outbox)
-    res = client.post(f"{BASE}/start", json={"name": "Ada", "email": "MENTOR@example.com", "mentorType": "faculty"})
-    assert res.json["resumed"] is True and len(outbox) == 2
+    # Same email again: no new link (that would let anyone take over the
+    # application) - they're told to log in, and their password still works.
+    res = client.post(f"{BASE}/start", json={"name": "X", "email": "MENTOR@example.com", "mentorType": "faculty", "password": "other123"})
+    assert res.json["code"] == "APPLICATION_EXISTS" and len(outbox) == 1
+    login(client, "mentor@example.com")
     make_user("stu@example.com", student=True)
-    res = client.post(f"{BASE}/start", json={"name": "S", "email": "stu@example.com", "mentorType": "faculty"})
+    res = client.post(f"{BASE}/start", json={"name": "S", "email": "stu@example.com", "mentorType": "faculty", "password": "secret123"})
     assert res.json["code"] == "EMAIL_IN_USE"
 
 
 def test_continue_link_expires(client, outbox):
-    client.post(f"{BASE}/start", json={"name": "A", "email": "a@example.com", "mentorType": "postdoc"})
+    client.post(f"{BASE}/start", json={"name": "A", "email": "a@example.com", "mentorType": "postdoc", "password": "secret123"})
     token = _continue_token(outbox)
     user = User.query.filter_by(email="a@example.com").one()
     user.continueTokenExpires = utcnow() - timedelta(minutes=1)
@@ -153,7 +158,7 @@ def test_bookings_and_applications_need_a_live_mentor(client):
 
 
 def test_reminder_command(app, client, outbox):
-    client.post(f"{BASE}/start", json={"name": "A", "email": "a@example.com", "mentorType": "postdoc"})
+    client.post(f"{BASE}/start", json={"name": "A", "email": "a@example.com", "mentorType": "postdoc", "password": "secret123"})
     teacher = Teacher.query.filter_by(email="a@example.com").one()
     teacher.createdAt = utcnow() - timedelta(days=4)
     db.session.commit()

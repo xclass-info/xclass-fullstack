@@ -127,18 +127,18 @@ def mentor_continue_link(token):
 
 def send_mentor_continue_link(to_email, mentor_name, token, reminder=False):
     intro = (
-        "Your HappyResearch mentor application is waiting for you - it only takes about 15 minutes to finish, and everything you've entered so far is saved."
+        "Your HappyResearch mentor application is waiting for you - it only takes about 10 minutes to finish, and everything you've entered so far is saved."
         if reminder
-        else "Thanks for your interest in mentoring with HappyResearch! Use the button below to continue your application. It takes about 15 minutes, and your progress is saved as you go."
+        else "Thanks for signing up to mentor with HappyResearch! Please confirm your email address to continue your application. It takes about 10 minutes, and your progress is saved as you go."
     )
     send(
-        "Finish your HappyResearch mentor application" if reminder else "Continue your HappyResearch mentor application",
+        "Finish your HappyResearch mentor application" if reminder else "Confirm your email to continue your HappyResearch mentor application",
         to_email,
         _wrap(f"""
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>{intro}</p>
-  {_button(mentor_continue_link(token), "Continue My Application")}
-  <p style="font-size:13px; color:#666;">This link signs you in and works for 14 days. Don't forward it.</p>
+  {_button(mentor_continue_link(token), "Confirm Email &amp; Continue" if not reminder else "Continue My Application")}
+  <p style="font-size:13px; color:#666;">This link signs you in and works for 14 days - don't forward it. You can also log in any time at Mentor Login with your email and password.</p>
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
         kind="mentor_continue_link",

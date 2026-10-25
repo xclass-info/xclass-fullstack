@@ -95,8 +95,9 @@ def _applicant():
 @bp.post("/start")
 @limiter.limit("5 per minute")
 def start():
-    """The 2-minute quick start. Creates a password-less account and emails a
-    link to continue."""
+    """The 2-minute quick start. Creates the account (with the password they
+    chose) and emails a link that confirms the address and opens the
+    application. After that they can also just log in to continue."""
     data = body()
     name = text(data, "name", required=True, max_len=200)
     email = text(data, "email", required=True, max_len=320).lower()
@@ -109,21 +110,25 @@ def start():
             "NOT_ELIGIBLE",
             "Mentors need to be PhD students or above. We'd love to hear from you once you are!",
         )
+    password = data.get("password") or ""
+    if len(password) < MIN_PASSWORD_LENGTH:
+        raise ApiError(400, "WEAK_PASSWORD", "Password should be at least 6 characters.")
 
-    user = User.query.filter_by(email=email).first()
+    user = User.query.filter_by(email=email, deletedAt=None).first()
     if user:
         teacher = db.session.get(Teacher, user.id)
         if teacher and teacher.verificationStatus in EDITABLE:
-            # Started before - just send a fresh link to pick up where they left off.
-            token = issue_continue_link(user)
-            db.session.commit()
-            emails.send_mentor_continue_link(email, teacher.name, token)
-            return jsonify({"ok": True, "resumed": True})
+            raise ApiError(
+                409,
+                "APPLICATION_EXISTS",
+                "You've already started an application with this email - log in to continue.",
+            )
         raise ApiError(
             409, "EMAIL_IN_USE", "This email already has an account. Please log in instead."
         )
 
     user = User(email=email, isAdmin=email in current_app.config["ADMIN_EMAILS"])
+    set_password(user, password)
     db.session.add(user)
     db.session.flush()
     teacher = Teacher(
@@ -141,7 +146,7 @@ def start():
     token = issue_continue_link(user)
     db.session.commit()
     emails.send_mentor_continue_link(email, name, token)
-    return jsonify({"ok": True, "resumed": False}), 201
+    return jsonify({"ok": True}), 201
 
 
 @bp.post("/continue")

@@ -71,26 +71,43 @@ export default function BecomeMentor() {
     university: "",
     researchArea: "",
     website: "",
+    password: "",
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [sent, setSent] = useState(null); // null | { resumed }
+  const [sent, setSent] = useState(false);
+  const [alreadyStarted, setAlreadyStarted] = useState(false);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
+    setAlreadyStarted(false);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (form.mentorType === NOT_ELIGIBLE) return;
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (form.password.length < 6) {
+      setError("Password should be at least 6 characters.");
+      return;
+    }
     setSubmitting(true);
     setError("");
     try {
-      const res = await api.post("/mentor-application/start", form);
-      setSent({ resumed: res.resumed });
+      const { confirmPassword, ...fields } = form;
+      await api.post("/mentor-application/start", fields);
+      setSent(true);
     } catch (err) {
-      if (err.code === "EMAIL_IN_USE") {
+      if (err.code === "APPLICATION_EXISTS") {
+        setAlreadyStarted(true);
+      } else if (err.code === "WEAK_PASSWORD") {
+        setError("Password should be at least 6 characters.");
+      } else if (err.code === "EMAIL_IN_USE") {
         setError("This email already has a HappyResearch account. Please log in instead.");
       } else if (err.code === "INVALID_EMAIL") {
         setError("Please enter a valid email address.");
@@ -192,17 +209,17 @@ export default function BecomeMentor() {
               <p style={{ fontSize: 48, margin: "0 0 8px" }}>📧</p>
               <h2 style={{ ...sectionTitle, marginBottom: 8 }}>Check your email</h2>
               <p style={{ color: "#475569", lineHeight: 1.6, margin: 0 }}>
-                {sent.resumed
-                  ? "You've already started an application - we've emailed you a fresh link to pick up where you left off."
-                  : "We've sent a link to continue your application. It takes about 15 minutes, and your progress is saved as you go."}{" "}
-                If you don't see it, check your spam folder.
+                We've sent a link to <strong>{form.email}</strong> to confirm
+                your email and continue your application. It takes about 10
+                minutes, and your progress is saved as you go. If you don't
+                see it, check your spam folder.
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
               <h2 style={{ ...sectionTitle, marginBottom: 6 }}>Start your application</h2>
               <p style={{ color: "#64748b", fontSize: 14, margin: "0 0 20px" }}>
-                Takes about 2 minutes. No password needed yet.
+                Takes about 2 minutes.
               </p>
 
               <label style={labelStyle}>Full name</label>
@@ -239,7 +256,20 @@ export default function BecomeMentor() {
                   </label>
                   <input name='website' type='url' value={form.website} onChange={handleChange} style={inputStyle} placeholder='https://' />
 
+                  <label style={labelStyle}>Password</label>
+                  <input name='password' type='password' value={form.password} onChange={handleChange} required style={inputStyle} placeholder='At least 6 characters' autoComplete='new-password' />
+
+                  <label style={labelStyle}>Confirm password</label>
+                  <input name='confirmPassword' type='password' value={form.confirmPassword} onChange={handleChange} required style={inputStyle} placeholder='••••••••' autoComplete='new-password' />
+
                   {error && <p style={{ color: "#a01f13", fontSize: 14, margin: "0 0 12px" }}>{error}</p>}
+                  {alreadyStarted && (
+                    <p style={{ background: "#fff8dc", color: "#8a6a25", borderRadius: 8, padding: "12px 14px", fontSize: 14, lineHeight: 1.6, margin: "0 0 12px" }}>
+                      You've already started an application with this email.{" "}
+                      <Link to='/teacher/login' style={{ color: "#2f6175", fontWeight: 700 }}>Log in</Link>{" "}
+                      to continue where you left off.
+                    </p>
+                  )}
 
                   <button
                     type='submit'
@@ -249,8 +279,8 @@ export default function BecomeMentor() {
                     {submitting ? "Sending..." : "Continue →"}
                   </button>
                   <p style={{ fontSize: 13, color: "#94a3b8", textAlign: "center", margin: "14px 0 0" }}>
-                    Already applied? Enter the same email to get a new link, or{" "}
-                    <Link to='/teacher/login' style={{ color: "#2f6175" }}>log in</Link>.
+                    Already applied?{" "}
+                    <Link to='/teacher/login' style={{ color: "#2f6175" }}>Log in</Link> to continue.
                   </p>
                 </>
               )}
