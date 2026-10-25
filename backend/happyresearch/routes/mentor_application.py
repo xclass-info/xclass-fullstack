@@ -80,9 +80,6 @@ def missing_items(teacher):
         missing.append("cv")
     if not (teacher.workEmailVerified or teacher.credentialURL):
         missing.append("credential")
-    idea = teacher.projectIdea or {}
-    if not (idea.get("title") or "").strip() or not (idea.get("description") or "").strip():
-        missing.append("projectIdea")
     if teacher.workAuthorized is None:
         missing.append("workAuthorized")
     return missing
@@ -192,11 +189,6 @@ def save():
         if key == "name" and not value:
             raise ApiError(400, "MISSING_FIELD", "Name is required.")
         setattr(teacher, key, value)
-    if "projectIdea" in data:
-        idea = data["projectIdea"] if isinstance(data["projectIdea"], dict) else {}
-        teacher.projectIdea = {
-            k: (idea.get(k) or "").strip()[:5000] for k in ("title", "description", "output")
-        }
     if "workAuthorized" in data:
         teacher.workAuthorized = None if data["workAuthorized"] is None else bool(data["workAuthorized"])
     teacher.updatedAt = utcnow()

@@ -227,7 +227,7 @@ def send_mentor_live(to_email, mentor_name):
         to_email,
         _wrap(f"""
   <p>Hi {escape(mentor_name or "there")},</p>
-  <p>Welcome aboard - your mentor profile is now live, and students can find you and apply for your research. A great next step is turning your project idea into your first research post.</p>
+  <p>Welcome aboard - your mentor profile is now live, and students can find you and apply for your research. A great next step is posting your first research project from your dashboard.</p>
   {_button(_frontend("/teacher/dashboard"), "Go to My Dashboard")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],

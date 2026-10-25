@@ -110,7 +110,6 @@ function ApplicantDetail({ m, onClose }) {
   const [error, setError] = useState("");
   const s = m.verificationStatus;
   const reviewable = s === "submitted" || s === "interview_requested";
-  const idea = m.projectIdea || {};
 
   async function run(path, payload) {
     setBusy(true);
@@ -197,11 +196,6 @@ function ApplicantDetail({ m, onClose }) {
         <Row label='Proof document'><FileLink url={m.credentialURL} /></Row>
         <Row label='CV'><FileLink url={m.cvURL} /></Row>
         <Row label='US work authorization'>{m.workAuthorized == null ? null : m.workAuthorized ? "Yes" : "No"}</Row>
-
-        <h4 style={{ margin: "22px 0 6px" }}>Project idea</h4>
-        <Row label='Title'>{idea.title}</Row>
-        <Row label='What the student does'>{idea.description}</Row>
-        <Row label='Output'>{idea.output}</Row>
 
         <h4 style={{ margin: "22px 0 6px" }}>History</h4>
         <Row label='Started'>{formatDate(m.createdAt)}</Row>

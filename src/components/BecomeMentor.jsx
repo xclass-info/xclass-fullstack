@@ -13,7 +13,7 @@ const NOT_ELIGIBLE = "not_eligible";
 
 const STEPS = [
   { title: "Quick start", time: "2 minutes", text: "Tell us who you are. We'll email you a link to continue." },
-  { title: "Your application", time: "About 15 minutes", text: "Your profile, proof of your PhD status, your CV and one research idea you'd love to supervise. Saved as you go." },
+  { title: "Your application", time: "About 10 minutes", text: "Your profile, proof of your PhD status and your CV. Saved as you go." },
   { title: "Review", time: "About 3 business days", text: "Our team reviews every application. Sometimes we'll ask for a short video interview." },
   { title: "Onboarding", time: "A few days", text: "Read our Mentor Guidelines. We run a background check on every mentor before they work with students." },
   { title: "Go live", time: "", text: "Your profile is published and students can apply for your research." },

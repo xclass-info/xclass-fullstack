@@ -39,7 +39,6 @@ def _complete(client, headers):
     client.patch(BASE, json={
         "degree": "Doctor of Philosophy (PhD)",
         "bio": "I study computing and love helping students do real research. " * 3,
-        "projectIdea": {"title": "Analytical engines", "description": "Build a model.", "output": "Paper"},
         "workAuthorized": True,
     }, headers=headers)
     _upload(client, headers, "photo", "me.png", b"\x89PNG", "image/png")
@@ -56,7 +55,10 @@ def test_full_pipeline_to_live(client, outbox):
     headers = _start(client, outbox)
     app_ = client.get(BASE, headers=headers).json
     assert app_["verificationStatus"] == "started" and app_["hasPassword"] is False
-    assert {"photo", "cv", "credential", "projectIdea", "bio"} <= set(app_["missing"])
+    assert {"photo", "cv", "credential", "bio"} <= set(app_["missing"])
+    # Nothing about projects/research can be written before approval.
+    client.patch(BASE, json={"projectIdea": {"title": "Sneaky"}}, headers=headers)
+    assert "projectIdea" not in client.get(BASE, headers=headers).json
 
     # Not public while applying.
     uid = app_["id"]

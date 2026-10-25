@@ -13,7 +13,6 @@ import {
   mentorTypeLabel,
   stageIndex,
 } from "../utils/mentorVerification";
-import { DELIVERABLE_OPTIONS } from "../utils/deliverables";
 import { formatMentorName } from "../utils/mentorName";
 import InitialsAvatar from "./InitialsAvatar";
 import Navbar from "./Navbar";
@@ -33,7 +32,6 @@ const DEGREES = [
 const STEPS = [
   { title: "Your profile", fields: ["name", "mentorType", "degree", "university", "researchArea", "bio", "photo"] },
   { title: "Credentials", fields: ["credential", "cv"] },
-  { title: "Project idea", fields: ["projectIdea"] },
   { title: "Review & submit", fields: ["workAuthorized"] },
 ];
 
@@ -47,7 +45,6 @@ const MISSING_LABELS = {
   photo: "A profile photo",
   credential: "Proof of PhD status (university email or document)",
   cv: "Your CV",
-  projectIdea: "A project idea (title and description)",
   workAuthorized: "US work authorization question",
   agreeTerms: "Agreeing to the Mentor Guidelines",
   consentBackgroundCheck: "Consent to a background check",
@@ -219,7 +216,6 @@ export default function MentorApplication() {
       bio: data.bio || "",
       languages: data.languages || "",
       website: data.website || "",
-      projectIdea: { title: "", description: "", output: "", ...(data.projectIdea || {}) },
       workAuthorized: data.workAuthorized ?? null,
     };
   }
@@ -235,10 +231,6 @@ export default function MentorApplication() {
 
   function setField(name, value) {
     setDraft((d) => ({ ...d, [name]: value }));
-  }
-
-  function setIdea(name, value) {
-    setDraft((d) => ({ ...d, projectIdea: { ...d.projectIdea, [name]: value } }));
   }
 
   async function upload(kind, file) {
@@ -507,46 +499,6 @@ export default function MentorApplication() {
 
                 {step === 2 && (
                   <>
-                    <h2 style={{ ...serif, marginTop: 0 }}>A project idea</h2>
-                    <p style={{ color: "#64748b", fontSize: 14, marginTop: -8 }}>
-                      One research project you'd love to supervise a student through. Keep it short - it helps us understand how you'd mentor, and once you're live it can become your first research post.
-                    </p>
-                    <label style={label}>Project title</label>
-                    <input
-                      style={input}
-                      value={draft.projectIdea.title}
-                      onChange={(e) => setIdea("title", e.target.value)}
-                      onBlur={() => save({ projectIdea: draft.projectIdea })}
-                      placeholder='e.g. How do microplastics affect plant growth?'
-                    />
-                    <label style={label}>What would the student do?</label>
-                    <textarea
-                      style={{ ...input, minHeight: 130, resize: "vertical" }}
-                      value={draft.projectIdea.description}
-                      onChange={(e) => setIdea("description", e.target.value)}
-                      onBlur={() => save({ projectIdea: draft.projectIdea })}
-                      placeholder='The question, the approach, and what they would learn along the way.'
-                    />
-                    <label style={label}>What would they produce? <span style={hint}>(optional)</span></label>
-                    <select
-                      style={input}
-                      value={draft.projectIdea.output}
-                      onChange={(e) => {
-                        const idea = { ...draft.projectIdea, output: e.target.value };
-                        setDraft((d) => ({ ...d, projectIdea: idea }));
-                        save({ projectIdea: idea });
-                      }}
-                    >
-                      <option value=''>Select</option>
-                      {DELIVERABLE_OPTIONS.map((d) => (
-                        <option key={d} value={d}>{d}</option>
-                      ))}
-                    </select>
-                  </>
-                )}
-
-                {step === 3 && (
-                  <>
                     <h2 style={{ ...serif, marginTop: 0 }}>Review & submit</h2>
                     {missing.filter((m) => !["workAuthorized"].includes(m)).length > 0 && (
                       <Notice color='#9a772b' bg='#fff8dc'>
@@ -682,7 +634,7 @@ export default function MentorApplication() {
           <div style={card}>
             <h2 style={{ ...serif, marginTop: 0 }}>🎉 You're live!</h2>
             <p style={{ color: "#475569", lineHeight: 1.7 }}>
-              Students can now find your profile and apply for your research. A great next step: turn your project idea into your first research post.
+              Students can now find your profile and apply for your research. A great next step: post your first research project from your dashboard.
             </p>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <button style={primaryBtn} onClick={() => navigate("/teacher/dashboard")}>Go to my dashboard →</button>

@@ -183,7 +183,8 @@ class Teacher(Model):
     # Proof of PhD status when no university email is verified: enrollment
     # letter, transcript or diploma.
     credentialURL = col("credential_url", db.Text)
-    # {"title", "description", "output"} - the idea they'd like to supervise.
+    # Legacy: an early version of the application asked for a project idea.
+    # Applicants no longer write anything about projects before approval.
     projectIdea = col("project_idea", JSON)
     workAuthorized = col("work_authorized", db.Boolean)
     agreedTermsAt = col("agreed_terms_at", db.DateTime(timezone=True))
