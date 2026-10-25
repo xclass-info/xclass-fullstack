@@ -13,20 +13,39 @@ _SIGNOFF = """
 
 
 def _wrap(body):
+    # Table layout + inline styles: the only thing every email client
+    # (Gmail, Outlook, phones) reliably centres and sizes the same way.
     return f"""
-<div style="font-family: Arial, Helvetica, sans-serif; max-width: 480px; margin: 0 auto; color: #1a1a1a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f6f8; padding:24px 12px;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px; background:#ffffff; border-radius:12px;">
+        <tr>
+          <td style="padding:22px 32px 0; font-family: Georgia, 'Times New Roman', serif; font-size:22px; color:#2f6175;">
+            happy<strong>Research</strong>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:8px 32px 28px; font-family: Arial, Helvetica, sans-serif; font-size:16px; line-height:1.6; color:#1a1a1a;">
 {body}
-</div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 """
 
 
 def _button(href, label):
     return f"""
-  <p style="text-align:center; margin: 32px 0;">
-    <a href="{escape(href)}" style="background:#2f6175; color:#ffffff; padding:14px 32px; border-radius:8px; text-decoration:none; font-weight:bold; display:inline-block;">
-      {escape(label)}
-    </a>
-  </p>"""
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:28px auto;">
+    <tr>
+      <td style="background:#2f6175; border-radius:8px;">
+        <a href="{escape(href)}" style="display:inline-block; padding:15px 32px; font-family: Arial, Helvetica, sans-serif; font-size:17px; font-weight:bold; color:#ffffff; text-decoration:none;">{escape(label)}</a>
+      </td>
+    </tr>
+  </table>"""
 
 
 def send(subject, to, html, reply_to=None, kind=None):
@@ -75,8 +94,8 @@ def send_account_verification(to_email, to_name, verify_link):
   <p>Thank you for joining our community of curious minds, aspiring researchers, and academic mentors.</p>
   <p>To complete your registration and activate your account, please verify your email address by clicking the button below.</p>
   {_button(verify_link, "Verify My Email Address")}
-  <p style="font-size:13px; color:#666;">For your security, this verification link can only be used once.</p>
-  <p style="font-size:13px; color:#666;">If you did not create a HappyResearch account, you can safely ignore this email.</p>
+  <p style="font-size:14px; color:#555;">For your security, this verification link can only be used once.</p>
+  <p style="font-size:14px; color:#555;">If you did not create a HappyResearch account, you can safely ignore this email.</p>
   <p>We look forward to supporting your research journey!</p>
   {_SIGNOFF}"""),
         kind="account_verification",
@@ -96,8 +115,8 @@ def send_password_reset(to_email, token):
   <p>Hello,</p>
   <p>We received a request to reset the password for your HappyResearch account.</p>
   {_button(link, "Choose a New Password")}
-  <p style="font-size:13px; color:#666;">This link expires in 1 hour and can only be used once.</p>
-  <p style="font-size:13px; color:#666;">If you didn't ask to reset your password, you can safely ignore this email - your password won't change.</p>
+  <p style="font-size:14px; color:#555;">This link expires in 1 hour and can only be used once.</p>
+  <p style="font-size:14px; color:#555;">If you didn't ask to reset your password, you can safely ignore this email - your password won't change.</p>
   {_SIGNOFF}"""),
         kind="password_reset",
     )
@@ -112,7 +131,7 @@ def send_work_email_verification(to_email, mentor_name, uid, token):
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>Click the button below to confirm this is your university email. It verifies your academic status for your HappyResearch mentor application.</p>
   {_button(link, "Verify University Email")}
-  <p style="font-size:13px; color:#666;">If you didn't request this, you can ignore this email.</p>
+  <p style="font-size:14px; color:#555;">If you didn't request this, you can ignore this email.</p>
   {_SIGNOFF}"""),
         kind="work_email_verification",
     )
@@ -137,8 +156,8 @@ def send_mentor_continue_link(to_email, mentor_name, token, reminder=False):
         _wrap(f"""
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>{intro}</p>
-  {_button(mentor_continue_link(token), "Confirm Email &amp; Continue" if not reminder else "Continue My Application")}
-  <p style="font-size:13px; color:#666;">This link signs you in and works for 14 days - don't forward it. You can also log in any time at Mentor Login with your email and password.</p>
+  {_button(mentor_continue_link(token), "Confirm Email & Continue" if not reminder else "Continue My Application")}
+  <p style="font-size:14px; color:#555;">This link signs you in and works for 14 days - don't forward it. You can also log in any time at Mentor Login with your email and password.</p>
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
         kind="mentor_continue_link",
@@ -245,7 +264,7 @@ def send_interview_request(to_email, mentor_name, message):
   <p>Thank you for applying to mentor with HappyResearch! Before we finish reviewing your application, we'd like to meet you in a short interview.</p>
   <div style="background:#f5f8fa; border-left:4px solid #2f6175; padding:12px 16px; margin:16px 0;">{body}</div>
   {_button(_frontend("/teacher/dashboard"), "View My Application")}
-  <p style="font-size:13px; color:#666;">You can reply to this email with any questions.</p>
+  <p style="font-size:14px; color:#555;">You can reply to this email with any questions.</p>
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
         kind="interview_request",
@@ -271,9 +290,9 @@ def send_booking_confirmation(to_email, to_name, booking):
         _wrap(f"""
   <p>Hi {escape(to_name or "there")},</p>
   <p>Your 1-on-1 session has been confirmed.</p>
-  <table style="font-size:14px; margin: 16px 0;">{details}</table>
+  <table style="font-size:16px; margin: 16px 0;">{details}</table>
   {_button(booking.meeting_link, "Join the Session") if booking.meeting_link else ""}
-  <p style="font-size:13px; color:#666;">Use the same link at the scheduled time. It works in any modern browser - no download needed.</p>
+  <p style="font-size:14px; color:#555;">Use the same link at the scheduled time. It works in any modern browser - no download needed.</p>
   {_SIGNOFF}"""),
         kind="booking_confirmation",
     )
