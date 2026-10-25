@@ -32,7 +32,23 @@ function writeToken(value) {
 }
 
 export function getToken() {
+  // Re-read on every call so all tabs share the latest login (logging in or
+  // out in one tab must not leave another tab using a stale token).
+  const stored = readToken();
+  if (stored !== null || token === null) token = stored;
   return token;
+}
+
+// Another tab logged in or out: refresh who's logged in here too.
+try {
+  window.addEventListener("storage", (e) => {
+    if (e.key === TOKEN_KEY) {
+      token = e.newValue;
+      loadUser();
+    }
+  });
+} catch {
+  // No window (tests/SSR) - nothing to sync.
 }
 
 function setUser(next) {

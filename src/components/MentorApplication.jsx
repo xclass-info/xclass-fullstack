@@ -3,7 +3,7 @@
 // edited ("started" / "changes_requested") it's a 4-step form that saves as
 // they go; after submitting it shows where they are and what happens next.
 // Backend: routes/mentor_application.py.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api, live } from "../api";
 import { onAuthStateChanged, refreshUser } from "../auth";
@@ -179,6 +179,8 @@ export default function MentorApplication() {
   const [uniEmail, setUniEmail] = useState("");
   const [uniEmailSent, setUniEmailSent] = useState(false);
   const [guidelinesChecked, setGuidelinesChecked] = useState(false);
+  const [signedOut, setSignedOut] = useState(false);
+  const uidRef = useRef(null);
 
   useEffect(() => {
     let stopLive = () => {};
@@ -192,12 +194,21 @@ export default function MentorApplication() {
         setApp({ notMentor: true });
         return;
       }
+      // A different account signed in (e.g. in another tab): start the form
+      // over from that account's own saved data.
+      if (uidRef.current && uidRef.current !== user.uid) {
+        setDraft({});
+        setUniEmail("");
+        setStep(0);
+      }
+      uidRef.current = user.uid;
       stopLive = live(() => api.get("/mentor-application"), (data) => {
+        setSignedOut(false);
         setApp(data);
         // Only seed the form once, so a refresh never clobbers typing.
         setDraft((d) => (Object.keys(d).length ? d : seedDraft(data)));
         setUniEmail((e) => e || data.workEmail || "");
-      });
+      }, (err) => err.status === 401 && setSignedOut(true));
     });
     return () => {
       unsub();
@@ -220,12 +231,19 @@ export default function MentorApplication() {
     };
   }
 
+  // A 401 means this tab isn't signed in (e.g. it logged out, or another
+  // account signed in elsewhere) - nothing will save until they log in again.
+  function handleError(err, fallback) {
+    if (err.status === 401) setSignedOut(true);
+    else setError(err.detail || fallback);
+  }
+
   async function save(fields) {
     setError("");
     try {
       setApp(await api.patch("/mentor-application", fields));
     } catch (err) {
-      setError(err.detail || "Couldn't save - please try again.");
+      handleError(err, "Couldn't save - please try again.");
     }
   }
 
@@ -241,7 +259,7 @@ export default function MentorApplication() {
       data.append("file", file);
       setApp(await api.post(`/mentor-application/${kind}`, data));
     } catch (err) {
-      setError(err.detail || "Upload failed - please try again.");
+      handleError(err, "Upload failed - please try again.");
     } finally {
       setBusy(false);
     }
@@ -254,6 +272,7 @@ export default function MentorApplication() {
       setApp(await api.post("/mentor-application/university-email", { email: uniEmail.trim() }));
       setUniEmailSent(true);
     } catch (err) {
+      if (err.status === 401) return setSignedOut(true);
       setError(err.code === "INVALID_EMAIL" ? "Please enter a valid email address." : "Couldn't send the email - please try again.");
     } finally {
       setBusy(false);
@@ -285,6 +304,7 @@ export default function MentorApplication() {
       refreshUser();
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
+      if (err.status === 401) return setSignedOut(true);
       setError(
         err.code === "INCOMPLETE"
           ? "Almost there - please complete the items marked below."
@@ -302,11 +322,30 @@ export default function MentorApplication() {
     try {
       setApp(await api.post("/mentor-application/accept-guidelines"));
       refreshUser();
-    } catch {
+    } catch (err) {
+      if (err.status === 401) return setSignedOut(true);
       setError("Couldn't save - please try again.");
     } finally {
       setBusy(false);
     }
+  }
+
+  if (signedOut) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+        <Navbar />
+        <div style={{ maxWidth: 560, margin: "0 auto", padding: "140px 24px" }}>
+          <div style={{ ...card, borderTop: "4px solid #a01f13", textAlign: "center" }}>
+            <p style={{ fontSize: 40, margin: "0 0 8px" }}>🔒</p>
+            <h2 style={{ ...serif, margin: "0 0 10px" }}>You're signed out</h2>
+            <p style={{ color: "#475569", lineHeight: 1.6, margin: "0 0 20px" }}>
+              Please log in again to keep working on your application. Everything that was saved before is still there.
+            </p>
+            <button style={primaryBtn} onClick={() => navigate("/teacher/login")}>Log in →</button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!app) {
