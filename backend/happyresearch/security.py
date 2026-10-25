@@ -145,6 +145,17 @@ def current_teacher():
     return teacher
 
 
+def current_live_teacher():
+    """Like current_teacher, but only for mentors whose application is
+    approved. Applicants can't post content or set availability until then."""
+    teacher = current_teacher()
+    if teacher.verificationStatus != "approved":
+        raise ApiError(
+            403, "NOT_LIVE", "You can do this once your mentor application is approved."
+        )
+    return teacher
+
+
 def current_student():
     """The logged-in, verified student's Student row (raises otherwise)."""
     user = current_user()

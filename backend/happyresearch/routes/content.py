@@ -6,7 +6,7 @@ from .. import storage
 from ..errors import ApiError
 from ..extensions import db, limiter
 from ..models import Project, Research, Showcase, Teacher, utcnow
-from ..security import current_teacher, current_user
+from ..security import current_live_teacher, current_user
 from ..serializers import showcase_json
 from ..uploads import read_upload
 from . import body
@@ -120,7 +120,7 @@ def _register(kind, model):
         return jsonify(_json(row))
 
     def create_item():
-        teacher = current_teacher()
+        teacher = current_live_teacher()
         data = body()
         row = model(**_clean(model, data))
         row.teacherId = teacher.id
@@ -138,7 +138,7 @@ def _register(kind, model):
         return jsonify(_json(row)), 201
 
     def update_item(item_id):
-        teacher = current_teacher()
+        teacher = current_live_teacher()
         row = _owned(model, item_id, teacher)
         data = body()
         changes = _clean(model, data)
@@ -152,7 +152,7 @@ def _register(kind, model):
         return jsonify(_json(row))
 
     def delete_item(item_id):
-        teacher = current_teacher()
+        teacher = current_live_teacher()
         row = _owned(model, item_id, teacher)
         db.session.delete(row)
         db.session.commit()
@@ -172,7 +172,7 @@ for _kind, _model in KINDS.items():
 @bp.post("/showcase/files")
 @limiter.limit("20 per minute")
 def upload_showcase_file():
-    teacher = current_teacher()
+    teacher = current_live_teacher()
     data, filename, content_type = read_upload(allow_pdf=True)
     ref = storage.put(
         storage.make_key(f"showcase-files/{teacher.id}", filename), data, content_type

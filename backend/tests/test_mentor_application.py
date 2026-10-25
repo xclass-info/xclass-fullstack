@@ -95,11 +95,10 @@ def test_full_pipeline_to_live(client, outbox):
     assert client.get(BASE, headers=mentor).json["interviewMessage"] == "Book a slot: link"
     assert client.post(f"/api/admin/teachers/{uid}/approve", headers=admin).json["verificationStatus"] == "onboarding"
 
-    # Pending mentors' drafts stay hidden from the public.
-    draft = client.post("/api/research", json={"title": "Draft idea", "seats": 1}, headers=mentor).json
-    assert client.get(f"/api/research/{draft['id']}").status_code == 404
-    assert client.get(f"/api/research/{draft['id']}", headers=mentor).status_code == 200
-    assert client.get(f"/api/research?teacherId={uid}").json == []
+    # Not approved yet: no posts, availability or dashboard profile edits.
+    assert client.post("/api/research", json={"title": "Too early", "seats": 1}, headers=mentor).json["code"] == "NOT_LIVE"
+    assert client.post("/api/teachers/me/availability", json={"date": "2026-12-01", "time": "10:00"}, headers=mentor).json["code"] == "NOT_LIVE"
+    assert client.patch("/api/teachers/me", json={"bio": "x"}, headers=mentor).json["code"] == "NOT_LIVE"
 
     # Live only after both onboarding steps.
     client.post(f"/api/admin/teachers/{uid}/background-check", json={"status": "passed", "note": "NSOPW clear"}, headers=admin)
@@ -108,7 +107,10 @@ def test_full_pipeline_to_live(client, outbox):
     assert client.post(f"{BASE}/accept-guidelines", headers=mentor).json["verificationStatus"] == "approved"
     assert outbox[0].subject == "You're live on HappyResearch!"
     assert client.get(f"/api/teachers/{uid}").status_code == 200
-    assert client.get(f"/api/research/{draft['id']}").status_code == 200
+    # Live mentors can post.
+    post = client.post("/api/research", json={"title": "First post", "seats": 1}, headers=mentor)
+    assert post.status_code == 201
+    assert client.get(f"/api/research/{post.json['id']}").status_code == 200
 
 
 def test_restarting_with_same_email_resends_link(client, outbox):

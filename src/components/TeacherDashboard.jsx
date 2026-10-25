@@ -22,21 +22,12 @@ const PATH_BY_KIND = {
   showcase: "showcase",
 };
 
-// What a not-yet-live mentor sees at the top of the dashboard.
-const APPLICATION_BANNER = {
-  submitted: "⏳ Your mentor application is in review. You can draft research posts meanwhile - they go public when you're live.",
-  interview_requested: "🗓 We'd like to schedule a short interview with you.",
-  onboarding: "🎉 You passed review! Finish onboarding to go live.",
-  declined: "Your mentor application wasn't approved this time.",
-};
-
 const NAV_ITEMS = [
   { id: "overview", label: "🏠 Overview" },
   { id: "content", label: "📚 Content", group: "My Content" },
   { id: "availability", label: "🗓 Availability", group: "Scheduling" },
   { id: "bookings", label: "📬 Bookings", group: "Scheduling" },
   { id: "profile", label: "👤 Profile", group: "Account" },
-  { id: "application", label: "📝 Application", group: "Account" },
 ];
 
 function profileFromTeacherData(data) {
@@ -102,8 +93,9 @@ export default function TeacherDashboard() {
       unsubscribeTeacher = live(
         () => api.get("/teachers/me"),
         (data) => {
-          // An application still being filled in lives on its own page.
-          if (["started", "changes_requested"].includes(data.verificationStatus)) {
+          // Until a mentor is approved, their application page is their home:
+          // posting content and setting availability open up once they're live.
+          if (data.verificationStatus !== "approved") {
             navigate("/mentor/application", { replace: true });
             return;
           }
@@ -294,34 +286,6 @@ export default function TeacherDashboard() {
             </button>
           </div>
         </div>
-        {/* Application banner - until the mentor is live */}
-        {teacher?.verificationStatus !== "approved" && (
-          <button
-            onClick={() => navigate("/mentor/application")}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "100%",
-              gap: 12,
-              background: vStatus.bg,
-              border: `1px solid ${vStatus.color}33`,
-              borderRadius: 10,
-              padding: "12px 18px",
-              marginBottom: 20,
-              cursor: "pointer",
-              textAlign: "left",
-            }}
-          >
-            <span style={{ fontSize: 14, fontWeight: 600, color: vStatus.color }}>
-              {APPLICATION_BANNER[teacher?.verificationStatus] || APPLICATION_BANNER.submitted}
-            </span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: vStatus.color, whiteSpace: "nowrap" }}>
-              View application →
-            </span>
-          </button>
-        )}
-
         <div className={styles.layout}>
           {/* Sidebar nav */}
           <nav className={styles.sidebar}>
@@ -382,25 +346,8 @@ export default function TeacherDashboard() {
                   }}
                 >
                   <p style={{ margin: 0, fontWeight: 700, color: vStatus.color }}>
-                    {teacher?.verificationStatus === "approved"
-                      ? "✅ You're verified and live"
-                      : APPLICATION_BANNER[teacher?.verificationStatus] || APPLICATION_BANNER.submitted}
+                    ✅ You're verified and live
                   </p>
-                  {teacher?.verificationStatus !== "approved" && (
-                    <button
-                      onClick={() => navigate("/mentor/application")}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: vStatus.color,
-                        fontWeight: 700,
-                        fontSize: 13,
-                        cursor: "pointer",
-                      }}
-                    >
-                      View application →
-                    </button>
-                  )}
                 </div>
 
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -590,17 +537,6 @@ export default function TeacherDashboard() {
             {activeTab === "bookings" && (
               <div className={styles.section}>
                 <BookingRequests />
-              </div>
-            )}
-            {/* ── Application Tab ── */}
-            {activeTab === "application" && (
-              <div className={styles.section}>
-                <p style={{ margin: "0 0 12px", fontWeight: 700, color: vStatus.color }}>
-                  Status: {vStatus.label}
-                </p>
-                <button className={styles.createBtn} onClick={() => navigate("/mentor/application")}>
-                  Open my application →
-                </button>
               </div>
             )}
             {/* ── Profile Tab ── */}

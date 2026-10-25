@@ -6,7 +6,7 @@ from flask import Blueprint, jsonify
 from ..errors import ApiError
 from ..extensions import db, limiter
 from ..models import Availability, Teacher, User, utcnow
-from ..security import current_teacher, current_user
+from ..security import current_live_teacher, current_teacher, current_user
 from ..serializers import rows, teacher_json
 from . import body, text
 
@@ -92,7 +92,7 @@ def get_me():
 
 @bp.patch("/me")
 def update_me():
-    teacher = current_teacher()
+    teacher = current_live_teacher()
     data = body()
     teacher.apply(
         {k: (v.strip() if isinstance(v, str) else v) for k, v in data.items()},
@@ -110,13 +110,13 @@ def update_me():
 
 @bp.get("/me/availability")
 def my_availability():
-    teacher = current_teacher()
+    teacher = current_live_teacher()
     return jsonify(rows(Availability.query.filter_by(teacherId=teacher.id).all()))
 
 
 @bp.post("/me/availability")
 def add_slot():
-    teacher = current_teacher()
+    teacher = current_live_teacher()
     data = body()
     date = text(data, "date", required=True, max_len=10)
     time = text(data, "time", required=True, max_len=5)
@@ -135,7 +135,7 @@ def add_slot():
 
 @bp.delete("/me/availability/<slot_id>")
 def delete_slot(slot_id):
-    teacher = current_teacher()
+    teacher = current_live_teacher()
     slot = db.session.get(Availability, slot_id)
     if not slot or slot.teacherId != teacher.id:
         raise ApiError(404, "NOT_FOUND", "Slot not found.")
