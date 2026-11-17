@@ -16,7 +16,7 @@ export default function Hero() {
       <div className={styles.videoOverlay} />
       <div className={styles.inner}>
         <div className={styles.content}>
-          <h1 className={styles.h1}>Do Real Research with a PhD Mentor.</h1>
+          <h1 className={styles.h1}>Your Research Journey, Guided by a PhD Mentor.</h1>
           <p className={styles.sub}>
             HappyResearch matches students with PhD and faculty mentors from
             top universities for one-on-one research projects - from your first
