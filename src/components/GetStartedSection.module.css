@@ -1,6 +1,6 @@
 .section {
   /* Now sits after Hero, not directly under the fixed navbar - same
-     symmetric mid-page spacing as the other sections (e.g. HowItWorks). */
+     symmetric mid-page spacing as the other homepage sections. */
   padding: 130px 6% 110px;
   background: var(--bg);
   position: relative;
