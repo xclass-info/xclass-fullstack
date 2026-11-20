@@ -122,7 +122,7 @@ export default function ActiveEnrolling() {
     <section className={styles.section}>
       <div className={`${styles.header} reveal`}>
         <div className='section-label' style={{ justifyContent: "center" }}>
-          📬 Active Enrolling
+          Enrolling now
         </div>
         <h2>Mentors taking students right now</h2>
         <p className='section-sub' style={{ margin: "0 auto" }}>

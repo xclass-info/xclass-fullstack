@@ -83,9 +83,7 @@ export default function FAQSection() {
     <section style={{ padding: "120px 24px 110px 24px", background: "white" }}>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         <div className='reveal' style={{ textAlign: "center", marginBottom: 48 }}>
-          <h2 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: 8 }}>
-            ❓ Frequently Asked Questions
-          </h2>
+          <h2>Frequently Asked Questions</h2>
           <p style={{ color: "#666", fontSize: 17 }}>
             Common questions from parents and students.
           </p>

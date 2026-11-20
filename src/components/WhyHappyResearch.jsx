@@ -27,9 +27,7 @@ export default function WhyHappyResearch() {
     <section style={{ padding: "120px 24px 110px 24px", background: "var(--bg)" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div className='reveal' style={{ textAlign: "center", marginBottom: 48 }}>
-          <h2 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: 8 }}>
-            ✨ Why HappyResearch
-          </h2>
+          <h2>Why HappyResearch</h2>
           <p style={{ color: "#666" }}>
             What makes mentorship here different from a class or a camp.
           </p>

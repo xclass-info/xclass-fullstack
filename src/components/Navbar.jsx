@@ -92,10 +92,10 @@ export default function Navbar() {
           </span>
           <div className={styles.dropdownMenu}>
             <div className={styles.dropdownMenuInner}>
-              <Link to='/projects'>💡 Projects</Link>
-              <Link to='/research'>🔬 Research</Link>
-              <Link to='/tutors'>🧑‍🏫 1-on-1 Learning</Link>
-              <Link to='/tell-us-what-you-need'>💬 On-demand Learning</Link>
+              <Link to='/projects'>Projects</Link>
+              <Link to='/research'>Research</Link>
+              <Link to='/tutors'>1-on-1 Learning</Link>
+              <Link to='/tell-us-what-you-need'>On-demand Learning</Link>
             </div>
           </div>
         </li>
@@ -158,19 +158,19 @@ export default function Navbar() {
             <p className={styles.mobileGroupLabel}>Programs</p>
           </li>
           <li>
-            <Link to='/projects'>💡 Projects</Link>
+            <Link to='/projects'>Projects</Link>
           </li>
           <li>
-            <Link to='/research'>🔬 Research</Link>
+            <Link to='/research'>Research</Link>
           </li>
           <li>
-            <Link to='/tutors'>🧑‍🏫 1-on-1 Learning</Link>
+            <Link to='/tutors'>1-on-1 Learning</Link>
           </li>
           <li>
-            <Link to='/tell-us-what-you-need'>💬 On-demand Learning</Link>
+            <Link to='/tell-us-what-you-need'>On-demand Learning</Link>
           </li>
           <li>
-            <Link to='/showcase'>🏆 Student Work</Link>
+            <Link to='/showcase'>Student Work</Link>
           </li>
 
           <li>

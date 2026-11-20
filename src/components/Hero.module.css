@@ -1,81 +1,63 @@
 .hero {
-  min-height: 58vh;
-  padding: 110px 6% 70px;
-  background: #1f3a42;
+  padding: 150px 6% 40px;
   position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-.videoBg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  z-index: 0;
-}
-
-.videoOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    rgba(18, 34, 40, 0.9) 0%,
-    rgba(31, 58, 66, 0.78) 45%,
-    rgba(47, 97, 117, 0.45) 100%
-  );
-  z-index: 1;
-  pointer-events: none;
 }
 
 .inner {
-  max-width: 1200px;
+  max-width: 1040px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 80px;
-  width: 100%;
-  position: relative;
-  z-index: 2;
-}
-
-.content {
-  flex: 1;
-  min-width: 0;
   animation: heroFadeUp 0.7s ease both;
 }
 
 .h1 {
-  font-family: "Source Serif 4", Georgia, serif;
-  font-size: clamp(2.6rem, 5.5vw, 4.4rem);
-  line-height: 1.05;
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5vw, 3.9rem);
+  font-weight: 300;
+  line-height: 1.12;
   letter-spacing: -0.015em;
-  color: #ffffff;
-  margin-bottom: 20px;
+  color: var(--ink);
+  max-width: 900px;
+  margin-bottom: 22px;
 }
 
 .sub {
-  font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 600;
-  line-height: 1.75;
-  margin-bottom: 36px;
-  max-width: 520px;
+  font-size: 1.2rem;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 680px;
+  margin-bottom: 30px;
 }
 
 .actions {
   display: flex;
-  gap: 16px;
+  align-items: center;
+  gap: 22px;
   flex-wrap: wrap;
-  margin-bottom: 48px;
+  margin-bottom: 56px;
+}
+
+/* The video, framed like a featured card: thin border, soft corners. */
+.videoCard {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #1f3a42;
+  aspect-ratio: 16 / 9;
+  max-height: 560px;
+  width: 100%;
+}
+
+.video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @keyframes heroFadeUp {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -83,17 +65,17 @@
   }
 }
 
-@media (max-width: 900px) {
-  .h1 {
-    font-size: 2.4rem;
-  }
-}
-
-@media (max-width: 560px) {
+@media (max-width: 760px) {
   .hero {
-    padding: 110px 4% 40px;
+    padding: 120px 20px 24px;
+  }
+  .h1 {
+    font-size: 2.3rem;
+  }
+  .sub {
+    font-size: 1.05rem;
   }
   .actions {
-    flex-direction: column;
+    margin-bottom: 36px;
   }
 }

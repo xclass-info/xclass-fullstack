@@ -7,17 +7,21 @@
 }
 
 :root {
-  /* Ported from the libri-stack design system: a muted teal/gold palette
-     with a serif display face, flat white tiles and thin borders instead
-     of the previous bright rainbow + heavy drop-shadow look. */
+  /* Light take on the Button School look: a clean grotesk for text, a light
+     editorial serif for big statements, quiet thin-bordered cards, lots of
+     space - in HappyResearch's teal/gold. */
+  --font-sans: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --ink: #16191b;
+  --border-strong: #c9c3b8;
   --primary: #427e94;
   --primary-hover: #2f6175;
   --primary-soft: #e3eff3;
   --accent: #9a772b;
-  --bg: #faf8f4;
+  --bg: #fbfaf7;
   --surface: #f3efe6;
   --card: #ffffff;
-  --border: #d5dde2;
+  --border: #e6e1d8;
   --coral: #427e94;
   --yellow: #9a772b;
   --blue: #427e94;
@@ -25,10 +29,10 @@
   --purple: #6d3f6b;
   --pink: #a01f13;
   --orange: #9a772b;
-  --text: #1a1a1a;
-  --muted: #555f66;
-  --radius: 12px;
-  --radius-lg: 16px;
+  --text: #16191b;
+  --muted: #5d666d;
+  --radius: 8px;
+  --radius-lg: 12px;
 }
 
 html {
@@ -36,25 +40,11 @@ html {
 }
 
 body {
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
   line-height: 1.6;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: radial-gradient(
-    circle,
-    rgba(66, 126, 148, 0.06) 1.5px,
-    transparent 1.5px
-  );
-  background-size: 30px 30px;
 }
 
 ::-webkit-scrollbar {
@@ -82,53 +72,64 @@ body::before {
   background-clip: text;
 }
 
+/* Small uppercase tag above a heading, e.g. "RESEARCH / 10 WEEKS". */
 .section-label {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--primary-hover);
+  color: var(--accent);
   margin-bottom: 14px;
 }
 
 h2 {
-  font-family: "Source Serif 4", Georgia, serif;
-  font-size: clamp(2.1rem, 3.8vw, 3.4rem);
-  font-weight: 700;
-  line-height: 1.08;
+  font-family: var(--font-serif);
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.15;
   margin-bottom: 14px;
   letter-spacing: -0.01em;
-  color: var(--accent);
+  color: var(--ink);
 }
 
 .section-sub {
   color: var(--muted);
-  max-width: 540px;
-  font-size: 1rem;
-  line-height: 1.75;
-  font-weight: 500;
+  max-width: 560px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+/* The short line Button School puts above its big statements. */
+.rule {
+  display: block;
+  width: 64px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border-strong);
+  margin-bottom: 28px;
 }
 
 .btn-primary {
   display: inline-block;
-  background: var(--primary);
+  background: var(--primary-hover);
   color: #fff;
-  padding: 12px 28px;
+  padding: 12px 22px;
   border-radius: var(--radius);
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
   font-size: 1rem;
   transition: background 0.15s;
   cursor: pointer;
   border: none;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
 }
 
 .btn-primary:hover {
-  background: var(--primary-hover);
+  background: #244d5d;
 }
 
 .btn-primary:active {
@@ -140,23 +141,22 @@ h2 {
   cursor: not-allowed;
 }
 
+/* Secondary action as a plain text link with an arrow, Button School style. */
 .btn-ghost {
   display: inline-block;
-  border: 1px solid var(--border);
+  border: none;
   color: var(--primary-hover);
-  padding: 12px 28px;
-  border-radius: var(--radius);
-  font-weight: 700;
+  padding: 12px 4px;
+  font-weight: 600;
   text-decoration: none;
   font-size: 1rem;
-  transition: background 0.15s, border-color 0.15s;
-  background: var(--primary-soft);
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  background: none;
+  font-family: var(--font-sans);
+  text-underline-offset: 4px;
 }
 
 .btn-ghost:hover {
-  border-color: var(--primary);
-  background: #d9ebf1;
+  text-decoration: underline;
 }
 
 .reveal {

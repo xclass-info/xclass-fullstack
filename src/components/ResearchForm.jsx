@@ -398,7 +398,7 @@ export default function ResearchForm({ research, onClose }) {
                 cursor: "pointer",
                 fontWeight: 800,
                 fontSize: "1rem",
-                fontFamily: "'Open Sans', Helvetica, Arial, sans-serif",
+                fontFamily: "var(--font-sans)",
               }}
             >
               Cancel

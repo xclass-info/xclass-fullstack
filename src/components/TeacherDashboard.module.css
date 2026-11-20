@@ -56,7 +56,7 @@
   font-weight: 700;
   color: #64748b;
   cursor: pointer;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   margin-bottom: 4px;
 }
 
@@ -92,7 +92,7 @@
   font-weight: 700;
   color: #64748b;
   cursor: pointer;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
 }
 
 .chipActive,
@@ -160,7 +160,7 @@
   text-decoration: none;
   border: none;
   cursor: pointer;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   transition: all 0.15s;
 }
 
@@ -178,7 +178,7 @@
   font-size: 1.1rem;
   font-weight: 800;
   cursor: pointer;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   transition: all 0.15s;
 }
 
@@ -344,7 +344,7 @@
   font-weight: 800;
   text-decoration: none;
   text-align: center;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   transition: all 0.15s;
 }
 
@@ -363,7 +363,7 @@
   font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   transition: all 0.15s;
 }
 

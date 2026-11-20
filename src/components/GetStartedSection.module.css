@@ -7,27 +7,6 @@
   overflow: hidden;
 }
 
-.blob1 {
-  position: absolute;
-  top: -10%;
-  right: -8%;
-  width: 420px;
-  height: 420px;
-  background: radial-gradient(circle, rgba(66, 126, 148, 0.16), transparent);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.blob2 {
-  position: absolute;
-  bottom: -15%;
-  left: -8%;
-  width: 380px;
-  height: 380px;
-  background: radial-gradient(circle, rgba(154, 119, 43, 0.14), transparent);
-  border-radius: 50%;
-  pointer-events: none;
-}
 
 .inner {
   max-width: 2000px;
@@ -71,23 +50,25 @@
   padding: 32px 36px;
   border-radius: var(--radius-lg);
   background: var(--card);
-  border: 2.5px solid var(--btn-accent, var(--border));
+  border: 1px solid var(--border);
   color: var(--text);
   text-decoration: none;
-  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  transition: border-color 0.2s, background 0.2s;
   animation: fadeInUp 0.7s ease both;
   animation-delay: 0.15s;
 }
 
 .btnTitle {
-  font-size: 1.35rem;
-  font-weight: 800;
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 400;
+  color: var(--ink);
   margin-bottom: 10px;
 }
 
 .btnDesc {
-  font-size: 0.92rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 400;
   color: var(--muted);
   line-height: 1.55;
 }
@@ -105,9 +86,7 @@
 }
 
 .bigButton:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
-  background: color-mix(in srgb, var(--btn-accent) 8%, var(--card));
+  border-color: var(--primary-hover);
 }
 
 @keyframes fadeInUp {

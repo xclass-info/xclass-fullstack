@@ -32,9 +32,7 @@ export default function OneOnOneSection() {
     <section style={{ padding: "120px 24px 110px 24px", background: "white" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div className='reveal' style={{ textAlign: "center", marginBottom: 48 }}>
-          <h2 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: 8 }}>
-            🧑‍🏫 1-on-1 Learning Opportunities
-          </h2>
+          <h2>1-on-1 Learning</h2>
           <p style={{ color: "#666" }}>
             Book time with a mentor for general help — homework, a specific
             question, or just someone to talk through an idea with.

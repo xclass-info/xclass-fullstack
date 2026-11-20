@@ -81,9 +81,9 @@ export default function Testimonials() {
     <section id='testimonials' className={styles.section}>
       <div className={`${styles.header} reveal`}>
         <div className='section-label' style={{ justifyContent: "center" }}>
-          ❤️ Student Stories
+          Student Stories
         </div>
-        <h2>What our students say 🌟</h2>
+        <h2>What our students say</h2>
         <p className='section-sub' style={{ margin: "0 auto" }}>
           Join thousands of happy learners who found their perfect mentors on
           HappyResearch.

@@ -25,9 +25,7 @@ export default function ProjectSection() {
     <section style={{ padding: "120px 24px 110px 24px", background: "var(--bg)" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div className='reveal' style={{ textAlign: "center", marginBottom: 48 }}>
-          <h2 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: 8 }}>
-            💡 Project Opportunities
-          </h2>
+          <h2>Project Opportunities</h2>
           <p style={{ color: "#666" }}>
             Build something real alongside a mentor — hands-on projects you
             can point to and say, I made this.

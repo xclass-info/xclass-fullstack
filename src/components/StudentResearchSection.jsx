@@ -27,9 +27,7 @@ export default function StudentResearchSection() {
     <section style={{ padding: "120px 24px 110px 24px", background: "white" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div className='reveal' style={{ textAlign: "center", marginBottom: 48 }}>
-          <h2 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: 8 }}>
-            🏆 Student Research
-          </h2>
+          <h2>Student Research</h2>
           <p style={{ color: "#666" }}>
             Real projects our students have finished with their mentors — not
             just what's possible, but what's already been done.
