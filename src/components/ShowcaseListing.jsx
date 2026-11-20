@@ -31,7 +31,7 @@ function ShowcaseDetailModal({ entry, mentorLabel, onClose }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           background: "white",
-          borderRadius: 16,
+          borderRadius: 12,
           padding: 32,
           width: "100%",
           maxWidth: 560,
@@ -86,7 +86,7 @@ function ShowcaseDetailModal({ entry, mentorLabel, onClose }) {
           </div>
         )}
 
-        <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8, color: "#1a1a2e" }}>
+        <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: 20, marginBottom: 8, color: "#1a1a2e" }}>
           {entry.title}
         </h2>
 
@@ -221,10 +221,8 @@ export default function ShowcaseListing() {
         style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 24px 48px" }}
       >
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <h1 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: 8 }}>
-            🏆 Student Work
-          </h1>
-          <p style={{ color: "#666", fontSize: "1rem", maxWidth: 600, margin: "0 auto" }}>
+          <h1 className="page-title">Student Work</h1>
+          <p className="page-sub">
             Real projects our students have finished with their mentors - not
             just what's possible, but what's already been done.
           </p>
@@ -298,7 +296,7 @@ export default function ShowcaseListing() {
                 className='reveal'
                 style={{
                   background: "white",
-                  borderRadius: 16,
+                  borderRadius: 12,
                   padding: 24,
                   boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
                   transition:

@@ -9,26 +9,27 @@
 
 .card {
   background: #ffffff;
-  border: 2.5px solid var(--border);
-  border-radius: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 40px;
   width: 100%;
   max-width: 440px;
-  box-shadow: 6px 6px 0 var(--border);
+  box-shadow: 0 12px 32px rgba(22, 25, 27, 0.05);
   position: relative;
 }
 
 .title {
-  font-family: "Source Serif 4", Georgia, serif;
-  font-size: 1.8rem;
-  color: #2f6175;
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--ink);
   margin-bottom: 6px;
 }
 
 .sub {
   color: var(--muted);
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 400;
   margin-bottom: 28px;
 }
 
@@ -45,20 +46,20 @@
 }
 
 .label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #2f6175;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink);
 }
 
 .input {
-  border: 2.5px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 12px 14px;
   font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 400;
   color: var(--text);
-  background: var(--bg);
+  background: #ffffff;
   transition: border-color 0.2s;
 }
 
@@ -71,19 +72,18 @@
   background: #2f6175;
   color: #ffffff;
   border: none;
-  border-radius: 50px;
-  padding: 14px;
+  border-radius: var(--radius);
+  padding: 13px;
   font-family: var(--font-sans);
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
   margin-top: 8px;
 }
 
 .btn:hover {
-  background: #1f4a57;
-  transform: translateY(-2px);
+  background: #244d5d;
 }
 
 .btn:disabled {
@@ -94,13 +94,13 @@
 }
 
 .error {
-  background: rgba(47, 97, 117, 0.06);
-  border: 2px solid #2f6175;
-  border-radius: 10px;
+  background: #fef6f5;
+  border: 1px solid rgba(160, 31, 19, 0.35);
+  border-radius: var(--radius);
   padding: 10px 14px;
-  color: #2f6175;
-  font-size: 0.875rem;
-  font-weight: 700;
+  color: #a01f13;
+  font-size: 0.9rem;
+  font-weight: 500;
   margin-bottom: 8px;
 }
 
@@ -109,12 +109,12 @@
   margin-top: 20px;
   font-size: 0.875rem;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .switch a {
-  color: #2f6175;
-  font-weight: 800;
+  color: var(--primary-hover);
+  font-weight: 600;
   text-decoration: none;
 }
 

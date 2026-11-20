@@ -81,11 +81,6 @@ export default function Navbar() {
       </Link>
 
       <ul className={styles.links}>
-        <li>
-          <a onClick={scrollToTop} style={{ cursor: "pointer" }}>
-            Home
-          </a>
-        </li>
         <li className={styles.dropdown}>
           <span className={styles.dropdownTrigger}>
             Programs <span className={styles.dropdownCaret}>▾</span>
@@ -103,13 +98,13 @@ export default function Navbar() {
           <Link to='/showcase'>Student Work</Link>
         </li>
         <li>
-          <Link to='/tutors'>Mentor</Link>
+          <Link to='/tutors'>Mentors</Link>
         </li>
         <li>
           <Link to='/gallery'>Gallery</Link>
         </li>
         <li>
-          <Link to='/about'>About Us</Link>
+          <Link to='/about'>About</Link>
         </li>
         <li>
           <Link to='/contact'>Contact</Link>
@@ -128,12 +123,17 @@ export default function Navbar() {
           </button>
         ) : (
           <>
-            <Link to='/student/login' className={styles.teacherBtn}>
-              Student Login
-            </Link>
-            <Link to='/teacher/login' className={styles.teacherBtn}>
-              Mentor Login
-            </Link>
+            <div className={styles.dropdown}>
+              <span className={`${styles.teacherBtn} ${styles.dropdownTrigger}`}>
+                Log in <span className={styles.dropdownCaret}>▾</span>
+              </span>
+              <div className={`${styles.dropdownMenu} ${styles.dropdownMenuRight}`}>
+                <div className={styles.dropdownMenuInner}>
+                  <Link to='/student/login'>Student login</Link>
+                  <Link to='/teacher/login'>Mentor login</Link>
+                </div>
+              </div>
+            </div>
             <Link to='/student/register' className={styles.cta}>
               Apply Now
             </Link>

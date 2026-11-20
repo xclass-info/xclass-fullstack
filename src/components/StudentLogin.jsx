@@ -124,7 +124,7 @@ export default function StudentLogin() {
           <button className={styles.closeBtn} onClick={() => navigate("/")}>
             ✕
           </button>
-          <h1 className={styles.title}>🎓 Student Login</h1>
+          <h1 className={styles.title}>Student login</h1>
           <p className={styles.sub}>Welcome back to HappyResearch</p>
 
           {location.state?.from && (

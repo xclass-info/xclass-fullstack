@@ -50,10 +50,8 @@ export default function ContactUs() {
         style={{ maxWidth: 600, margin: "0 auto", padding: "100px 24px 48px" }}
       >
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h1 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: 8 }}>
-            Contact Us
-          </h1>
-          <p style={{ color: "#666" }}>
+          <h1 className="page-title">Contact us</h1>
+          <p className="page-sub">
             Have questions? We'd love to hear from you!
           </p>
         </div>
@@ -62,13 +60,13 @@ export default function ContactUs() {
         <div
           style={{
             background: "white",
-            borderRadius: 16,
+            borderRadius: 12,
             padding: 32,
-            boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+            border: "1px solid var(--border)",
             marginBottom: 24,
           }}
         >
-          <h3 style={{ margin: "0 0 20px", fontSize: 16 }}>📋 Get in Touch</h3>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, margin: "0 0 20px", fontSize: 16 }}>Get in Touch</h3>
           <div
             style={{
               display: "flex",
@@ -242,13 +240,13 @@ export default function ContactUs() {
         <div
           style={{
             background: "white",
-            borderRadius: 16,
+            borderRadius: 12,
             padding: 32,
-            boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+            border: "1px solid var(--border)",
           }}
         >
-          <h3 style={{ margin: "0 0 20px", fontSize: 16 }}>
-            ✉️ Send us a Message
+          <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, margin: "0 0 20px", fontSize: 16 }}>
+            Send us a Message
           </h3>
 
           {submitted ? (

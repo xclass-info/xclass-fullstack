@@ -82,7 +82,7 @@ export default function ResetPassword() {
             </div>
           ) : (
             <>
-              <h1 className={styles.title}>🔑 Choose a New Password</h1>
+              <h1 className={styles.title}>Choose a new password</h1>
               <p className={styles.sub}>For your HappyResearch account</p>
 
               {error && <p className={styles.error}>{error}</p>}

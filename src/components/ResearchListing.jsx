@@ -390,17 +390,8 @@ export default function ResearchListing() {
         {/* Main content */}
         <div style={{ flex: "1 1 600px", minWidth: 0 }}>
           <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <h1
-              style={{
-                fontFamily: "'Source Serif 4', Georgia, serif",
-                fontSize: "2rem",
-                fontWeight: 700,
-                marginBottom: 8,
-              }}
-            >
-              🔬 Research
-            </h1>
-            <p style={{ color: "var(--muted)", fontSize: "1rem" }}>
+            <h1 className="page-title">Research</h1>
+            <p className="page-sub">
               Explore research topics, ideas and their impact from our mentors.
             </p>
           </div>

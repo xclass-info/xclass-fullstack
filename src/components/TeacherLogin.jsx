@@ -108,7 +108,7 @@ export default function TeacherLogin() {
           <button className={styles.closeBtn} onClick={() => navigate("/")}>
             ✕
           </button>
-          <h1 className={styles.title}>👩‍🏫 Mentor Login</h1>
+          <h1 className={styles.title}>Mentor login</h1>
           <p className={styles.sub}>Welcome back to HappyResearch</p>
 
           {error && <p className={styles.error}>{error}</p>}

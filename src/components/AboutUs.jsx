@@ -3,39 +3,23 @@ import Footer from "./Footer";
 
 export default function AboutUs() {
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
       <Navbar />
 
-      {/* Hero */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, #2f6175, #427e94)",
-          padding: "120px 24px 80px",
-          textAlign: "center",
-          color: "white",
-        }}
-      >
-        <h1 style={{ fontSize: "2.5rem", fontWeight: 700, marginBottom: 16 }}>
-          About HappyResearch
-        </h1>
-        <p
-          style={{
-            fontSize: "1.1rem",
-            maxWidth: 600,
-            margin: "0 auto",
-            opacity: 0.9,
-            lineHeight: 1.7,
-          }}
-        >
+      {/* Hero - the same calm opening as the homepage */}
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "150px 24px 8px" }}>
+        <span className='rule' />
+        <h1 className='page-title'>About HappyResearch</h1>
+        <p className='page-sub' style={{ margin: 0 }}>
           We connect curious young minds with world-class research mentors to
           spark a lifelong love of discovery, innovation, and learning.
         </p>
       </div>
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "64px 24px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 24px 64px" }}>
         <div
           style={{
-            borderRadius: 16,
+            borderRadius: 12,
             overflow: "hidden",
             marginBottom: 24,
           }}
@@ -56,14 +40,14 @@ export default function AboutUs() {
         <div
           style={{
             background: "white",
-            borderRadius: 16,
+            borderRadius: 12,
             padding: 40,
-            boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+            border: "1px solid var(--border)",
             marginBottom: 24,
           }}
         >
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: 8 }}>
-            💬 From the Founder
+          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: "1.5rem", marginBottom: 8 }}>
+            From the Founder
           </h2>
           <div
             style={{
@@ -180,14 +164,14 @@ export default function AboutUs() {
         <div
           style={{
             background: "white",
-            borderRadius: 16,
+            borderRadius: 12,
             padding: 40,
-            boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+            border: "1px solid var(--border)",
             marginBottom: 24,
           }}
         >
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: 16 }}>
-            🎯 Our Mission
+          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: "1.5rem", marginBottom: 16 }}>
+            Our Mission
           </h2>
           <p style={{ fontSize: 15, color: "#555", lineHeight: 1.8 }}>
             At HappyResearch, we believe every student deserves the opportunity
@@ -203,14 +187,14 @@ export default function AboutUs() {
         <div
           style={{
             background: "white",
-            borderRadius: 16,
+            borderRadius: 12,
             padding: 40,
-            boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+            border: "1px solid var(--border)",
             marginBottom: 24,
           }}
         >
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: 24 }}>
-            🔬 What We Do
+          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: "1.5rem", marginBottom: 24 }}>
+            What We Do
           </h2>
           <div
             style={{
@@ -280,14 +264,14 @@ export default function AboutUs() {
         <div
           style={{
             background: "white",
-            borderRadius: 16,
+            borderRadius: 12,
             padding: 40,
-            boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+            border: "1px solid var(--border)",
             marginBottom: 24,
           }}
         >
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: 20 }}>
-            💡 Why HappyResearch?
+          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: "1.5rem", marginBottom: 20 }}>
+            Why HappyResearch?
           </h2>
           {[
             {
@@ -363,7 +347,7 @@ export default function AboutUs() {
         <div
           style={{
             background: "linear-gradient(135deg, #2f6175, #427e94)",
-            borderRadius: 16,
+            borderRadius: 12,
             padding: 40,
             marginBottom: 24,
             color: "white",
@@ -377,7 +361,7 @@ export default function AboutUs() {
               textAlign: "center",
             }}
           >
-            🌟 HappyResearch by the Numbers
+            HappyResearch by the Numbers
           </h2>
           <div
             style={{

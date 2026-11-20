@@ -381,17 +381,8 @@ export default function ProjectListing() {
         {/* Main content */}
         <div style={{ flex: "1 1 600px", minWidth: 0 }}>
           <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <h1
-              style={{
-                fontFamily: "'Source Serif 4', Georgia, serif",
-                fontSize: "2rem",
-                fontWeight: 700,
-                marginBottom: 8,
-              }}
-            >
-              💡 Projects
-            </h1>
-            <p style={{ color: "var(--muted)", fontSize: "1rem" }}>
+            <h1 className="page-title">Projects</h1>
+            <p className="page-sub">
               Explore hands-on projects you can work on with our mentors.
             </p>
           </div>

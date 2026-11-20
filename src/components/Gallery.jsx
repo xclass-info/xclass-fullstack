@@ -280,10 +280,8 @@ export default function Gallery() {
       >
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h1 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: 8 }}>
-            🖼️ Gallery
-          </h1>
-          <p style={{ color: "#666" }}>
+          <h1 className="page-title">Gallery</h1>
+          <p className="page-sub">
             Moments from our research programs, projects and student
             journeys.
           </p>
@@ -363,7 +361,7 @@ export default function Gallery() {
                     style={{
                       borderRadius: 12,
                       overflow: "hidden",
-                      boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+                      border: "1px solid var(--border)",
                       background: "white",
                     }}
                   >

@@ -112,7 +112,7 @@ export default function StudentRegister() {
             </div>
           ) : (
             <>
-              <h1 className={styles.title}>🎓 Student Sign Up</h1>
+              <h1 className={styles.title}>Student sign up</h1>
               <p className={styles.sub}>
                 Create your HappyResearch student account
               </p>

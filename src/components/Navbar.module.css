@@ -43,6 +43,7 @@
 }
 
 .links a {
+  white-space: nowrap;
   text-decoration: none;
   color: var(--muted);
   font-size: 1rem;
@@ -97,6 +98,12 @@
     opacity 0.15s,
     transform 0.15s,
     visibility 0.15s;
+}
+
+/* The "Log in" menu sits at the right edge, so it opens leftwards. */
+.dropdownMenuRight {
+  left: auto;
+  right: 0;
 }
 
 .dropdown:hover .dropdownMenu {
@@ -221,7 +228,7 @@
   text-align: center;
 }
 
-@media (max-width: 1260px) {
+@media (max-width: 1100px) {
   .links {
     display: none;
   }

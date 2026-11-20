@@ -141,15 +141,17 @@ export default function ResearchDetail() {
             background: "white",
             borderRadius: 20,
             padding: "40px 44px",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+            border: "1px solid var(--border)",
           }}
         >
           <h1
             style={{
-              fontSize: "1.9rem",
-              lineHeight: 1.3,
+              fontFamily: "var(--font-serif)",
+              fontSize: "2.2rem",
+              fontWeight: 400,
+              lineHeight: 1.2,
               margin: "0 0 16px",
-              color: "#1a1a2e",
+              color: "var(--ink)",
             }}
           >
             {research.title}

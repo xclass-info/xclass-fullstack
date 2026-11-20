@@ -102,27 +102,11 @@ export default function TellUsWhatYouNeed() {
         style={{ maxWidth: 600, margin: "0 auto", padding: "120px 24px 80px" }}
       >
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div
-            style={{
-              display: "inline-block",
-              background: "#fff8dc",
-              color: "#2f6175",
-              fontSize: 12,
-              fontWeight: 700,
-              padding: "4px 16px",
-              borderRadius: 20,
-              border: "1px solid #9a772b",
-              marginBottom: 12,
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
-          >
-            💬 On-demand Learning
+          <div className='section-label'>
+            On-demand Learning
           </div>
-          <h1 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: 8 }}>
-            Not sure where to start?
-          </h1>
-          <p style={{ color: "#666" }}>
+          <h1 className="page-title">Not sure where to start?</h1>
+          <p className="page-sub">
             Describe what you need help with - even attach a photo of your
             homework or project - and we'll point you in the right
             direction.
@@ -132,9 +116,9 @@ export default function TellUsWhatYouNeed() {
         <div
           style={{
             background: "white",
-            borderRadius: 16,
+            borderRadius: 12,
             padding: 40,
-            boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+            border: "1px solid var(--border)",
           }}
         >
           {done ? (

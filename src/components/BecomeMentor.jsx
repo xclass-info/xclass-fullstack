@@ -56,11 +56,11 @@ const inputStyle = {
 const labelStyle = { display: "block", fontSize: 13, fontWeight: 600, color: "#475569", marginBottom: 6 };
 
 const sectionTitle = {
-  fontSize: "1.6rem",
-  fontWeight: 700,
+  fontSize: "1.9rem",
+  fontWeight: 400,
   margin: "0 0 20px",
-  fontFamily: "'Source Serif 4', Georgia, serif",
-  color: "#1f3a42",
+  fontFamily: "var(--font-serif)",
+  color: "var(--ink)",
 };
 
 export default function BecomeMentor() {
@@ -122,26 +122,22 @@ export default function BecomeMentor() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
       <Navbar />
 
-      {/* Hero */}
-      <section style={{ background: "#1f3a42", color: "white", padding: "130px 24px 70px" }}>
-        <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ color: "#e5c98a", fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 12px" }}>
-            Become a Mentor
-          </p>
-          <h1 style={{ fontSize: "clamp(2rem, 5vw, 2.8rem)", margin: "0 0 16px", fontFamily: "'Source Serif 4', Georgia, serif", lineHeight: 1.2 }}>
-            Guide the next generation of researchers
+      {/* Hero - the same calm opening as the homepage */}
+      <section style={{ padding: "150px 24px 24px" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <span className='rule' />
+          <div className='section-label'>Become a Mentor</div>
+          <h1 className='page-title' style={{ fontSize: "clamp(2.4rem, 5vw, 3.6rem)", maxWidth: 820 }}>
+            Guide the next generation of researchers.
           </h1>
-          <p style={{ fontSize: 18, lineHeight: 1.6, color: "#d6e4ea", margin: "0 0 28px" }}>
+          <p className='page-sub' style={{ margin: "0 0 28px" }}>
             Mentor a motivated student through a real research project in your
             field - online, on your schedule, and paid per project.
           </p>
-          <a
-            href='#apply'
-            style={{ display: "inline-block", padding: "14px 32px", borderRadius: 10, background: "#9a772b", color: "white", fontWeight: 700, textDecoration: "none", fontSize: 16 }}
-          >
+          <a href='#apply' className='btn-primary'>
             Apply in 2 minutes →
           </a>
         </div>
@@ -150,7 +146,7 @@ export default function BecomeMentor() {
       <div style={{ maxWidth: 960, margin: "0 auto", padding: "56px 24px" }}>
         {/* Who can apply + what it looks like */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24, marginBottom: 56 }}>
-          <div style={{ background: "white", borderRadius: 16, padding: 28, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
+          <div style={{ background: "white", borderRadius: 16, padding: 28, border: "1px solid var(--border)" }}>
             <h2 style={{ ...sectionTitle, fontSize: "1.3rem" }}>Who can apply</h2>
             <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.9, color: "#334155" }}>
               {MENTOR_TYPES.map((t) => (
@@ -158,7 +154,7 @@ export default function BecomeMentor() {
               ))}
             </ul>
           </div>
-          <div style={{ background: "white", borderRadius: 16, padding: 28, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
+          <div style={{ background: "white", borderRadius: 16, padding: 28, border: "1px solid var(--border)" }}>
             <h2 style={{ ...sectionTitle, fontSize: "1.3rem" }}>What mentoring looks like</h2>
             <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.9, color: "#334155" }}>
               <li>10 one-hour online sessions over about 3 months</li>
@@ -174,7 +170,7 @@ export default function BecomeMentor() {
         <h2 style={sectionTitle}>How it works</h2>
         <ol style={{ listStyle: "none", padding: 0, margin: "0 0 56px", display: "grid", gap: 12 }}>
           {STEPS.map((s, i) => (
-            <li key={s.title} style={{ display: "flex", gap: 16, background: "white", borderRadius: 12, padding: "16px 20px", alignItems: "flex-start", boxShadow: "0 1px 6px rgba(0,0,0,0.04)" }}>
+            <li key={s.title} style={{ display: "flex", gap: 16, background: "white", borderRadius: 12, padding: "16px 20px", alignItems: "flex-start", border: "1px solid var(--border)" }}>
               <span style={{ flexShrink: 0, width: 32, height: 32, borderRadius: "50%", background: "#2f6175", color: "white", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {i + 1}
               </span>
@@ -191,7 +187,7 @@ export default function BecomeMentor() {
         <h2 style={sectionTitle}>Questions</h2>
         <div style={{ display: "grid", gap: 10, marginBottom: 56 }}>
           {FAQ.map((f) => (
-            <details key={f.q} style={{ background: "white", borderRadius: 12, padding: "14px 20px", boxShadow: "0 1px 6px rgba(0,0,0,0.04)" }}>
+            <details key={f.q} style={{ background: "white", borderRadius: 12, padding: "14px 20px", border: "1px solid var(--border)" }}>
               <summary style={{ cursor: "pointer", fontWeight: 600, color: "#1f3a42" }}>{f.q}</summary>
               <p style={{ margin: "10px 0 0", color: "#475569", lineHeight: 1.6 }}>{f.a}</p>
             </details>
@@ -203,7 +199,7 @@ export default function BecomeMentor() {
         </div>
 
         {/* Quick start */}
-        <section id='apply' style={{ background: "white", borderRadius: 16, padding: "32px 28px", maxWidth: 560, margin: "0 auto", boxShadow: "0 2px 16px rgba(0,0,0,0.07)", borderTop: "4px solid #9a772b" }}>
+        <section id='apply' style={{ background: "white", borderRadius: 16, padding: "32px 28px", maxWidth: 560, margin: "0 auto", border: "1px solid var(--border)" }}>
           {sent ? (
             <div style={{ textAlign: "center" }}>
               <p style={{ fontSize: 48, margin: "0 0 8px" }}>📧</p>

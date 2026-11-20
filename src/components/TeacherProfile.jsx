@@ -15,7 +15,7 @@ import { toPrereqArray } from "../utils/prerequisites";
 
 const cardStyle = {
   background: "white",
-  borderRadius: 16,
+  borderRadius: 12,
   padding: 28,
   boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
   border: "1px solid #eef1f3",
@@ -48,8 +48,8 @@ function SectionHeading({ eyebrow, title }) {
       <p
         style={{
           margin: "0 0 4px",
-          fontSize: 11,
-          fontWeight: 700,
+          fontSize: 12,
+          fontWeight: 600,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
           color: "#9a772b",
@@ -60,10 +60,10 @@ function SectionHeading({ eyebrow, title }) {
       <h3
         style={{
           margin: 0,
-          fontFamily: "'Source Serif 4', Georgia, serif",
-          fontSize: 22,
-          fontWeight: 700,
-          color: "var(--text)",
+          fontFamily: "var(--font-serif)",
+          fontSize: 26,
+          fontWeight: 400,
+          color: "var(--ink)",
         }}
       >
         {title}
@@ -680,7 +680,7 @@ export default function TeacherProfile() {
                   cursor: "pointer",
                 }}
               >
-                📅 Book a Consultation
+                Book a consultation
               </button>
 
               {(teacher.gender || teacher.languages || teacher.website) && (
@@ -721,7 +721,7 @@ export default function TeacherProfile() {
             {/* About */}
             {teacher.bio && (
               <div style={cardStyle}>
-                <SectionHeading eyebrow='About' title='👤 Bio' />
+                <SectionHeading eyebrow='About' title='Bio' />
                 <p
                   style={{
                     fontSize: 14.5,
@@ -738,7 +738,7 @@ export default function TeacherProfile() {
         {/* Research */}
         {research.length > 0 && (
           <div style={cardStyle}>
-            <SectionHeading eyebrow='Portfolio' title='🔬 Research' />
+            <SectionHeading eyebrow='Portfolio' title='Research' />
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {research.map((r) => (
                 <ResearchItem
@@ -755,7 +755,7 @@ export default function TeacherProfile() {
         {/* Projects (new collection first, then the older per-profile list) */}
         {[...projects, ...(teacher.projects || [])].length > 0 && (
           <div style={cardStyle}>
-            <SectionHeading eyebrow='Portfolio' title='💡 Projects' />
+            <SectionHeading eyebrow='Portfolio' title='Projects' />
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {[...projects, ...(teacher.projects || [])].map((project) => (
                 <div
@@ -880,7 +880,7 @@ export default function TeacherProfile() {
             {booked ? (
               <div style={{ textAlign: "center", padding: 20 }}>
                 <p style={{ fontSize: 48 }}>✅</p>
-                <h3 style={{ fontFamily: "'Source Serif 4', Georgia, serif" }}>
+                <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontFamily: "'Source Serif 4', Georgia, serif" }}>
                   Booking Request Sent!
                 </h3>
                 <p style={{ color: "var(--muted)", marginBottom: 20 }}>
