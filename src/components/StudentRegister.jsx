@@ -2,7 +2,7 @@ import { useState } from "react";
 import { register } from "../auth";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import styles from "./TeacherAuth.module.css";
-import Footer from "./Footer";
+import AuthLayout from "./AuthLayout";
 import { GRADE_OPTIONS } from "../utils/grades";
 
 export default function StudentRegister() {
@@ -66,150 +66,191 @@ export default function StudentRegister() {
   }
 
   return (
-    <>
-      <div className={styles.page}>
-        <div className={styles.card}>
-          <button className={styles.closeBtn} onClick={() => navigate("/")}>
-            ✕
+    <AuthLayout
+      title={
+        <>
+          Start with one <mark>question</mark>.
+        </>
+      }
+      text='Create your student account, then choose a program and apply to work with a PhD mentor.'
+      points={[
+        "Create your account",
+        "Verify your email",
+        "Choose a program and apply",
+      ]}
+    >
+      {done ? (
+        <>
+          <div className={styles.doneIcon} aria-hidden='true'>
+            <svg
+              width='26'
+              height='26'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='#111111'
+              strokeWidth='2.4'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            >
+              <path d='M20 6 9 17l-5-5' />
+            </svg>
+          </div>
+          <h1 className={styles.title}>
+            {emailFailed ? "Account created" : "Check your email"}
+          </h1>
+          <p className={styles.bodyText}>
+            {emailFailed ? (
+              <>
+                We couldn't send the verification email to{" "}
+                <strong>{form.email}</strong>. Go to log in and choose "Resend
+                verification email".
+              </>
+            ) : (
+              <>
+                We sent a verification link to <strong>{form.email}</strong>.
+                Click it to verify your account, then log in. If you don't see
+                it, check your spam folder.
+              </>
+            )}
+          </p>
+          <button
+            onClick={() =>
+              navigate("/student/login", { state: location.state })
+            }
+            className={styles.btn}
+          >
+            Go to log in →
           </button>
+        </>
+      ) : (
+        <>
+          <h1 className={styles.title}>Create your account</h1>
+          <p className={styles.sub}>It takes about a minute.</p>
 
-          {done ? (
-            <div style={{ textAlign: "center", padding: 20 }}>
-              <p style={{ fontSize: 48, marginBottom: 12 }}>📧</p>
-              <h3 style={{ color: "var(--primary-hover)", marginBottom: 8 }}>
-                {emailFailed ? "Account created" : "Check your email!"}
-              </h3>
-              <p
-                style={{
-                  color: "var(--muted)",
-                  fontSize: 14,
-                  lineHeight: 1.6,
-                  marginBottom: 20,
-                }}
-              >
-                {emailFailed ? (
-                  <>
-                    We couldn't send the verification email to{" "}
-                    <strong>{form.email}</strong>. Go to Login and choose
-                    "Resend Verification Email".
-                  </>
-                ) : (
-                  <>
-                    We sent a verification link to <strong>{form.email}</strong>
-                    . Click it to verify your account before logging in. If you
-                    don't see it, check your spam folder.
-                  </>
-                )}
-              </p>
-              <button
-                onClick={() =>
-                  navigate("/student/login", { state: location.state })
-                }
-                className={styles.btn}
-              >
-                Go to Login →
-              </button>
-            </div>
-          ) : (
-            <>
-              <h1 className={styles.title}>Student sign up</h1>
-              <p className={styles.sub}>
-                Create your HappyResearch student account
-              </p>
-
-              {error && <p className={styles.error}>{error}</p>}
-
-              <form onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.field}>
-                  <label className={styles.label}>Full Name</label>
-                  <input
-                    className={styles.input}
-                    name='name'
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder='Your full name'
-                    required
-                  />
-                </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Email</label>
-                  <input
-                    className={styles.input}
-                    name='email'
-                    type='email'
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder='you@email.com'
-                    required
-                  />
-                </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Grade (optional)</label>
-                  <select
-                    className={styles.input}
-                    name='grade'
-                    value={form.grade}
-                    onChange={handleChange}
-                  >
-                    <option value=''>Select grade</option>
-                    {GRADE_OPTIONS.map((g) => (
-                      <option key={g} value={g}>
-                        {g}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Phone Number (optional)</label>
-                  <input
-                    className={styles.input}
-                    name='phone'
-                    type='tel'
-                    value={form.phone}
-                    onChange={handleChange}
-                    placeholder='(555) 555-5555'
-                  />
-                </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Password</label>
-                  <input
-                    className={styles.input}
-                    name='password'
-                    type='password'
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder='At least 6 characters'
-                    required
-                  />
-                </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Confirm Password</label>
-                  <input
-                    className={styles.input}
-                    name='confirmPassword'
-                    type='password'
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    placeholder='••••••••'
-                    required
-                  />
-                </div>
-                <button className={styles.btn} type='submit' disabled={loading}>
-                  {loading ? "Creating account..." : "Create Account →"}
-                </button>
-              </form>
-
-              <p className={styles.switch}>
-                Already have an account?{" "}
-                <Link to='/student/login' state={location.state}>
-                  Log in
-                </Link>
-              </p>
-            </>
+          {error && (
+            <p className={styles.error} role='alert'>
+              {error}
+            </p>
           )}
-        </div>
-      </div>
-      <Footer />
-    </>
+
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor='reg-name'>
+                Full name
+              </label>
+              <input
+                id='reg-name'
+                className={styles.input}
+                name='name'
+                autoComplete='name'
+                value={form.name}
+                onChange={handleChange}
+                placeholder='Your full name'
+                required
+              />
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor='reg-email'>
+                Email
+              </label>
+              <input
+                id='reg-email'
+                className={styles.input}
+                name='email'
+                type='email'
+                autoComplete='email'
+                value={form.email}
+                onChange={handleChange}
+                placeholder='you@email.com'
+                required
+              />
+            </div>
+            <div className={styles.row}>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor='reg-grade'>
+                  Grade{" "}
+                  <span style={{ color: "var(--muted)", fontWeight: 400 }}>
+                    (optional)
+                  </span>
+                </label>
+                <select
+                  id='reg-grade'
+                  className={styles.input}
+                  name='grade'
+                  value={form.grade}
+                  onChange={handleChange}
+                >
+                  <option value=''>Select</option>
+                  {GRADE_OPTIONS.map((g) => (
+                    <option key={g} value={g}>
+                      {g}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor='reg-phone'>
+                  Phone{" "}
+                  <span style={{ color: "var(--muted)", fontWeight: 400 }}>
+                    (optional)
+                  </span>
+                </label>
+                <input
+                  id='reg-phone'
+                  className={styles.input}
+                  name='phone'
+                  type='tel'
+                  autoComplete='tel'
+                  value={form.phone}
+                  onChange={handleChange}
+                  placeholder='(555) 555-5555'
+                />
+              </div>
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor='reg-password'>
+                Password
+              </label>
+              <input
+                id='reg-password'
+                className={styles.input}
+                name='password'
+                type='password'
+                autoComplete='new-password'
+                value={form.password}
+                onChange={handleChange}
+                placeholder='At least 6 characters'
+                required
+              />
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor='reg-confirmPassword'>
+                Confirm password
+              </label>
+              <input
+                id='reg-confirmPassword'
+                className={styles.input}
+                name='confirmPassword'
+                type='password'
+                autoComplete='new-password'
+                value={form.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <button className={styles.btn} type='submit' disabled={loading}>
+              {loading ? "Creating account..." : "Create account →"}
+            </button>
+          </form>
+
+          <p className={styles.switch}>
+            Already have an account?{" "}
+            <Link to='/student/login' state={location.state}>
+              Log in
+            </Link>
+          </p>
+        </>
+      )}
+    </AuthLayout>
   );
 }

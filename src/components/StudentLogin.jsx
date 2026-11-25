@@ -2,7 +2,7 @@ import { useState } from "react";
 import { login, logout, sendPasswordReset } from "../auth";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import styles from "./TeacherAuth.module.css";
-import Footer from "./Footer";
+import AuthLayout from "./AuthLayout";
 import {
   isAccountVerified,
   resendVerificationEmail,
@@ -110,121 +110,106 @@ export default function StudentLogin() {
     }
   }
 
-  const notice = {
-    color: "var(--mint)",
-    fontSize: 14,
-    marginBottom: 12,
-    textAlign: "center",
-  };
-
   return (
-    <>
-      <div className={styles.page}>
-        <div className={styles.card}>
-          <button className={styles.closeBtn} onClick={() => navigate("/")}>
-            ✕
-          </button>
-          <h1 className={styles.title}>Student login</h1>
-          <p className={styles.sub}>Welcome back to HappyResearch</p>
+    <AuthLayout
+      title={
+        <>
+          Welcome <mark>back</mark>.
+        </>
+      }
+      text='Pick up your research where you left off.'
+    >
+      <h1 className={styles.title}>Student log in</h1>
+      <p className={styles.sub}>Use the email you signed up with.</p>
 
-          {location.state?.from && (
-            <p style={notice}>Log in to finish registering.</p>
-          )}
+      {location.state?.from && (
+        <p className={styles.notice}>Log in to finish registering.</p>
+      )}
 
-          {error && <p className={styles.error}>{error}</p>}
+      {error && (
+        <p className={styles.error} role='alert'>
+          {error}
+        </p>
+      )}
 
-          {showResend && !resendSent && (
-            <button
-              type='button'
-              onClick={handleResendVerification}
-              disabled={resendLoading}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: 8,
-                border: "1px solid #111111",
-                background: "transparent",
-                color: "#111111",
-                cursor: "pointer",
-                fontSize: 13,
-                fontWeight: 600,
-                marginBottom: 12,
-              }}
-            >
-              {resendLoading ? "Sending..." : "📧 Resend Verification Email"}
-            </button>
-          )}
-          {resendSent && (
-            <p style={notice}>
-              ✅ Verification email sent! Check your inbox and spam folder.
-            </p>
-          )}
-          {resetSent && (
-            <p style={notice}>
-              ✅ Password reset email sent! Check your inbox and spam folder.
-            </p>
-          )}
+      {showResend && !resendSent && (
+        <button
+          type='button'
+          className={styles.secondaryBtn}
+          onClick={handleResendVerification}
+          disabled={resendLoading}
+        >
+          {resendLoading ? "Sending..." : "Resend verification email"}
+        </button>
+      )}
+      {resendSent && (
+        <p className={styles.notice} role='status'>
+          Verification email sent. Check your inbox and spam folder.
+        </p>
+      )}
+      {resetSent && (
+        <p className={styles.notice} role='status'>
+          Password reset email sent. Check your inbox and spam folder.
+        </p>
+      )}
 
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.field}>
-              <label className={styles.label}>Email</label>
-              <input
-                className={styles.input}
-                name='email'
-                type='email'
-                value={form.email}
-                onChange={handleChange}
-                placeholder='you@email.com'
-                required
-              />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.label}>Password</label>
-              <input
-                className={styles.input}
-                name='password'
-                type='password'
-                value={form.password}
-                onChange={handleChange}
-                placeholder='••••••••'
-                required
-              />
-            </div>
-
-            <div style={{ textAlign: "right", marginBottom: 12 }}>
-              <button
-                type='button'
-                onClick={handleForgotPassword}
-                disabled={resetLoading}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#111111",
-                  cursor: "pointer",
-                  fontSize: 13,
-                }}
-              >
-                {resetLoading ? "Sending..." : "Forgot password?"}
-              </button>
-            </div>
-
-            <button className={styles.btn} type='submit' disabled={loading}>
-              {loading ? "Logging in..." : "Login →"}
-            </button>
-          </form>
-
-          <p className={styles.switch}>
-            New here?{" "}
-            <Link to='/student/register' state={location.state}>
-              Create a student account
-            </Link>
-          </p>
-          <p className={styles.switch}>
-            Are you a mentor? <Link to='/teacher/login'>Mentor Login</Link>
-          </p>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor='login-email'>
+            Email
+          </label>
+          <input
+            id='login-email'
+            className={styles.input}
+            name='email'
+            type='email'
+            autoComplete='email'
+            value={form.email}
+            onChange={handleChange}
+            placeholder='you@email.com'
+            required
+          />
         </div>
-      </div>
-      <Footer />
-    </>
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor='login-password'>
+            Password
+          </label>
+          <input
+            id='login-password'
+            className={styles.input}
+            name='password'
+            type='password'
+            autoComplete='current-password'
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className={styles.passwordRow}>
+          <button
+            type='button'
+            className={styles.linkBtn}
+            onClick={handleForgotPassword}
+            disabled={resetLoading}
+          >
+            {resetLoading ? "Sending..." : "Forgot password?"}
+          </button>
+        </div>
+
+        <button className={styles.btn} type='submit' disabled={loading}>
+          {loading ? "Logging in..." : "Log in →"}
+        </button>
+      </form>
+
+      <p className={styles.switch}>
+        New here?{" "}
+        <Link to='/student/register' state={location.state}>
+          Create a student account
+        </Link>
+      </p>
+      <p className={styles.switch} style={{ marginTop: 8 }}>
+        Are you a mentor? <Link to='/teacher/login'>Mentor log in</Link>
+      </p>
+    </AuthLayout>
   );
 }

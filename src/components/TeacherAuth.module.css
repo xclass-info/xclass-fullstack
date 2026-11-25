@@ -1,3 +1,123 @@
+/* ---- Split account layout (log in, sign up, reset password) ---- */
+.split {
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--bg);
+}
+
+.aside {
+  flex: 1 1 420px;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 32px 48px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+}
+
+.asideLogo {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--bg);
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.asideLogo span {
+  color: var(--lime);
+}
+
+.asideBody {
+  margin-top: auto;
+  margin-bottom: auto;
+  max-width: 520px;
+}
+
+.asideTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 5vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.05em;
+  margin-bottom: 24px;
+  color: var(--bg);
+}
+
+.asideTitle mark {
+  background: var(--lime);
+  color: var(--ink);
+  padding: 0 0.1em;
+  border-radius: 0.1em;
+}
+
+.asideText {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #cfcfcf;
+}
+
+.points {
+  list-style: none;
+  margin-top: 36px;
+  border-top: 1px solid #333333;
+}
+
+.points li {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid #333333;
+  font-size: 1rem;
+}
+
+.points li span {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--lime);
+  min-width: 24px;
+}
+
+.main {
+  flex: 1 1 480px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px 48px;
+}
+
+.mainTop {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.backLink {
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 10px 0;
+}
+
+.backLink:hover {
+  opacity: 0.6;
+}
+
+.formWrap {
+  width: 100%;
+  max-width: 420px;
+  margin: auto;
+  padding: 40px 0;
+}
+
+/* Old centered-card wrappers, still used by a few pages. */
 .page {
   min-height: 100vh;
   display: flex;
@@ -9,28 +129,28 @@
 
 .card {
   background: #ffffff;
-  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 40px;
   width: 100%;
   max-width: 440px;
-  box-shadow: 0 12px 32px rgba(22, 25, 27, 0.05);
   position: relative;
 }
 
 .title {
-  font-family: var(--font-serif);
-  font-size: 2rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, 2.8rem);
   font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
   color: var(--ink);
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .sub {
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 400;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
 .form {
@@ -47,43 +167,52 @@
 
 .label {
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink);
 }
 
 .input {
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  padding: 12px 14px;
+  width: 100%;
+  min-width: 0;
+  border: 1.5px solid #cfccc2;
+  border-radius: 12px;
+  padding: 13px 16px;
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 400;
   color: var(--text);
   background: #ffffff;
-  transition: border-color 0.2s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .input:focus {
   outline: none;
-  border-color: #111111;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(198, 243, 92, 0.9);
 }
 
 .btn {
-  background: #111111;
-  color: #ffffff;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  background: var(--ink);
+  color: var(--bg);
   border: none;
-  border-radius: var(--radius);
-  padding: 13px;
+  border-radius: 999px;
+  padding: 16px 24px;
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: background 0.15s;
   margin-top: 8px;
 }
 
 .btn:hover {
-  background: #333333;
+  background: #2b2b2b;
 }
 
 .btn:disabled {
@@ -94,32 +223,105 @@
 }
 
 .error {
-  background: #fef6f5;
-  border: 1px solid rgba(160, 31, 19, 0.35);
-  border-radius: var(--radius);
-  padding: 10px 14px;
+  background: #fdf0ee;
+  border-radius: 12px;
+  padding: 12px 16px;
   color: #a01f13;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+/* Good news, e.g. "Reset email sent". */
+.notice {
+  background: #eef9d6;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #2f4a06;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+/* Small text action, e.g. "Forgot password?". */
+.linkBtn {
+  background: none;
+  border: none;
+  padding: 4px 0;
+  color: var(--ink);
+  font-family: var(--font-sans);
   font-size: 0.9rem;
   font-weight: 500;
-  margin-bottom: 8px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.linkBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Outlined full-width button, e.g. "Resend verification email". */
+.secondaryBtn {
+  width: 100%;
+  background: transparent;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 12px 20px;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.secondaryBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.passwordRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+}
+
+.doneIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--lime);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.bodyText {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 28px;
 }
 
 .switch {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 0.875rem;
+  margin-top: 24px;
+  font-size: 0.95rem;
   color: var(--muted);
   font-weight: 400;
 }
 
 .switch a {
-  color: var(--primary-hover);
+  color: var(--ink);
   font-weight: 600;
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .switch a:hover {
-  color: #111111;
+  opacity: 0.6;
 }
 
 .back {
@@ -137,7 +339,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -153,8 +355,8 @@
 
 .errorMsg {
   color: #a01f13;
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 500;
   margin-top: 2px;
 }
 
@@ -181,5 +383,38 @@
 .closeBtn:hover {
   border-color: #111111;
   color: #111111;
-  background: rgba(154, 119, 43, 0.1);
+  background: var(--surface);
+}
+
+@media (max-width: 900px) {
+  .aside {
+    min-height: 0;
+    position: static;
+    padding: 24px 24px 36px;
+    gap: 32px;
+  }
+  .asideTitle {
+    font-size: 2.4rem;
+    margin-bottom: 12px;
+  }
+  .asideText {
+    font-size: 1rem;
+  }
+  /* On phones the form matters more than the extra detail. */
+  .points {
+    display: none;
+  }
+  .main {
+    flex-basis: 100%;
+    padding-top: 8px;
+  }
+  .aside {
+    flex-basis: 100%;
+  }
+  .mainTop {
+    display: none;
+  }
+  .formWrap {
+    padding: 24px 0;
+  }
 }

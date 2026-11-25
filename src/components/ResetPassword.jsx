@@ -2,13 +2,12 @@
 // Landing page for the "reset your password" email link (?token=...).
 // Works for students, mentors and the admin - they share one login system.
 import { useState } from "react";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { api } from "../api";
 import styles from "./TeacherAuth.module.css";
-import Footer from "./Footer";
+import AuthLayout from "./AuthLayout";
 
 export default function ResetPassword() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const [form, setForm] = useState({ password: "", confirmPassword: "" });
@@ -33,7 +32,10 @@ export default function ResetPassword() {
     }
     setLoading(true);
     try {
-      await api.post("/auth/reset-password", { token, password: form.password });
+      await api.post("/auth/reset-password", {
+        token,
+        password: form.password,
+      });
       setDone(true);
     } catch (err) {
       setError(
@@ -47,80 +49,102 @@ export default function ResetPassword() {
   }
 
   return (
-    <>
-      <div className={styles.page}>
-        <div className={styles.card}>
-          <button className={styles.closeBtn} onClick={() => navigate("/")}>
-            ✕
-          </button>
+    <AuthLayout
+      title={
+        <>
+          A fresh <mark>start</mark>.
+        </>
+      }
+      text='Choose a new password for your HappyResearch account.'
+    >
+      {done ? (
+        <>
+          <div className={styles.doneIcon} aria-hidden='true'>
+            <svg
+              width='26'
+              height='26'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='#111111'
+              strokeWidth='2.4'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            >
+              <path d='M20 6 9 17l-5-5' />
+            </svg>
+          </div>
+          <h1 className={styles.title}>Password updated</h1>
+          <p className={styles.bodyText}>
+            You can now log in with your new password.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <Link to='/student/login' className={styles.btn}>
+              Student log in →
+            </Link>
+            <Link to='/teacher/login' className={styles.btn}>
+              Mentor log in →
+            </Link>
+          </div>
+        </>
+      ) : !token ? (
+        <>
+          <h1 className={styles.title}>Link not valid</h1>
+          <p className={styles.bodyText}>
+            This link is missing its code. Request a new password reset link
+            from the log in page.
+          </p>
+          <Link to='/student/login' className={styles.btn}>
+            Go to log in →
+          </Link>
+        </>
+      ) : (
+        <>
+          <h1 className={styles.title}>Choose a new password</h1>
+          <p className={styles.sub}>At least 6 characters.</p>
 
-          {done ? (
-            <div style={{ textAlign: "center", padding: 20 }}>
-              <p style={{ fontSize: 48, marginBottom: 12 }}>✅</p>
-              <h3 style={{ color: "var(--primary-hover)", marginBottom: 8 }}>
-                Password updated
-              </h3>
-              <p style={{ color: "var(--muted)", fontSize: 14, marginBottom: 20 }}>
-                You can now log in with your new password.
-              </p>
-              <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
-                <Link to='/student/login' className={styles.btn} style={{ textDecoration: "none" }}>
-                  Student Login →
-                </Link>
-                <Link to='/teacher/login' className={styles.btn} style={{ textDecoration: "none" }}>
-                  Mentor Login →
-                </Link>
-              </div>
-            </div>
-          ) : !token ? (
-            <div style={{ textAlign: "center", padding: 20 }}>
-              <p style={{ fontSize: 48, marginBottom: 12 }}>⚠️</p>
-              <h3 style={{ marginBottom: 8 }}>Link not valid</h3>
-              <p style={{ color: "var(--muted)", fontSize: 14 }}>
-                Request a new password reset link from the login page.
-              </p>
-            </div>
-          ) : (
-            <>
-              <h1 className={styles.title}>Choose a new password</h1>
-              <p className={styles.sub}>For your HappyResearch account</p>
-
-              {error && <p className={styles.error}>{error}</p>}
-
-              <form onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.field}>
-                  <label className={styles.label}>New Password</label>
-                  <input
-                    className={styles.input}
-                    name='password'
-                    type='password'
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder='At least 6 characters'
-                    required
-                  />
-                </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Confirm Password</label>
-                  <input
-                    className={styles.input}
-                    name='confirmPassword'
-                    type='password'
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    placeholder='••••••••'
-                    required
-                  />
-                </div>
-                <button className={styles.btn} type='submit' disabled={loading}>
-                  {loading ? "Saving..." : "Save Password →"}
-                </button>
-              </form>
-            </>
+          {error && (
+            <p className={styles.error} role='alert'>
+              {error}
+            </p>
           )}
-        </div>
-      </div>
-      <Footer />
-    </>
+
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor='reset-password'>
+                New password
+              </label>
+              <input
+                id='reset-password'
+                className={styles.input}
+                name='password'
+                type='password'
+                autoComplete='new-password'
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor='reset-confirm'>
+                Confirm password
+              </label>
+              <input
+                id='reset-confirm'
+                className={styles.input}
+                name='confirmPassword'
+                type='password'
+                autoComplete='new-password'
+                value={form.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <button className={styles.btn} type='submit' disabled={loading}>
+              {loading ? "Saving..." : "Save password →"}
+            </button>
+          </form>
+        </>
+      )}
+    </AuthLayout>
   );
 }
