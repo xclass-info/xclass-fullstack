@@ -31,7 +31,7 @@ const itemStyle = {
 
 function liftOn(e) {
   e.currentTarget.style.transform = "translateY(-2px)";
-  e.currentTarget.style.boxShadow = "0 8px 20px rgba(47,97,117,0.1)";
+  e.currentTarget.style.boxShadow = "0 8px 20px rgba(17,17,17,0.1)";
   e.currentTarget.style.borderColor = "#d8e4e8";
 }
 function liftOff(e) {
@@ -52,7 +52,7 @@ function SectionHeading({ eyebrow, title }) {
           fontWeight: 600,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          color: "#9a772b",
+          color: "#111111",
         }}
       >
         {eyebrow}
@@ -62,7 +62,7 @@ function SectionHeading({ eyebrow, title }) {
           margin: 0,
           fontFamily: "var(--font-serif)",
           fontSize: 26,
-          fontWeight: 400,
+          fontWeight: 600,
           color: "var(--ink)",
         }}
       >
@@ -143,7 +143,7 @@ function ExpandableText({ text, style }) {
           style={{
             background: "none",
             border: "none",
-            color: "#2f6175",
+            color: "#111111",
             cursor: "pointer",
             fontSize: 12,
             fontWeight: 600,
@@ -274,7 +274,7 @@ function ResearchItem({ r, onRegister, expertiseTags }) {
         style={{
           background: "none",
           border: "none",
-          color: "#2f6175",
+          color: "#111111",
           cursor: "pointer",
           fontSize: 12,
           fontWeight: 600,
@@ -427,7 +427,7 @@ export default function TeacherProfile() {
               padding: "10px 24px",
               borderRadius: 8,
               border: "none",
-              background: "#2f6175",
+              background: "#111111",
               color: "white",
               cursor: "pointer",
             }}
@@ -484,7 +484,7 @@ export default function TeacherProfile() {
           style={{
             background: "none",
             border: "none",
-            color: "#2f6175",
+            color: "#111111",
             cursor: "pointer",
             fontSize: 14,
             marginBottom: 20,
@@ -553,7 +553,7 @@ export default function TeacherProfile() {
               <h1
                 style={{
                   margin: "0 0 2px",
-                  fontFamily: "'Source Serif 4', Georgia, serif",
+                  fontFamily: "var(--font-display)",
                   fontSize: 24,
                   fontWeight: 700,
                   color: "var(--text)",
@@ -561,7 +561,7 @@ export default function TeacherProfile() {
               >
                 {displayName}
               </h1>
-              <p style={{ margin: "0 0 10px", fontSize: 13, color: "#9a772b", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              <p style={{ margin: "0 0 10px", fontSize: 13, color: "#111111", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}>
                 Research Mentor
               </p>
 
@@ -612,8 +612,8 @@ export default function TeacherProfile() {
                       style={{
                         fontSize: 11.5,
                         background: "#fff8dc",
-                        color: "#2f6175",
-                        border: "1px solid #9a772b",
+                        color: "#111111",
+                        border: "1px solid #111111",
                         padding: "4px 11px",
                         borderRadius: 20,
                         fontWeight: 600,
@@ -651,8 +651,8 @@ export default function TeacherProfile() {
                           margin: "0 0 2px",
                           fontSize: 20,
                           fontWeight: 700,
-                          color: "#2f6175",
-                          fontFamily: "'Source Serif 4', Georgia, serif",
+                          color: "#111111",
+                          fontFamily: "var(--font-display)",
                         }}
                       >
                         {s.value}
@@ -673,7 +673,7 @@ export default function TeacherProfile() {
                   padding: "14px 20px",
                   borderRadius: 12,
                   border: "none",
-                  background: "#2f6175",
+                  background: "#111111",
                   color: "white",
                   fontSize: 15.5,
                   fontWeight: 700,
@@ -704,7 +704,7 @@ export default function TeacherProfile() {
                         href={safeUrl(teacher.website)}
                         target='_blank'
                         rel='noreferrer'
-                        style={{ color: "#2f6175" }}
+                        style={{ color: "#111111" }}
                       >
                         {teacher.website}
                       </a>
@@ -880,7 +880,7 @@ export default function TeacherProfile() {
             {booked ? (
               <div style={{ textAlign: "center", padding: 20 }}>
                 <p style={{ fontSize: 48 }}>✅</p>
-                <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontFamily: "'Source Serif 4', Georgia, serif" }}>
+                <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, fontFamily: "var(--font-display)" }}>
                   Booking Request Sent!
                 </h3>
                 <p style={{ color: "var(--muted)", marginBottom: 20 }}>
@@ -895,7 +895,7 @@ export default function TeacherProfile() {
                     padding: "10px 24px",
                     borderRadius: 8,
                     border: "none",
-                    background: "#2f6175",
+                    background: "#111111",
                     color: "white",
                     cursor: "pointer",
                   }}
@@ -916,7 +916,7 @@ export default function TeacherProfile() {
                   <h3
                     style={{
                       margin: 0,
-                      fontFamily: "'Source Serif 4', Georgia, serif",
+                      fontFamily: "var(--font-display)",
                     }}
                   >
                     Book with {teacher.name}
@@ -955,7 +955,7 @@ export default function TeacherProfile() {
                         style={{
                           padding: "10px 16px",
                           borderRadius: 8,
-                          border: `2px solid ${selectedSlot?.id === slot.id ? "#2f6175" : "#eee"}`,
+                          border: `2px solid ${selectedSlot?.id === slot.id ? "#111111" : "#eee"}`,
                           background:
                             selectedSlot?.id === slot.id ? "#eff6ff" : "white",
                           cursor: "pointer",
@@ -1024,7 +1024,7 @@ export default function TeacherProfile() {
                     padding: "12px",
                     borderRadius: 8,
                     border: "none",
-                    background: "#2f6175",
+                    background: "#111111",
                     color: "white",
                     fontSize: 16,
                     cursor: "pointer",

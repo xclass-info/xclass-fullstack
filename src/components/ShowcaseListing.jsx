@@ -86,7 +86,7 @@ function ShowcaseDetailModal({ entry, mentorLabel, onClose }) {
           </div>
         )}
 
-        <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: 20, marginBottom: 8, color: "#1a1a2e" }}>
+        <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, fontSize: 20, marginBottom: 8, color: "#1a1a2e" }}>
           {entry.title}
         </h2>
 
@@ -113,7 +113,7 @@ function ShowcaseDetailModal({ entry, mentorLabel, onClose }) {
               href={entry.fileUrl}
               target='_blank'
               rel='noreferrer'
-              style={{ fontSize: 13, color: "#2f6175", fontWeight: 600, textDecoration: "none" }}
+              style={{ fontSize: 13, color: "#111111", fontWeight: 600, textDecoration: "none" }}
             >
               📄 View Paper (PDF) →
             </a>
@@ -123,7 +123,7 @@ function ShowcaseDetailModal({ entry, mentorLabel, onClose }) {
               href={entry.outputUrl}
               target='_blank'
               rel='noreferrer'
-              style={{ fontSize: 13, color: "#2f6175", fontWeight: 600, textDecoration: "none" }}
+              style={{ fontSize: 13, color: "#111111", fontWeight: 600, textDecoration: "none" }}
             >
               View work →
             </a>
@@ -181,7 +181,7 @@ export default function ShowcaseListing() {
       <Link
         to={`/teacher/${s.teacherId}`}
         onClick={(e) => e.stopPropagation()}
-        style={{ color: "#2f6175", textDecoration: "underline" }}
+        style={{ color: "#111111", textDecoration: "underline" }}
       >
         {name}
       </Link>
@@ -243,8 +243,8 @@ export default function ShowcaseListing() {
               style={{
                 padding: "8px 16px",
                 borderRadius: 20,
-                border: "1px solid " + (filter === "all" ? "#2f6175" : "#ddd"),
-                background: filter === "all" ? "#2f6175" : "white",
+                border: "1px solid " + (filter === "all" ? "#111111" : "#ddd"),
+                background: filter === "all" ? "#111111" : "white",
                 color: filter === "all" ? "white" : "#555",
                 fontSize: 13,
                 fontWeight: 600,
@@ -260,8 +260,8 @@ export default function ShowcaseListing() {
                 style={{
                   padding: "8px 16px",
                   borderRadius: 20,
-                  border: "1px solid " + (filter === d ? "#2f6175" : "#ddd"),
-                  background: filter === d ? "#2f6175" : "white",
+                  border: "1px solid " + (filter === d ? "#111111" : "#ddd"),
+                  background: filter === d ? "#111111" : "white",
                   color: filter === d ? "white" : "#555",
                   fontSize: 13,
                   fontWeight: 600,
@@ -398,7 +398,7 @@ export default function ShowcaseListing() {
                         rel='noreferrer'
                         style={{
                           fontSize: 12,
-                          color: "#2f6175",
+                          color: "#111111",
                           fontWeight: 600,
                           textDecoration: "none",
                         }}
@@ -413,7 +413,7 @@ export default function ShowcaseListing() {
                         rel='noreferrer'
                         style={{
                           fontSize: 12,
-                          color: "#2f6175",
+                          color: "#111111",
                           fontWeight: 600,
                           textDecoration: "none",
                         }}

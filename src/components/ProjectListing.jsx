@@ -60,7 +60,7 @@ const checkboxRow = {
 const filterLabel = {
   fontSize: 13,
   fontWeight: 700,
-  color: "#2f6175",
+  color: "#111111",
   textTransform: "uppercase",
   letterSpacing: "0.04em",
   margin: "20px 0 10px",
@@ -124,7 +124,7 @@ export default function ProjectListing() {
       <Link
         to={`/teacher/${p.teacherId}`}
         onClick={(e) => e.stopPropagation()}
-        style={{ color: "#2f6175", textDecoration: "underline" }}
+        style={{ color: "#111111", textDecoration: "underline" }}
       >
         {name}
       </Link>
@@ -290,7 +290,7 @@ export default function ProjectListing() {
               style={{
                 background: "none",
                 border: "none",
-                color: "#2f6175",
+                color: "#111111",
                 fontSize: 12,
                 fontWeight: 600,
                 cursor: "pointer",
@@ -447,7 +447,7 @@ export default function ProjectListing() {
                   padding: "8px 20px",
                   borderRadius: 8,
                   border: "none",
-                  background: "#2f6175",
+                  background: "#111111",
                   color: "white",
                   cursor: "pointer",
                 }}
@@ -545,7 +545,7 @@ export default function ProjectListing() {
                               display: "inline-block",
                               fontSize: 11,
                               fontWeight: 700,
-                              color: "#8a6a25",
+                              color: "#111111",
                               background: "rgba(154, 119, 43, 0.1)",
                               padding: "2px 10px",
                               borderRadius: 20,
@@ -627,7 +627,7 @@ export default function ProjectListing() {
                         👩‍🏫 Mentored by: {mentorLabel(p)}
                       </span>
                       <span
-                        style={{ fontSize: 12, color: "#2f6175", fontWeight: 600 }}
+                        style={{ fontSize: 12, color: "#111111", fontWeight: 600 }}
                       >
                         Read more →
                       </span>

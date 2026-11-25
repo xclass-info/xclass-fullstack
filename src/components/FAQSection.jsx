@@ -34,12 +34,13 @@ function FAQItem({ item, open, onToggle }) {
     <div
       className='reveal'
       style={{
-        borderBottom: "1px solid var(--border)",
-        padding: "20px 0",
+        borderTop: "2px solid var(--ink)",
+        padding: "24px 0",
       }}
     >
       <button
         onClick={onToggle}
+        aria-expanded={open}
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -50,13 +51,16 @@ function FAQItem({ item, open, onToggle }) {
           cursor: "pointer",
           padding: 0,
           textAlign: "left",
-          fontSize: 19,
-          fontWeight: 700,
+          fontSize: 20,
+          fontWeight: 600,
+          fontFamily: "var(--font-display)",
+          letterSpacing: "-0.01em",
           color: "var(--text)",
+          minHeight: 44,
         }}
       >
         {item.q}
-        <span style={{ color: "#9a772b", fontSize: 22, flexShrink: 0, marginLeft: 16 }}>
+        <span aria-hidden='true' style={{ fontSize: 28, fontWeight: 400, flexShrink: 0, marginLeft: 16 }}>
           {open ? "−" : "+"}
         </span>
       </button>
@@ -64,9 +68,10 @@ function FAQItem({ item, open, onToggle }) {
         <p
           style={{
             marginTop: 12,
-            fontSize: 16,
-            color: "#555",
-            lineHeight: 1.7,
+            fontSize: 17,
+            color: "var(--muted)",
+            lineHeight: 1.65,
+            maxWidth: 720,
           }}
         >
           {item.a}
@@ -80,16 +85,29 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section style={{ padding: "120px 24px 110px 24px", background: "white" }}>
-      <div style={{ maxWidth: 720, margin: "0 auto" }}>
-        <div className='reveal' style={{ textAlign: "center", marginBottom: 48 }}>
-          <h2>Frequently Asked Questions</h2>
-          <p style={{ color: "#666", fontSize: 17 }}>
-            Common questions from parents and students.
-          </p>
+    <section id='faq' style={{ padding: "120px 24px" }}>
+      <div
+        style={{
+          maxWidth: 1232,
+          margin: "0 auto",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "32px 64px",
+        }}
+      >
+        <div className='reveal' style={{ flex: "1 1 320px" }}>
+          <h2
+            style={{
+              fontSize: "clamp(2.4rem, 5.5vw, 4.5rem)",
+              letterSpacing: "-0.045em",
+              lineHeight: 1,
+            }}
+          >
+            Questions parents ask.
+          </h2>
         </div>
 
-        <div>
+        <div style={{ flex: "2 1 520px", borderBottom: "2px solid var(--ink)" }}>
           {FAQS.map((item, i) => (
             <FAQItem
               key={item.q}

@@ -1,12 +1,11 @@
 .footer {
-  border-top: 1px solid var(--border);
   background: var(--bg);
-  padding: 72px 6% 32px;
+  padding: 88px 24px 32px;
   position: relative;
 }
 
 .inner {
-  max-width: 1040px;
+  max-width: 1232px;
   margin: 0 auto;
 }
 
@@ -25,11 +24,23 @@
   gap: 6px;
 }
 
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.dot {
+  color: #8dbf1f;
+}
+
 .tagline {
-  font-family: var(--font-serif);
-  font-size: 1.3rem;
-  font-weight: 300;
-  line-height: 1.45;
+  font-size: 1.05rem;
+  line-height: 1.55;
   color: var(--ink);
   margin-bottom: 14px;
 }
@@ -61,22 +72,22 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--muted);
   margin-bottom: 4px;
 }
 
 .column a {
-  color: var(--muted);
+  color: var(--ink);
   font-size: 0.95rem;
   text-decoration: none;
 }
 
 .column a:hover {
-  color: var(--ink);
+  opacity: 0.6;
 }
 
 .bottom {
-  border-top: 1px solid var(--border);
+  border-top: 2px solid var(--ink);
   padding-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -102,7 +113,7 @@
 
 @media (max-width: 760px) {
   .footer {
-    padding: 56px 20px 28px;
+    padding: 64px 20px 28px;
   }
   .columns {
     gap: 36px;

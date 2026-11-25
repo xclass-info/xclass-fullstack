@@ -62,7 +62,7 @@ function RegistrationCard({ row }) {
       </div>
 
       {reg.status === "pending" && (
-        <p className={styles.cardDesc} style={{ color: "#8a6a25" }}>
+        <p className={styles.cardDesc} style={{ color: "#111111" }}>
           We typically review applications within 48 hours.
         </p>
       )}
@@ -93,7 +93,7 @@ function RegistrationCard({ row }) {
             👩‍🏫 Mentored by:{" "}
             <Link
               to={`/teacher/${reg.teacherId}`}
-              style={{ color: "#2f6175", textDecoration: "underline" }}
+              style={{ color: "#111111", textDecoration: "underline" }}
             >
               {formatMentorName(mentorName, {
                 mentorType,
@@ -174,7 +174,7 @@ export function StudentDashboardView({
       <div className={styles.page}>
         <div className={styles.header}>
           <div className={styles.headerLeft}>
-            <h1 className={styles.logo}>💻 happy<span style={{ color: "#9a772b" }}>Research</span></h1>
+            <h1 className={styles.logo}>💻 happy<span style={{ color: "#111111" }}>Research</span></h1>
             <p className={styles.welcome}>
               Welcome back, <strong>{student.name}</strong> 👋
             </p>
@@ -212,10 +212,10 @@ export function StudentDashboardView({
                   cursor: "pointer",
                   fontSize: 19,
                   fontWeight: 600,
-                  color: activeTab === tab.id ? "#2f6175" : "#888",
+                  color: activeTab === tab.id ? "#111111" : "#888",
                   borderBottom:
                     activeTab === tab.id
-                      ? "2px solid #2f6175"
+                      ? "2px solid #111111"
                       : "2px solid transparent",
                   marginBottom: -2,
                   transition: "all 0.15s",
@@ -259,7 +259,7 @@ export function StudentDashboardView({
                     padding: "10px 20px",
                     borderRadius: 8,
                     border: "none",
-                    background: "#2f6175",
+                    background: "#111111",
                     color: "white",
                     fontSize: 14,
                     fontWeight: 600,
@@ -355,7 +355,7 @@ export function StudentDashboardView({
                         padding: "12px 32px",
                         borderRadius: 8,
                         border: "none",
-                        background: "#2f6175",
+                        background: "#111111",
                         color: "white",
                         fontSize: 15,
                         fontWeight: 600,

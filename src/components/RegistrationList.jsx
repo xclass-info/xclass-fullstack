@@ -7,7 +7,7 @@ import { api, live, seg, toMillis, formatDate } from "../api";
 // they were confirmed under the old instant-accept flow, so treat missing
 // status as approved rather than pending.
 const STATUS_BADGE = {
-  pending: { label: "Pending review", color: "#9a772b", bg: "#fff8dc" },
+  pending: { label: "Pending review", color: "#111111", bg: "#fff8dc" },
   approved: { label: "Approved", color: "#1f6f4a", bg: "#f0fdf4" },
   rejected: { label: "Rejected", color: "#a01f13", bg: "#fef2f2" },
 };
@@ -43,7 +43,7 @@ export default function RegistrationList({ itemId }) {
         style={{
           background: "none",
           border: "none",
-          color: "#2f6175",
+          color: "#111111",
           cursor: "pointer",
           fontSize: 13,
           fontWeight: 700,

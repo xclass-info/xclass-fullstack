@@ -33,7 +33,7 @@ const checkboxRow = {
 const filterLabel = {
   fontSize: 13,
   fontWeight: 700,
-  color: "#2f6175",
+  color: "#111111",
   textTransform: "uppercase",
   letterSpacing: "0.04em",
   margin: "20px 0 10px",
@@ -361,9 +361,9 @@ export default function Tutors({ standalone = false }) {
                 style={{
                   padding: "12px 32px",
                   borderRadius: 10,
-                  border: "2px solid #2f6175",
+                  border: "2px solid #111111",
                   background: "white",
-                  color: "#2f6175",
+                  color: "#111111",
                   fontSize: 14,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -418,7 +418,7 @@ export default function Tutors({ standalone = false }) {
                 style={{
                   background: "none",
                   border: "none",
-                  color: "#2f6175",
+                  color: "#111111",
                   fontSize: 12,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -565,7 +565,7 @@ export default function Tutors({ standalone = false }) {
                     padding: "8px 20px",
                     borderRadius: 8,
                     border: "none",
-                    background: "#2f6175",
+                    background: "#111111",
                     color: "white",
                     cursor: "pointer",
                   }}
@@ -585,9 +585,9 @@ export default function Tutors({ standalone = false }) {
                       style={{
                         padding: "12px 32px",
                         borderRadius: 10,
-                        border: "2px solid #2f6175",
+                        border: "2px solid #111111",
                         background: "white",
-                        color: "#2f6175",
+                        color: "#111111",
                         fontSize: 14,
                         fontWeight: 700,
                         cursor: "pointer",

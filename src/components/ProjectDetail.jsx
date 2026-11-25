@@ -96,7 +96,7 @@ export default function ProjectDetail() {
         <Navbar />
         <div style={{ ...wrapStyle, textAlign: "center" }}>
           <p>Project not found.</p>
-          <Link to='/projects' style={{ color: "#2f6175" }}>
+          <Link to='/projects' style={{ color: "#111111" }}>
             ← Back to all projects
           </Link>
         </div>
@@ -121,7 +121,7 @@ export default function ProjectDetail() {
         <Link
           to='/projects'
           style={{
-            color: "#2f6175",
+            color: "#111111",
             fontSize: 14,
             textDecoration: "none",
             display: "inline-block",
@@ -143,7 +143,7 @@ export default function ProjectDetail() {
             style={{
               fontFamily: "var(--font-serif)",
               fontSize: "2.2rem",
-              fontWeight: 400,
+              fontWeight: 600,
               lineHeight: 1.2,
               margin: "0 0 16px",
               color: "var(--ink)",
@@ -158,7 +158,7 @@ export default function ProjectDetail() {
                 display: "inline-block",
                 fontSize: 12,
                 fontWeight: 700,
-                color: "#8a6a25",
+                color: "#111111",
                 background: "rgba(154, 119, 43, 0.1)",
                 padding: "4px 12px",
                 borderRadius: 20,
@@ -174,7 +174,7 @@ export default function ProjectDetail() {
             {mentor ? (
               <Link
                 to={`/teacher/${mentor.id}`}
-                style={{ color: "#2f6175", textDecoration: "underline" }}
+                style={{ color: "#111111", textDecoration: "underline" }}
               >
                 {mentorLabel}
               </Link>

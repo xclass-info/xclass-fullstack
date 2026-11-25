@@ -25,19 +25,6 @@ export default function Navbar() {
     navigate("/");
   }
 
-  function scrollTo(id) {
-    if (location.pathname !== "/") {
-      navigate("/");
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }, 300);
-    } else {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    }
-  }
-
   function scrollToTop() {
     if (location.pathname !== "/") {
       navigate("/");
@@ -49,35 +36,8 @@ export default function Navbar() {
   return (
     <nav className={styles.nav}>
       {/* Logo */}
-      <Link to='/' className={styles.logo}>
-        <svg
-          width='34'
-          height='34'
-          viewBox='0 0 100 100'
-          className={styles.logoMark}
-          aria-hidden='true'
-        >
-          <rect width='100' height='100' rx='22' fill='#2f6175' />
-          <path
-            d='M78,15 L80,20 L85,22 L80,24 L78,29 L76,24 L71,22 L76,20 Z'
-            fill='#ffffff'
-          />
-          <path
-            d='M43,17 L57,17 L57,37 L71,78 C72.5,83 69,87 63,87 L37,87 C31,87 27.5,83 29,78 L43,37 Z'
-            fill='none'
-            stroke='#9a772b'
-            strokeWidth='6'
-            strokeLinejoin='round'
-          />
-          <path
-            d='M33.5,68 L29,78 C27.5,83 31,87 37,87 L63,87 C69,87 72.5,83 71,78 L66.5,68 Z'
-            fill='#ffffff'
-          />
-          <circle cx='46' cy='76' r='3' fill='#9a772b' />
-          <circle cx='56' cy='80' r='2.3' fill='#9a772b' />
-          <circle cx='50' cy='71' r='2' fill='#9a772b' />
-        </svg>
-        happy<span className={styles.logoClass}>Research</span>
+      <Link to='/' className={styles.logo} aria-label='HappyResearch home'>
+        happyresearch<span className={styles.logoDot}>.</span>
       </Link>
 
       <ul className={styles.links}>
@@ -135,14 +95,19 @@ export default function Navbar() {
               </div>
             </div>
             <Link to='/student/register' className={styles.cta}>
-              Apply Now
+              Apply now
             </Link>
           </>
         )}
       </div>
 
       {/* Hamburger button */}
-      <button className={styles.hamburger} onClick={() => setOpen(!open)}>
+      <button
+        className={styles.hamburger}
+        onClick={() => setOpen(!open)}
+        aria-label={open ? "Close menu" : "Open menu"}
+        aria-expanded={open}
+      >
         {open ? "✕" : "☰"}
       </button>
 
@@ -174,9 +139,7 @@ export default function Navbar() {
           </li>
 
           <li>
-            <a onClick={() => scrollTo("tutors")} style={{ cursor: "pointer" }}>
-              Mentor
-            </a>
+            <Link to='/tutors'>Mentors</Link>
           </li>
           <li>
             <Link to='/gallery'>Gallery</Link>
@@ -208,7 +171,7 @@ export default function Navbar() {
               </li>
               <li>
                 <Link to='/student/register' className={styles.cta}>
-                  Apply Now
+                  Apply now
                 </Link>
               </li>
             </>

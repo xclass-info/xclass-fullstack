@@ -21,7 +21,7 @@
 .title {
   font-family: var(--font-serif);
   font-size: 2rem;
-  font-weight: 300;
+  font-weight: 600;
   color: var(--ink);
   margin-bottom: 6px;
 }
@@ -65,11 +65,11 @@
 
 .input:focus {
   outline: none;
-  border-color: #2f6175;
+  border-color: #111111;
 }
 
 .btn {
-  background: #2f6175;
+  background: #111111;
   color: #ffffff;
   border: none;
   border-radius: var(--radius);
@@ -83,7 +83,7 @@
 }
 
 .btn:hover {
-  background: #244d5d;
+  background: #333333;
 }
 
 .btn:disabled {
@@ -119,7 +119,7 @@
 }
 
 .switch a:hover {
-  color: #9a772b;
+  color: #111111;
 }
 
 .back {
@@ -132,7 +132,7 @@
 }
 
 .back:hover {
-  color: #2f6175;
+  color: #111111;
 }
 
 .row {
@@ -179,7 +179,7 @@
 }
 
 .closeBtn:hover {
-  border-color: #9a772b;
-  color: #2f6175;
+  border-color: #111111;
+  color: #111111;
   background: rgba(154, 119, 43, 0.1);
 }

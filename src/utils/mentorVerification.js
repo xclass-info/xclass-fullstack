@@ -17,9 +17,9 @@ export function mentorTypeLabel(value) {
 
 export const VERIFICATION_STATUS = {
   started: { label: "Application started", color: "#92400e", bg: "rgba(217,119,6,0.08)" },
-  submitted: { label: "In review", color: "#2f6175", bg: "#e3eff3" },
+  submitted: { label: "In review", color: "#111111", bg: "#e3eff3" },
   changes_requested: { label: "Changes requested", color: "#a01f13", bg: "rgba(160,31,19,0.08)" },
-  interview_requested: { label: "Interview requested", color: "#8a6a25", bg: "#fff8dc" },
+  interview_requested: { label: "Interview requested", color: "#111111", bg: "#fff8dc" },
   onboarding: { label: "Onboarding", color: "#1f6f4a", bg: "#f0fdf4" },
   approved: { label: "Live", color: "#14532d", bg: "rgba(22,101,52,0.08)" },
   declined: { label: "Declined", color: "#64748b", bg: "#f1f5f9" },

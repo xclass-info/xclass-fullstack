@@ -7,7 +7,7 @@ const TESTIMONIALS = [
     name: "Sophia L.",
     info: "11th Grade · Astrophysics Research Student",
     initials: "SL",
-    gradient: "linear-gradient(135deg, #2f6175, #427e94)",
+    gradient: "linear-gradient(135deg, #111111, #111111)",
     featured: false,
   },
   {
@@ -16,7 +16,7 @@ const TESTIMONIALS = [
     name: "Marcus T.",
     info: "12th Grade · AI & Computer Vision Research Student",
     initials: "MT",
-    gradient: "linear-gradient(135deg, #8a6a25, #9a772b)",
+    gradient: "linear-gradient(135deg, #111111, #111111)",
     featured: true,
   },
   {
@@ -44,7 +44,7 @@ const TESTIMONIALS = [
     name: "Priya M.",
     info: "10th Grade · Robotics Research Student",
     initials: "PM",
-    gradient: "linear-gradient(135deg, #1f6f4a, #2f6175)",
+    gradient: "linear-gradient(135deg, #1f6f4a, #111111)",
     featured: false,
   },
   {
@@ -80,14 +80,7 @@ export default function Testimonials() {
   return (
     <section id='testimonials' className={styles.section}>
       <div className={`${styles.header} reveal`}>
-        <div className='section-label' style={{ justifyContent: "center" }}>
-          Student Stories
-        </div>
-        <h2>What our students say</h2>
-        <p className='section-sub' style={{ margin: "0 auto" }}>
-          Join thousands of happy learners who found their perfect mentors on
-          HappyResearch.
-        </p>
+        <h2 className={styles.title}>In their own words.</h2>
       </div>
 
       <div className={`${styles.marqueeWrap} reveal`}>

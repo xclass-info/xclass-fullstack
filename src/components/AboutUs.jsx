@@ -46,14 +46,14 @@ export default function AboutUs() {
             marginBottom: 24,
           }}
         >
-          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: "1.5rem", marginBottom: 8 }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, fontSize: "1.5rem", marginBottom: 8 }}>
             From the Founder
           </h2>
           <div
             style={{
               width: 48,
               height: 3,
-              background: "linear-gradient(135deg, #2f6175, #427e94)",
+              background: "linear-gradient(135deg, #111111, #111111)",
               borderRadius: 2,
               marginBottom: 24,
             }}
@@ -108,8 +108,8 @@ export default function AboutUs() {
               lineHeight: 1.9,
               marginBottom: 16,
               fontStyle: "italic",
-              color: "#2f6175",
-              borderLeft: "3px solid #2f6175",
+              color: "#111111",
+              borderLeft: "3px solid #111111",
               paddingLeft: 16,
             }}
           >
@@ -170,7 +170,7 @@ export default function AboutUs() {
             marginBottom: 24,
           }}
         >
-          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: "1.5rem", marginBottom: 16 }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, fontSize: "1.5rem", marginBottom: 16 }}>
             Our Mission
           </h2>
           <p style={{ fontSize: 15, color: "#555", lineHeight: 1.8 }}>
@@ -193,7 +193,7 @@ export default function AboutUs() {
             marginBottom: 24,
           }}
         >
-          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: "1.5rem", marginBottom: 24 }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, fontSize: "1.5rem", marginBottom: 24 }}>
             What We Do
           </h2>
           <div
@@ -270,7 +270,7 @@ export default function AboutUs() {
             marginBottom: 24,
           }}
         >
-          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, fontSize: "1.5rem", marginBottom: 20 }}>
+          <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, fontSize: "1.5rem", marginBottom: 20 }}>
             Why HappyResearch?
           </h2>
           {[
@@ -305,7 +305,7 @@ export default function AboutUs() {
                   width: 32,
                   height: 32,
                   borderRadius: "50%",
-                  background: "linear-gradient(135deg, #2f6175, #427e94)",
+                  background: "linear-gradient(135deg, #111111, #111111)",
                   color: "white",
                   fontWeight: 700,
                   display: "flex",
@@ -346,7 +346,7 @@ export default function AboutUs() {
         {/* Stats */}
         <div
           style={{
-            background: "linear-gradient(135deg, #2f6175, #427e94)",
+            background: "linear-gradient(135deg, #111111, #111111)",
             borderRadius: 12,
             padding: 40,
             marginBottom: 24,
@@ -410,7 +410,7 @@ export default function AboutUs() {
             style={{
               padding: "12px 32px",
               borderRadius: 32,
-              background: "#2f6175",
+              background: "#111111",
               color: "white",
               textDecoration: "none",
               fontWeight: 600,
@@ -424,7 +424,7 @@ export default function AboutUs() {
             style={{
               padding: "12px 32px",
               borderRadius: 32,
-              background: "#2f6175",
+              background: "#111111",
               color: "white",
               textDecoration: "none",
               fontWeight: 600,
@@ -438,7 +438,7 @@ export default function AboutUs() {
             style={{
               padding: "12px 32px",
               borderRadius: 32,
-              background: "#2f6175",
+              background: "#111111",
               color: "white",
               textDecoration: "none",
               fontWeight: 600,

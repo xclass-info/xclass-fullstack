@@ -57,7 +57,7 @@ const labelStyle = { display: "block", fontSize: 13, fontWeight: 600, color: "#4
 
 const sectionTitle = {
   fontSize: "1.9rem",
-  fontWeight: 400,
+  fontWeight: 600,
   margin: "0 0 20px",
   fontFamily: "var(--font-serif)",
   color: "var(--ink)",
@@ -171,11 +171,11 @@ export default function BecomeMentor() {
         <ol style={{ listStyle: "none", padding: 0, margin: "0 0 56px", display: "grid", gap: 12 }}>
           {STEPS.map((s, i) => (
             <li key={s.title} style={{ display: "flex", gap: 16, background: "white", borderRadius: 12, padding: "16px 20px", alignItems: "flex-start", border: "1px solid var(--border)" }}>
-              <span style={{ flexShrink: 0, width: 32, height: 32, borderRadius: "50%", background: "#2f6175", color: "white", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ flexShrink: 0, width: 32, height: 32, borderRadius: "50%", background: "#111111", color: "white", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {i + 1}
               </span>
               <div>
-                <strong style={{ color: "#1f3a42" }}>{s.title}</strong>
+                <strong style={{ color: "#111111" }}>{s.title}</strong>
                 {s.time && <span style={{ color: "#94a3b8", fontSize: 13 }}> · {s.time}</span>}
                 <p style={{ margin: "4px 0 0", color: "#475569", lineHeight: 1.6 }}>{s.text}</p>
               </div>
@@ -188,13 +188,13 @@ export default function BecomeMentor() {
         <div style={{ display: "grid", gap: 10, marginBottom: 56 }}>
           {FAQ.map((f) => (
             <details key={f.q} style={{ background: "white", borderRadius: 12, padding: "14px 20px", border: "1px solid var(--border)" }}>
-              <summary style={{ cursor: "pointer", fontWeight: 600, color: "#1f3a42" }}>{f.q}</summary>
+              <summary style={{ cursor: "pointer", fontWeight: 600, color: "#111111" }}>{f.q}</summary>
               <p style={{ margin: "10px 0 0", color: "#475569", lineHeight: 1.6 }}>{f.a}</p>
             </details>
           ))}
           <p style={{ fontSize: 14, color: "#64748b", margin: "6px 0 0" }}>
             Want to know more about how mentors work with students? Read our{" "}
-            <Link to='/mentor/guidelines' style={{ color: "#2f6175" }}>Mentor Guidelines</Link>.
+            <Link to='/mentor/guidelines' style={{ color: "#111111" }}>Mentor Guidelines</Link>.
           </p>
         </div>
 
@@ -234,7 +234,7 @@ export default function BecomeMentor() {
               </select>
 
               {form.mentorType === NOT_ELIGIBLE ? (
-                <p style={{ background: "#fff8dc", color: "#8a6a25", borderRadius: 8, padding: "12px 14px", fontSize: 14, lineHeight: 1.6 }}>
+                <p style={{ background: "#fff8dc", color: "#111111", borderRadius: 8, padding: "12px 14px", fontSize: 14, lineHeight: 1.6 }}>
                   Thank you for your interest! Our mentors are currently PhD
                   students and above. We'd love to hear from you once you've
                   started a PhD program.
@@ -260,9 +260,9 @@ export default function BecomeMentor() {
 
                   {error && <p style={{ color: "#a01f13", fontSize: 14, margin: "0 0 12px" }}>{error}</p>}
                   {alreadyStarted && (
-                    <p style={{ background: "#fff8dc", color: "#8a6a25", borderRadius: 8, padding: "12px 14px", fontSize: 14, lineHeight: 1.6, margin: "0 0 12px" }}>
+                    <p style={{ background: "#fff8dc", color: "#111111", borderRadius: 8, padding: "12px 14px", fontSize: 14, lineHeight: 1.6, margin: "0 0 12px" }}>
                       You've already started an application with this email.{" "}
-                      <Link to='/teacher/login' style={{ color: "#2f6175", fontWeight: 700 }}>Log in</Link>{" "}
+                      <Link to='/teacher/login' style={{ color: "#111111", fontWeight: 700 }}>Log in</Link>{" "}
                       to continue where you left off.
                     </p>
                   )}
@@ -270,13 +270,13 @@ export default function BecomeMentor() {
                   <button
                     type='submit'
                     disabled={submitting}
-                    style={{ width: "100%", padding: 14, borderRadius: 10, border: "none", background: "#2f6175", color: "white", fontWeight: 700, fontSize: 16, cursor: "pointer" }}
+                    style={{ width: "100%", padding: 14, borderRadius: 10, border: "none", background: "#111111", color: "white", fontWeight: 700, fontSize: 16, cursor: "pointer" }}
                   >
                     {submitting ? "Sending..." : "Continue →"}
                   </button>
                   <p style={{ fontSize: 13, color: "#94a3b8", textAlign: "center", margin: "14px 0 0" }}>
                     Already applied?{" "}
-                    <Link to='/teacher/login' style={{ color: "#2f6175" }}>Log in</Link> to continue.
+                    <Link to='/teacher/login' style={{ color: "#111111" }}>Log in</Link> to continue.
                   </p>
                 </>
               )}

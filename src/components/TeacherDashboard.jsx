@@ -217,7 +217,7 @@ export default function TeacherDashboard() {
       <div className={styles.page}>
         <div className={styles.header}>
           <div className={styles.headerLeft}>
-            <h1 className={styles.logo}>🔬 happy<span style={{ color: "#9a772b" }}>Research</span></h1>
+            <h1 className={styles.logo}>🔬 happy<span style={{ color: "#111111" }}>Research</span></h1>
           </div>
         </div>
         <div className={styles.grid}>
@@ -275,7 +275,7 @@ export default function TeacherDashboard() {
         {/* Header */}
         <div className={styles.header}>
           <div className={styles.headerLeft}>
-            <h1 className={styles.logo}>💻 happy<span style={{ color: "#9a772b" }}>Research</span></h1>
+            <h1 className={styles.logo}>💻 happy<span style={{ color: "#111111" }}>Research</span></h1>
             <p className={styles.welcome}>
               Welcome back, <strong>{teacher?.name}</strong> 👋
             </p>
@@ -565,7 +565,7 @@ export default function TeacherDashboard() {
                         padding: "10px 20px",
                         borderRadius: 8,
                         border: "none",
-                        background: "#2f6175",
+                        background: "#111111",
                         color: "white",
                         fontSize: 14,
                         fontWeight: 600,
@@ -610,7 +610,7 @@ export default function TeacherDashboard() {
                             display: "block",
                             marginTop: 4,
                             fontSize: 15,
-                            color: "#2f6175",
+                            color: "#111111",
                           }}
                         >
                           {profile.website}
@@ -866,7 +866,7 @@ export default function TeacherDashboard() {
                           padding: "12px 32px",
                           borderRadius: 8,
                           border: "none",
-                          background: profileSaved ? "#1f6f4a" : "#2f6175",
+                          background: profileSaved ? "#1f6f4a" : "#111111",
                           color: "white",
                           fontSize: 15,
                           fontWeight: 600,

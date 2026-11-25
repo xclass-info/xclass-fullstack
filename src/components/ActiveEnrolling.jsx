@@ -121,12 +121,10 @@ export default function ActiveEnrolling() {
   return (
     <section className={styles.section}>
       <div className={`${styles.header} reveal`}>
-        <div className='section-label' style={{ justifyContent: "center" }}>
-          Enrolling now
-        </div>
-        <h2>Mentors taking students right now</h2>
-        <p className='section-sub' style={{ margin: "0 auto" }}>
-          These mentors have open seats in a research or project opening today.
+        <div className='section-label'>Enrolling now</div>
+        <h2>Open seats right now.</h2>
+        <p className='section-sub'>
+          These mentors have room in a research program or project today.
         </p>
       </div>
 

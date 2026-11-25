@@ -1,38 +1,29 @@
 import { Link } from "react-router-dom";
 import styles from "./Hero.module.css";
 
-// Button School-style opening: a short rule, one calm serif statement, a
-// plain explanation, then the video in a framed card underneath.
+// Concept C opening: one very large headline with the key words marked in
+// lime, a heavy rule, then a single plain sentence and the two actions.
 export default function Hero() {
   return (
     <section className={styles.hero}>
       <div className={styles.inner}>
-        <span className='rule' />
-        <h1 className={styles.h1}>Your Research Journey, Guided by a PhD Mentor.</h1>
-        <p className={styles.sub}>
-          HappyResearch matches students with PhD and faculty mentors from top
-          universities for one-on-one research projects - from your first
-          question to a finished paper, poster or app.
-        </p>
-        <div className={styles.actions}>
-          <Link to='/research' className='btn-primary'>
-            Explore Research Projects
-          </Link>
-          <Link to='/tutors' className='btn-ghost'>
-            Find your mentor {"→"}
-          </Link>
-        </div>
-
-        <div className={styles.videoCard}>
-          <video
-            className={styles.video}
-            src='/hero-bg.mp4'
-            poster='/hero-poster.jpg'
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
+        <h1 className={styles.h1}>
+          Your research journey, guided by a{" "}
+          <span className='mark'>PhD mentor</span>.
+        </h1>
+        <div className={styles.bottom}>
+          <p className={styles.sub}>
+            One student. One PhD mentor. One real question, worked through to a
+            finished paper or project.
+          </p>
+          <div className={styles.actions}>
+            <Link to='/student/register' className='btn-primary'>
+              Start your application →
+            </Link>
+            <a href='#paths' className='btn-ghost'>
+              See programs
+            </a>
+          </div>
         </div>
       </div>
     </section>

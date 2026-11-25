@@ -130,7 +130,7 @@ export default function ShowcaseForm({ entry, onClose }) {
           style={{
             background: "none",
             border: "none",
-            color: "#2f6175",
+            color: "#111111",
             cursor: "pointer",
             fontSize: 14,
             marginBottom: 12,

@@ -27,7 +27,7 @@ function RoleChips({ p }) {
     <span style={{ display: "inline-flex", gap: 4, flexWrap: "wrap" }}>
       {p.isAdmin && <span style={chip("#7c2d12", "#ffedd5")}>Admin</span>}
       {p.isStudent && (
-        <span style={chip("#2f6175", "#e3eff3")}>Student{p.studentVerified === false ? " · unverified" : ""}</span>
+        <span style={chip("#111111", "#e3eff3")}>Student{p.studentVerified === false ? " · unverified" : ""}</span>
       )}
       {p.isMentor && (
         <span style={chip(statusInfo(p.mentorStatus).color, statusInfo(p.mentorStatus).bg)}>
@@ -143,29 +143,29 @@ function PersonPanel({ id, onClose, onEditMentor, onGo }) {
             ) : (
               <Section title='Actions'>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  <button style={smallBtn("#2f6175", true)} disabled={busy} onClick={() => act("Password reset email sent.", () => api.post(path("password-reset")))}>
+                  <button style={smallBtn("#111111", true)} disabled={busy} onClick={() => act("Password reset email sent.", () => api.post(path("password-reset")))}>
                     Send password reset
                   </button>
                   {(p.studentVerified === false || ["started", "changes_requested"].includes(p.mentorStatus) || p.teacher?.accountEmailVerified === false) && (
                     <>
                       <button
-                        style={smallBtn("#2f6175", true)}
+                        style={smallBtn("#111111", true)}
                         disabled={busy}
                         onClick={() => act("Email sent.", () => api.post(path("resend-verification")))}
                       >
                         {["started", "changes_requested"].includes(p.mentorStatus) ? "Resend application link" : "Resend verification email"}
                       </button>
-                      <button style={smallBtn("#2f6175", true)} disabled={busy} onClick={() => act("Email marked as verified.", () => api.post(path("mark-verified")))}>
+                      <button style={smallBtn("#111111", true)} disabled={busy} onClick={() => act("Email marked as verified.", () => api.post(path("mark-verified")))}>
                         Mark email verified
                       </button>
                     </>
                   )}
                   {p.isMentor && (
                     <>
-                      <button style={smallBtn("#2f6175", true)} onClick={() => onEditMentor(p.teacher)}>Edit mentor profile</button>
+                      <button style={smallBtn("#111111", true)} onClick={() => onEditMentor(p.teacher)}>Edit mentor profile</button>
                       {p.mentorStatus === "approved" && (
                         <button
-                          style={smallBtn("#9a772b", true)}
+                          style={smallBtn("#111111", true)}
                           disabled={busy}
                           onClick={() =>
                             act(p.mentorHidden ? "Mentor is visible on the site again." : "Mentor hidden from the site.", () =>
@@ -177,7 +177,7 @@ function PersonPanel({ id, onClose, onEditMentor, onGo }) {
                         </button>
                       )}
                       {p.mentorStatus !== "approved" && (
-                        <button style={smallBtn("#2f6175", true)} onClick={() => onGo("applications")}>Open application</button>
+                        <button style={smallBtn("#111111", true)} onClick={() => onGo("applications")}>Open application</button>
                       )}
                     </>
                   )}
@@ -310,7 +310,7 @@ export default function AdminPeople({ openId, onOpen, onEditMentor, onGo }) {
             <button
               key={f.id}
               onClick={() => setFilter(f.id)}
-              style={{ padding: "7px 14px", borderRadius: 20, border: active ? "2px solid #2f6175" : "1px solid #e2e8f0", background: active ? "#e3eff3" : "white", fontWeight: active ? 700 : 500, fontSize: 13, cursor: "pointer" }}
+              style={{ padding: "7px 14px", borderRadius: 20, border: active ? "2px solid #111111" : "1px solid #e2e8f0", background: active ? "#e3eff3" : "white", fontWeight: active ? 700 : 500, fontSize: 13, cursor: "pointer" }}
             >
               {f.label} ({count})
             </button>

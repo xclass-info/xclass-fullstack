@@ -68,7 +68,7 @@ export default function AdminToday({ onOpenPerson, onGo }) {
         items={data.mentorReviews}
         empty='No applications waiting.'
         render={(m) => (
-          <Item key={m.id} action={<button style={smallBtn("#2f6175")} onClick={() => onGo("applications")}>Review</button>}>
+          <Item key={m.id} action={<button style={smallBtn("#111111")} onClick={() => onGo("applications")}>Review</button>}>
             <strong>{m.name}</strong>{" "}
             <span style={{ color: "#64748b" }}>
               {m.status === "interview_requested" ? "· interview requested" : `· submitted ${formatDate(m.submittedAt)}`}
@@ -81,7 +81,7 @@ export default function AdminToday({ onOpenPerson, onGo }) {
         items={data.backgroundChecks}
         empty='None pending.'
         render={(m) => (
-          <Item key={m.id} action={<button style={smallBtn("#2f6175")} onClick={() => onGo("applications")}>Open</button>}>
+          <Item key={m.id} action={<button style={smallBtn("#111111")} onClick={() => onGo("applications")}>Open</button>}>
             <strong>{m.name}</strong> <span style={{ color: "#64748b" }}>· passed review, waiting on background check</span>
           </Item>
         )}
@@ -91,7 +91,7 @@ export default function AdminToday({ onOpenPerson, onGo }) {
         items={data.enrollments}
         empty='No student applications waiting.'
         render={(r) => (
-          <Item key={r.id} action={<button style={smallBtn("#2f6175")} onClick={() => onGo("student-applications")}>Review</button>}>
+          <Item key={r.id} action={<button style={smallBtn("#111111")} onClick={() => onGo("student-applications")}>Review</button>}>
             <strong>{r.studentName}</strong> <span style={{ color: "#64748b" }}>→ {r.itemTitle} · {formatDate(r.createdAt)}</span>
           </Item>
         )}
@@ -101,7 +101,7 @@ export default function AdminToday({ onOpenPerson, onGo }) {
         items={data.staleBookings}
         empty='Mentors are answering their booking requests.'
         render={(b) => (
-          <Item key={b.id} action={b.teacherId && <button style={smallBtn("#2f6175")} onClick={() => onOpenPerson(b.teacherId)}>Open mentor</button>}>
+          <Item key={b.id} action={b.teacherId && <button style={smallBtn("#111111")} onClick={() => onOpenPerson(b.teacherId)}>Open mentor</button>}>
             <strong>{b.studentName}</strong>{" "}
             <span style={{ color: "#64748b" }}>
               with {b.teacherName} · {b.date} {b.time} · requested {formatDate(b.createdAt)}
@@ -114,7 +114,7 @@ export default function AdminToday({ onOpenPerson, onGo }) {
         items={data.failedEmails}
         empty='All emails went out.'
         render={(e) => (
-          <Item key={e.id} action={<button style={smallBtn("#2f6175")} onClick={() => onGo("emails")}>Email log</button>}>
+          <Item key={e.id} action={<button style={smallBtn("#111111")} onClick={() => onGo("emails")}>Email log</button>}>
             <strong>{e.toEmail}</strong> <span style={{ color: "#64748b" }}>· {e.subject} · {formatDate(e.createdAt)}</span>
           </Item>
         )}

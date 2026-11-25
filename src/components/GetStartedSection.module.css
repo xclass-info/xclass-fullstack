@@ -61,7 +61,7 @@
 .btnTitle {
   font-family: var(--font-serif);
   font-size: 1.45rem;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--ink);
   margin-bottom: 10px;
 }

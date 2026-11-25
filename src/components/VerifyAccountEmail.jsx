@@ -70,7 +70,7 @@ export default function VerifyAccountEmail() {
                   display: "inline-block",
                   padding: "12px 28px",
                   borderRadius: 8,
-                  background: "#2f6175",
+                  background: "#111111",
                   color: "white",
                   fontWeight: 700,
                   textDecoration: "none",

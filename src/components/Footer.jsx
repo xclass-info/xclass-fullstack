@@ -14,7 +14,9 @@ export default function Footer() {
       <div className={styles.inner}>
         <div className={styles.top}>
           <div className={styles.about}>
-            <span className='rule' />
+            <Link to='/' className={styles.wordmark}>
+              happyresearch<span className={styles.dot}>.</span>
+            </Link>
             <p className={styles.tagline}>
               Real research for curious students, guided by PhD and faculty
               mentors.

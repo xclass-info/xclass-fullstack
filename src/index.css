@@ -7,32 +7,36 @@
 }
 
 :root {
-  /* Light take on the Button School look: a clean grotesk for text, a light
-     editorial serif for big statements, quiet thin-bordered cards, lots of
-     space - in HappyResearch's teal/gold. */
-  --font-sans: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: "Source Serif 4", Georgia, serif;
-  --ink: #16191b;
-  --border-strong: #c9c3b8;
-  --primary: #427e94;
-  --primary-hover: #2f6175;
-  --primary-soft: #e3eff3;
-  --accent: #9a772b;
-  --bg: #fbfaf7;
-  --surface: #f3efe6;
+  /* Concept C, "Bold": a warm off-white page, near-black ink, Space Grotesk
+     for big tight headlines, Inter for text, and one lime highlight. */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  /* Old name kept so every page that asks for the "statement" font gets
+     the new display face. */
+  --font-serif: var(--font-display);
+  --ink: #111111;
+  --lime: #c6f35c;
+  --border-strong: #111111;
+  --primary: #111111;
+  --primary-hover: #111111;
+  --primary-soft: #e8e6df;
+  --accent: #111111;
+  --bg: #f5f4f0;
+  --surface: #e8e6df;
   --card: #ffffff;
-  --border: #e6e1d8;
-  --coral: #427e94;
-  --yellow: #9a772b;
-  --blue: #427e94;
+  --border: #dedbd2;
+  --coral: #111111;
+  --yellow: #111111;
+  --blue: #111111;
   --mint: #1f6f4a;
   --purple: #6d3f6b;
   --pink: #a01f13;
-  --orange: #9a772b;
-  --text: #16191b;
-  --muted: #5d666d;
-  --radius: 8px;
-  --radius-lg: 12px;
+  --orange: #111111;
+  --text: #111111;
+  --muted: #4f4f4f;
+  --radius: 12px;
+  --radius-card: 20px;
+  --radius-lg: 20px;
 }
 
 html {
@@ -72,7 +76,7 @@ body {
   background-clip: text;
 }
 
-/* Small uppercase tag above a heading, e.g. "RESEARCH / 10 WEEKS". */
+/* Small tag above a heading, e.g. "PROGRAMS". */
 .section-label {
   display: inline-flex;
   align-items: center;
@@ -81,82 +85,127 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--muted);
   margin-bottom: 14px;
 }
 
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
 h2 {
-  font-family: var(--font-serif);
-  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
-  font-weight: 400;
-  line-height: 1.15;
-  margin-bottom: 14px;
-  letter-spacing: -0.01em;
+  font-size: clamp(2.1rem, 4.6vw, 3.6rem);
+  font-weight: 600;
+  line-height: 1.02;
+  margin-bottom: 16px;
+  letter-spacing: -0.04em;
   color: var(--ink);
 }
 
 .section-sub {
   color: var(--muted);
   max-width: 560px;
-  font-size: 1.05rem;
-  line-height: 1.7;
+  font-size: 1.1rem;
+  line-height: 1.6;
   font-weight: 400;
 }
 
-/* The short line Button School puts above its big statements. */
+/* A highlighted word, like a marker stroke: <span class="mark">PhD mentor</span> */
+.mark {
+  background: var(--lime);
+  padding: 0 0.12em;
+  border-radius: 0.12em;
+  position: relative;
+  z-index: -1;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Older markup still renders this short line; Concept C doesn't use it. */
 .rule {
-  display: block;
-  width: 64px;
-  height: 3px;
+  display: none;
+  width: 48px;
+  height: 4px;
   border-radius: 2px;
-  background: var(--border-strong);
+  background: var(--ink);
   margin-bottom: 28px;
 }
 
 .btn-primary {
   display: inline-block;
-  background: var(--primary-hover);
-  color: #fff;
-  padding: 12px 22px;
-  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 15px 26px;
+  border-radius: 999px;
   font-weight: 600;
   text-decoration: none;
   font-size: 1rem;
-  transition: background 0.15s;
+  line-height: 1.2;
+  transition:
+    background 0.15s,
+    transform 0.15s;
   cursor: pointer;
-  border: none;
+  border: 2px solid var(--ink);
   font-family: var(--font-sans);
 }
 
 .btn-primary:hover {
-  background: #244d5d;
+  background: #2b2b2b;
+  transform: translateY(-1px);
 }
 
 .btn-primary:active {
-  background: var(--primary-hover);
+  transform: none;
 }
 
 .btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
-/* Secondary action as a plain text link with an arrow, Button School style. */
+/* Secondary action: an outlined pill. */
 .btn-ghost {
   display: inline-block;
-  border: none;
-  color: var(--primary-hover);
-  padding: 12px 4px;
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  padding: 13px 24px;
+  border-radius: 999px;
   font-weight: 600;
   text-decoration: none;
   font-size: 1rem;
+  line-height: 1.2;
   background: none;
   font-family: var(--font-sans);
-  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
 .btn-ghost:hover {
-  text-decoration: underline;
+  background: var(--surface);
+}
+
+/* Lime call-to-action, for dark backgrounds and the nav. */
+.btn-lime {
+  display: inline-block;
+  background: var(--lime);
+  color: var(--ink);
+  padding: 15px 26px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1rem;
+  line-height: 1.2;
+  border: none;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.btn-lime:hover {
+  filter: brightness(0.95);
 }
 
 .reveal {
@@ -172,21 +221,26 @@ h2 {
   transform: translateY(0);
 }
 
-/* Page titles on inner pages: same light serif statement as the homepage. */
+/* Page titles on inner pages: the same tight display type as the homepage. */
 .page-title {
-  font-family: var(--font-serif);
-  font-size: clamp(2.2rem, 4vw, 3.2rem);
-  font-weight: 300;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6vw, 4.6rem);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
   color: var(--ink);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .page-sub {
   color: var(--muted);
-  font-size: 1.1rem;
-  line-height: 1.65;
+  font-size: 1.15rem;
+  line-height: 1.6;
   max-width: 620px;
   margin: 0 auto;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
 }

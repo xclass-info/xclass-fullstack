@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import GetStartedSection from "./components/GetStartedSection";
+import { MentorStrip, Paths, StudentWork, ApplyBand } from "./components/HomeSections";
 import Tutors from "./components/Tutors";
 import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
@@ -28,12 +28,7 @@ import ResetPassword from "./components/ResetPassword";
 import StudentLogin from "./components/StudentLogin";
 import StudentRegister from "./components/StudentRegister";
 import StudentDashboard from "./components/StudentDashboard";
-import ResearchSection from "./components/ResearchSection";
-import ProjectSection from "./components/ProjectSection";
-import OneOnOneSection from "./components/OneOnOneSection";
 import ActiveEnrolling from "./components/ActiveEnrolling";
-import WhyHappyResearch from "./components/WhyHappyResearch";
-import StudentResearchSection from "./components/StudentResearchSection";
 import FAQSection from "./components/FAQSection";
 
 import ContactUs from "./components/ContactUs";
@@ -82,16 +77,13 @@ function HomePage() {
     <>
       <Navbar />
       <Hero />
-      <Testimonials />
-      <WhyHappyResearch />
-      <GetStartedSection />
+      <MentorStrip />
+      <Paths />
       <ActiveEnrolling />
-      <ResearchSection />
-      <ProjectSection />
-      <OneOnOneSection />
-      <StudentResearchSection />
-      <Tutors />
+      <StudentWork />
+      <Testimonials />
       <FAQSection />
+      <ApplyBand />
       <Footer />
     </>
   );

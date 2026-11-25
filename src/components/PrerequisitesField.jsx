@@ -70,7 +70,7 @@ export default function PrerequisitesField({ value, onChange }) {
           style={{
             background: "none",
             border: "none",
-            color: "#2f6175",
+            color: "#111111",
             cursor: "pointer",
             fontWeight: 700,
             fontSize: 14,

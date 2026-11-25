@@ -387,7 +387,7 @@ export default function AdminDashboard() {
                 padding: 12,
                 borderRadius: 8,
                 border: "none",
-                background: "#2f6175",
+                background: "#111111",
                 color: "white",
                 fontSize: 15,
                 cursor: "pointer",
@@ -407,7 +407,7 @@ export default function AdminDashboard() {
               marginTop: 14,
               background: "none",
               border: "none",
-              color: "#2f6175",
+              color: "#111111",
               fontSize: 13,
               fontWeight: 600,
               cursor: "pointer",
@@ -584,7 +584,7 @@ export default function AdminDashboard() {
                   padding: "10px 12px",
                   borderRadius: 8,
                   border: "none",
-                  background: tab === item.id ? "#2f6175" : "transparent",
+                  background: tab === item.id ? "#111111" : "transparent",
                   color: tab === item.id ? "white" : "#555",
                   cursor: "pointer",
                   fontWeight: 600,
@@ -723,7 +723,7 @@ export default function AdminDashboard() {
                         setEditItem({ ...r });
                         setEditType("research");
                       }}
-                      style={btnStyle("#2f6175")}
+                      style={btnStyle("#111111")}
                     >
                       ✏️ Edit
                     </button>
@@ -829,7 +829,7 @@ export default function AdminDashboard() {
                       style={{
                         fontSize: 11,
                         background: "#e3eff3",
-                        color: "#2f6175",
+                        color: "#111111",
                         padding: "2px 8px",
                         borderRadius: 20,
                         display: "inline-block",
@@ -1052,7 +1052,7 @@ export default function AdminDashboard() {
                       width: 90,
                       height: 90,
                       borderRadius: "50%",
-                      background: "linear-gradient(135deg, #2f6175, #427e94)",
+                      background: "linear-gradient(135deg, #111111, #111111)",
                       color: "white",
                       fontSize: 32,
                       fontWeight: 700,
@@ -1073,7 +1073,7 @@ export default function AdminDashboard() {
                   style={{
                     cursor: "pointer",
                     fontSize: 13,
-                    color: "#2f6175",
+                    color: "#111111",
                     fontWeight: 600,
                   }}
                 >

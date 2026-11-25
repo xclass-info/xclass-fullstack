@@ -212,7 +212,7 @@ function PhotoCarousel({ photos, onPhotoClick }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#2f6175",
+            color: "#111111",
             fontWeight: 700,
           }}
         >
@@ -229,7 +229,7 @@ function PhotoCarousel({ photos, onPhotoClick }) {
                 height: 8,
                 borderRadius: 4,
                 border: "none",
-                background: index === current ? "#2f6175" : "#ddd",
+                background: index === current ? "#111111" : "#ddd",
                 cursor: "pointer",
                 transition: "all 0.3s",
                 padding: 0,
@@ -251,7 +251,7 @@ function PhotoCarousel({ photos, onPhotoClick }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#2f6175",
+            color: "#111111",
             fontWeight: 700,
           }}
         >
@@ -307,7 +307,7 @@ export default function Gallery() {
                 padding: "8px 24px",
                 borderRadius: 20,
                 border: "none",
-                background: tab === t.id ? "#2f6175" : "#e0e0e0",
+                background: tab === t.id ? "#111111" : "#e0e0e0",
                 color: tab === t.id ? "white" : "#555",
                 cursor: "pointer",
                 fontWeight: 600,

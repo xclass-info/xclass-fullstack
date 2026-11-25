@@ -123,9 +123,9 @@ export default function TeacherLogin() {
                 width: "100%",
                 padding: "10px",
                 borderRadius: 8,
-                border: "1px solid #2f6175",
+                border: "1px solid #111111",
                 background: "transparent",
-                color: "#2f6175",
+                color: "#111111",
                 cursor: "pointer",
                 fontSize: 13,
                 fontWeight: 600,
@@ -197,7 +197,7 @@ export default function TeacherLogin() {
                 style={{
                   background: "none",
                   border: "none",
-                  color: "#2f6175",
+                  color: "#111111",
                   cursor: "pointer",
                   fontSize: 13,
                 }}

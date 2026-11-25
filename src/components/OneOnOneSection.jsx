@@ -153,7 +153,7 @@ export default function OneOnOneSection() {
               display: "inline-block",
               padding: "12px 32px",
               borderRadius: 32,
-              background: "#2f6175",
+              background: "#111111",
               color: "white",
               textDecoration: "none",
               fontWeight: 600,
@@ -162,7 +162,7 @@ export default function OneOnOneSection() {
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow = "0 8px 20px rgba(47, 97, 117,0.25)";
+              e.currentTarget.style.boxShadow = "0 8px 20px rgba(17,17,17,0.25)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "translateY(0)";

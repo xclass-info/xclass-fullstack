@@ -66,7 +66,7 @@ export default function ContactUs() {
             marginBottom: 24,
           }}
         >
-          <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, margin: "0 0 20px", fontSize: 16 }}>Get in Touch</h3>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, margin: "0 0 20px", fontSize: 16 }}>Get in Touch</h3>
           <div
             style={{
               display: "flex",
@@ -89,7 +89,7 @@ export default function ContactUs() {
               </p>
               <a
                 href='mailto:happyprogramming.us@gmail.com'
-                style={{ fontSize: 15, color: "#2f6175", fontWeight: 600 }}
+                style={{ fontSize: 15, color: "#111111", fontWeight: 600 }}
               >
                 happyprogramming.us@gmail.com
               </a>
@@ -117,7 +117,7 @@ export default function ContactUs() {
               </p>
               <a
                 href='tel:+17033000061'
-                style={{ fontSize: 15, color: "#2f6175", fontWeight: 600 }}
+                style={{ fontSize: 15, color: "#111111", fontWeight: 600 }}
               >
                 (703)-300-0061
               </a>
@@ -138,7 +138,7 @@ export default function ContactUs() {
               </p>
               <a
                 href='https://happyresearch.org'
-                style={{ fontSize: 15, color: "#2f6175", fontWeight: 600 }}
+                style={{ fontSize: 15, color: "#111111", fontWeight: 600 }}
               >
                 happyresearch.org
               </a>
@@ -245,7 +245,7 @@ export default function ContactUs() {
             border: "1px solid var(--border)",
           }}
         >
-          <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 400, margin: "0 0 20px", fontSize: 16 }}>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, margin: "0 0 20px", fontSize: 16 }}>
             Send us a Message
           </h3>
 
@@ -263,7 +263,7 @@ export default function ContactUs() {
                   padding: "10px 24px",
                   borderRadius: 8,
                   border: "none",
-                  background: "#2f6175",
+                  background: "#111111",
                   color: "white",
                   cursor: "pointer",
                   fontWeight: 600,
@@ -416,7 +416,7 @@ export default function ContactUs() {
                   padding: 14,
                   borderRadius: 10,
                   border: "none",
-                  background: "#2f6175",
+                  background: "#111111",
                   color: "white",
                   fontSize: 16,
                   fontWeight: 600,

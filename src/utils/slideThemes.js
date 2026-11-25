@@ -9,7 +9,7 @@
 const THEMES = [
   {
     name: "teal",
-    gradient: "linear-gradient(135deg, #1f3a42, #2f6175)",
+    gradient: "linear-gradient(135deg, #111111, #2f6175)",
     eyebrow: "#e8c468",
     accent: "#9fe0cf",
     tagline: "#c9b8e8",

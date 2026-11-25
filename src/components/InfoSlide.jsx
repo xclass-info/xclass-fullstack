@@ -59,7 +59,7 @@ export default function InfoSlide({ kind, item }) {
         <h2
           style={{
             margin: "0 0 16px",
-            fontFamily: "'Source Serif 4', Georgia, serif",
+            fontFamily: "var(--font-display)",
             fontSize: "1.9rem",
             fontWeight: 800,
             lineHeight: 1.15,

@@ -93,7 +93,7 @@ export default function ContentCard({ item, kind, onEdit, onDelete, onToggleStag
               href={safeUrl(item.outputUrl)}
               target='_blank'
               rel='noreferrer'
-              style={{ fontSize: 13, color: "#2f6175", textDecoration: "underline" }}
+              style={{ fontSize: 13, color: "#111111", textDecoration: "underline" }}
             >
               View finished work →
             </a>
