@@ -1,133 +1,115 @@
 // src/components/ShowcaseListing.jsx
 // Public proof-of-outcomes page: finished student projects, published by
-// mentors from their dashboard's Showcase tab.
+// mentors from their dashboard's Showcase tab. Big header, output-type
+// filter chips, a card grid, and a detail dialog per entry.
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { api, live, toMillis, formatDate } from "../api";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { Link } from "react-router-dom";
-import { SkeletonClassCard } from "./Skeleton";
 import { formatMentorName } from "../utils/mentorName";
+import { safeUrl } from "../utils/format";
 import { DELIVERABLE_OPTIONS } from "../utils/deliverables";
-import { useScrollReveal } from "../utils/useScrollReveal";
-import { TopicIcon } from "../utils/topicIcons";
+import { pickIcon } from "../utils/topicIcons";
+import list from "./ProgramListing.module.css";
+import reg from "./RegisterControls.module.css";
+import styles from "./ShowcaseListing.module.css";
 
-function ShowcaseDetailModal({ entry, mentorLabel, onClose }) {
+// Poster image when there is one, otherwise a bold block with a topic icon
+// (lime or ink, picked from the entry id so it stays the same).
+function Cover({ entry, large = false }) {
+  const [failed, setFailed] = useState(false);
+  if (entry.fileType === "image" && entry.fileUrl && !failed) {
+    return (
+      <div className={`${styles.cover} ${large ? styles.coverLarge : ""}`}>
+        <img
+          src={entry.fileUrl}
+          alt={`${entry.title} poster`}
+          className={styles.coverImg}
+          onError={() => setFailed(true)}
+        />
+      </div>
+    );
+  }
+  const { Icon, teal } = pickIcon(entry.id);
   return (
     <div
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.5)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 200,
-        padding: 16,
-      }}
+      className={`${styles.cover} ${large ? styles.coverLarge : ""} ${teal ? styles.coverDark : styles.coverLime}`}
+      aria-hidden='true'
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: "white",
-          borderRadius: 12,
-          padding: 32,
-          width: "100%",
-          maxWidth: 560,
-          maxHeight: "90vh",
-          overflowY: "auto",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            gap: 12,
-            marginBottom: 16,
-          }}
+      <Icon size={large ? 72 : 56} />
+    </div>
+  );
+}
+
+function Links({ entry }) {
+  const pdf = entry.fileType === "pdf" ? safeUrl(entry.fileUrl) : null;
+  const work = safeUrl(entry.outputUrl);
+  if (!pdf && !work) return null;
+  return (
+    <div className={styles.links}>
+      {pdf && (
+        <a href={pdf} target='_blank' rel='noreferrer' className='btn-primary'>
+          Read the paper (PDF) →
+        </a>
+      )}
+      {work && (
+        <a
+          href={work}
+          target='_blank'
+          rel='noreferrer'
+          className={pdf ? "btn-ghost" : "btn-primary"}
         >
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              color: "var(--mint)",
-              background: "rgba(31,111,74,0.08)",
-              padding: "3px 10px",
-              borderRadius: 20,
-            }}
-          >
-            📦 {entry.outputType}
-          </span>
-          <button
-            onClick={onClose}
-            style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer" }}
-          >
-            ✕
-          </button>
-        </div>
+          View the work →
+        </a>
+      )}
+    </div>
+  );
+}
 
-        {entry.fileType === "image" ? (
-          <img
-            src={entry.fileUrl}
-            alt={`${entry.title} poster`}
-            style={{
-              width: "100%",
-              maxHeight: 320,
-              objectFit: "cover",
-              borderRadius: 10,
-              marginBottom: 16,
-            }}
-          />
-        ) : (
-          <div style={{ marginBottom: 16 }}>
-            <TopicIcon seed={entry.id} />
-          </div>
-        )}
+function DetailDialog({ entry, mentor, onClose }) {
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
-        <h2 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, fontSize: 20, marginBottom: 8, color: "#1a1a2e" }}>
-          {entry.title}
-        </h2>
-
-        <p style={{ fontSize: 13, color: "#888", margin: "0 0 4px" }}>
-          👤 {entry.studentName}
-        </p>
-        <p style={{ fontSize: 13, color: "#888", margin: "0 0 16px" }}>
-          👩‍🏫 Mentored by: {mentorLabel(entry)}
-        </p>
-
-        <p style={{ fontSize: 14, color: "#444", lineHeight: 1.7, marginBottom: 20 }}>
-          {entry.summary}
-        </p>
-
-        {entry.createdAt && (
-          <p style={{ fontSize: 12, color: "#aaa", marginBottom: 20 }}>
-            Published {formatDate(entry.createdAt)}
+  return (
+    <div className={reg.overlay} onClick={onClose}>
+      <div
+        className={styles.dialog}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='work-title'
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type='button'
+          className={`${reg.close} ${styles.dialogClose}`}
+          onClick={onClose}
+          aria-label='Close'
+        >
+          ✕
+        </button>
+        <Cover entry={entry} large />
+        <div className={styles.dialogBody}>
+          {entry.outputType && (
+            <p className={styles.type}>{entry.outputType}</p>
+          )}
+          <h2 id='work-title' className={styles.dialogTitle}>
+            {entry.title}
+          </h2>
+          <p className={styles.byline}>
+            {entry.studentName && <>By {entry.studentName} · </>}
+            Mentored by {mentor}
           </p>
-        )}
-
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          {entry.fileType === "pdf" && (
-            <a
-              href={entry.fileUrl}
-              target='_blank'
-              rel='noreferrer'
-              style={{ fontSize: 13, color: "#111111", fontWeight: 600, textDecoration: "none" }}
-            >
-              📄 View Paper (PDF) →
-            </a>
+          {entry.summary && <p className={styles.summary}>{entry.summary}</p>}
+          {entry.createdAt && (
+            <p className={styles.date}>
+              Published {formatDate(entry.createdAt)}
+            </p>
           )}
-          {entry.outputUrl && (
-            <a
-              href={entry.outputUrl}
-              target='_blank'
-              rel='noreferrer'
-              style={{ fontSize: 13, color: "#111111", fontWeight: 600, textDecoration: "none" }}
-            >
-              View work →
-            </a>
-          )}
+          <Links entry={entry} />
         </div>
       </div>
     </div>
@@ -139,17 +121,20 @@ export default function ShowcaseListing() {
   const [teachers, setTeachers] = useState({});
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
-  const [selectedEntry, setSelectedEntry] = useState(null);
-  const pageRef = useScrollReveal([loading, entries]);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    const unsub = live(() => api.get("/showcase"), (rows) => {
-      setEntries(
-        rows
-          .sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt)),
-      );
-      setLoading(false);
-    });
+    const unsub = live(
+      () => api.get("/showcase"),
+      (rows) => {
+        setEntries(
+          [...rows].sort(
+            (a, b) => toMillis(b.createdAt) - toMillis(a.createdAt),
+          ),
+        );
+        setLoading(false);
+      },
+    );
     return () => unsub();
   }, []);
 
@@ -166,295 +151,161 @@ export default function ShowcaseListing() {
       .catch((err) => console.error(err));
   }, []);
 
-  function mentorLabel(s) {
-    const liveMentor = teachers[s.teacherId];
-    const name = liveMentor?.name
-      ? formatMentorName(liveMentor.name, {
-          mentorType: liveMentor.mentorType,
-          degree: liveMentor.degree,
-        })
+  // The mentor's name, linked to their profile while they're live.
+  function mentorLabel(s, { link = true } = {}) {
+    const t = teachers[s.teacherId];
+    const isLive =
+      t?.name && t.verificationStatus === "approved" && !t.disabled;
+    const name = t?.name
+      ? formatMentorName(t.name, { mentorType: t.mentorType, degree: t.degree })
       : s.teacherName && s.teacherName !== "Teacher"
         ? s.teacherName
-        : "Mentor";
-    if (!liveMentor?.name) return name;
+        : "a HappyResearch mentor";
+    if (!isLive || !link) return name;
     return (
       <Link
         to={`/teacher/${s.teacherId}`}
+        className={styles.mentorLink}
         onClick={(e) => e.stopPropagation()}
-        style={{ color: "#111111", textDecoration: "underline" }}
       >
         {name}
       </Link>
     );
   }
 
+  // Only offer chips for output types that actually have work.
+  const counts = entries.reduce((acc, e) => {
+    acc[e.outputType] = (acc[e.outputType] || 0) + 1;
+    return acc;
+  }, {});
+  const types = [
+    ...DELIVERABLE_OPTIONS.filter((d) => counts[d]),
+    ...Object.keys(counts).filter(
+      (d) => d && d !== "undefined" && !DELIVERABLE_OPTIONS.includes(d),
+    ),
+  ];
   const filtered =
     filter === "all" ? entries : entries.filter((e) => e.outputType === filter);
 
-  if (loading) {
-    return (
-      <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
-        <Navbar />
-        <div
-          style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 24px 48px" }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: 24,
-            }}
-          >
-            {[1, 2, 3].map((i) => (
-              <SkeletonClassCard key={i} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div ref={pageRef} style={{ minHeight: "100vh", background: "var(--bg)" }}>
+    <div className={list.page}>
       <Navbar />
-      <div
-        style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 24px 48px" }}
-      >
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <h1 className="page-title">Student Work</h1>
-          <p className="page-sub">
-            Real projects our students have finished with their mentors - not
-            just what's possible, but what's already been done.
-          </p>
-        </div>
 
-        {entries.length > 0 && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 8,
-              flexWrap: "wrap",
-              marginBottom: 32,
-            }}
-          >
-            <button
-              onClick={() => setFilter("all")}
-              style={{
-                padding: "8px 16px",
-                borderRadius: 20,
-                border: "1px solid " + (filter === "all" ? "#111111" : "#ddd"),
-                background: filter === "all" ? "#111111" : "white",
-                color: filter === "all" ? "white" : "#555",
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
-            >
-              All
-            </button>
-            {DELIVERABLE_OPTIONS.map((d) => (
-              <button
-                key={d}
-                onClick={() => setFilter(d)}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: 20,
-                  border: "1px solid " + (filter === d ? "#111111" : "#ddd"),
-                  background: filter === d ? "#111111" : "white",
-                  color: filter === d ? "white" : "#555",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
+      <header className={list.head}>
+        <div className={list.wrap}>
+          <h1 className={list.title}>Student work.</h1>
+          <div className={list.headBottom}>
+            <p className={list.sub}>
+              Papers, posters, apps and models our students finished with their
+              mentors. Not what's possible, what's already been done.
+            </p>
+            {types.length > 1 && (
+              <div
+                className={styles.chips}
+                role='group'
+                aria-label='Filter by output type'
               >
-                {d}
-              </button>
-            ))}
+                {[
+                  ["all", "All", entries.length],
+                  ...types.map((t) => [t, t, counts[t]]),
+                ].map(([value, label, n]) => (
+                  <button
+                    key={value}
+                    type='button'
+                    aria-pressed={filter === value}
+                    className={`${styles.chip} ${filter === value ? styles.chipOn : ""}`}
+                    onClick={() => setFilter(value)}
+                  >
+                    {label} <span className={styles.chipCount}>{n}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </div>
+      </header>
 
-        {entries.length === 0 ? (
-          <div style={{ textAlign: "center", color: "#aaa", padding: 40 }}>
-            <p>😴 No finished projects published yet. Check back soon!</p>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div style={{ textAlign: "center", color: "var(--muted)", padding: 40 }}>
-            <p>No projects with that output type yet.</p>
+      <main className={`${list.wrap} ${styles.body}`}>
+        {loading ? (
+          <p className={styles.loading}>Loading...</p>
+        ) : entries.length === 0 ? (
+          <div className={list.empty}>
+            <p className={list.emptyTitle}>The first projects are underway.</p>
+            <p>
+              Finished work shows up here once a student and their mentor
+              publish it.
+            </p>
+            <Link to='/research' className='btn-primary'>
+              See open programs →
+            </Link>
           </div>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-              gap: 24,
-            }}
-          >
-            {filtered.map((s, idx) => (
-              <div
-                key={s.id}
-                className='reveal'
-                style={{
-                  background: "white",
-                  borderRadius: 12,
-                  padding: 24,
-                  boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
-                  transition:
-                    "transform 0.2s, box-shadow 0.2s, opacity 0.6s ease, transform 0.6s ease",
-                  transitionDelay: `${Math.min(idx, 8) * 60}ms`,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)";
-                }}
-              >
-                <div style={{ marginBottom: 14 }}>
-                  {s.fileType === "image" ? (
-                    <img
-                      src={s.fileUrl}
-                      alt={`${s.title} poster`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(s.fileUrl, "_blank", "noopener,noreferrer");
-                      }}
-                      style={{
-                        width: "100%",
-                        height: 140,
-                        objectFit: "cover",
-                        borderRadius: 10,
-                        cursor: "pointer",
-                      }}
-                    />
-                  ) : (
-                    <TopicIcon seed={s.id} />
-                  )}
-                </div>
-                <span
-                  style={{
-                    display: "inline-block",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: "var(--mint)",
-                    background: "rgba(31,111,74,0.08)",
-                    padding: "3px 10px",
-                    borderRadius: 20,
-                    marginBottom: 12,
-                  }}
+          <>
+            <p className={list.count}>
+              {filtered.length} {filtered.length === 1 ? "project" : "projects"}
+            </p>
+            <div className={styles.grid}>
+              {filtered.map((s) => (
+                <article
+                  key={s.id}
+                  className={styles.card}
+                  onClick={() => setSelected(s)}
                 >
-                  📦 {s.outputType}
-                </span>
-
-                <h3
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                    marginBottom: 8,
-                    color: "#333",
-                  }}
-                >
-                  {s.title}
-                </h3>
-
-                <p style={{ fontSize: 13, color: "#888", margin: "0 0 12px" }}>
-                  👤 {s.studentName}
-                </p>
-
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "#555",
-                    margin: "0 0 16px",
-                    lineHeight: 1.6,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 4,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {s.summary}
-                </p>
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                    gap: 8,
-                  }}
-                >
-                  <span style={{ fontSize: 12, color: "#888" }}>
-                    👩‍🏫 Mentored by: {mentorLabel(s)}
-                  </span>
-                  <span style={{ display: "flex", gap: 12 }}>
-                    {s.fileType === "pdf" && (
-                      <a
-                        href={s.fileUrl}
-                        target='_blank'
-                        rel='noreferrer'
-                        style={{
-                          fontSize: 12,
-                          color: "#111111",
-                          fontWeight: 600,
-                          textDecoration: "none",
+                  <Cover entry={s} />
+                  <div className={styles.cardBody}>
+                    {s.outputType && (
+                      <p className={styles.type}>{s.outputType}</p>
+                    )}
+                    <h2 className={styles.cardTitle}>
+                      <button
+                        type='button'
+                        className={styles.titleBtn}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelected(s);
                         }}
                       >
-                        📄 View Paper (PDF) →
-                      </a>
+                        {s.title}
+                      </button>
+                    </h2>
+                    {s.summary && (
+                      <p className={styles.cardSummary}>{s.summary}</p>
                     )}
-                    {s.outputUrl && (
-                      <a
-                        href={s.outputUrl}
-                        target='_blank'
-                        rel='noreferrer'
-                        style={{
-                          fontSize: 12,
-                          color: "#111111",
-                          fontWeight: 600,
-                          textDecoration: "none",
-                        }}
-                      >
-                        View work →
-                      </a>
-                    )}
-                  </span>
-                </div>
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedEntry(s);
-                  }}
-                  style={{
-                    width: "100%",
-                    marginTop: 16,
-                    padding: 10,
-                    borderRadius: 8,
-                    border: "1px solid var(--border)",
-                    background: "var(--bg)",
-                    color: "var(--text)",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    cursor: "pointer",
-                  }}
-                >
-                  See More →
-                </button>
-              </div>
-            ))}
-          </div>
+                    <div className={styles.cardFoot}>
+                      <span className={styles.people}>
+                        {s.studentName && (
+                          <span className={styles.student}>
+                            {s.studentName}
+                          </span>
+                        )}
+                        <span>with {mentorLabel(s)}</span>
+                      </span>
+                      <span className={styles.more} aria-hidden='true'>
+                        Read more →
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </>
         )}
-      </div>
+      </main>
 
-      {selectedEntry && (
-        <ShowcaseDetailModal
-          entry={selectedEntry}
-          mentorLabel={mentorLabel}
-          onClose={() => setSelectedEntry(null)}
+      <section className={styles.band}>
+        <div className={`${list.wrap} ${styles.bandInner}`}>
+          <h2 className={styles.bandTitle}>Your project could be next.</h2>
+          <Link to='/student/register' className='btn-primary'>
+            Start your application →
+          </Link>
+        </div>
+      </section>
+
+      {selected && (
+        <DetailDialog
+          entry={selected}
+          mentor={mentorLabel(selected)}
+          onClose={() => setSelected(null)}
         />
       )}
 
