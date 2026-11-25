@@ -95,7 +95,7 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route path='/' element={<HomePage />} />
-        <Route path='/tutors' element={<Tutors standalone={true} />} />
+        <Route path='/tutors' element={<Tutors />} />
         <Route path='/student/login' element={<StudentLogin />} />
         <Route path='/student/register' element={<StudentRegister />} />
         <Route path='/student/dashboard' element={<StudentDashboard />} />

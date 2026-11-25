@@ -2,11 +2,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { api, live } from "../api";
 import styles from "./Tutors.module.css";
+import list from "./ProgramListing.module.css";
 import { SkeletonCard } from "./Skeleton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import InitialsAvatar from "./InitialsAvatar";
 import { formatMentorName } from "../utils/mentorName";
 import { useScrollReveal } from "../utils/useScrollReveal";
 
@@ -19,25 +19,6 @@ const OPENING_OPTIONS = [
   { value: "research", label: "Research" },
   { value: "project", label: "Project" },
 ];
-
-const checkboxRow = {
-  display: "flex",
-  alignItems: "center",
-  gap: 8,
-  fontSize: 14,
-  color: "var(--muted)",
-  marginBottom: 8,
-  cursor: "pointer",
-};
-
-const filterLabel = {
-  fontSize: 13,
-  fontWeight: 700,
-  color: "#111111",
-  textTransform: "uppercase",
-  letterSpacing: "0.04em",
-  margin: "20px 0 10px",
-};
 
 // Matches only the exact surname, not a substring anywhere in the full name
 // (a plain .includes("wu")/.includes("pan") would also match names like
@@ -54,7 +35,8 @@ function featuredSort(a, b) {
   return 0;
 }
 
-export default function Tutors({ standalone = false }) {
+// Public /tutors page: every live mentor, with search, filters and sort.
+export default function Tutors() {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -67,42 +49,50 @@ export default function Tutors({ standalone = false }) {
   const [sortBy, setSortBy] = useState("featured");
   const [visibleCount, setVisibleCount] = useState(20);
 
-  // this component is used both embedded on the homepage (which sets up its
-  // own page-wide observer) and standalone at /tutors (which has no such
-  // observer), so it can't rely on a parent to make its cards visible.
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const sectionRef = useScrollReveal([loading, teachers]);
 
   useEffect(() => {
-    const unsub = live(() => api.get("/teachers"), (rows) => {
-      const data = rows;
-      const filtered = data.filter(
-        (t) => !t.disabled && t.verificationStatus === "approved",
-      );
-      filtered.sort(featuredSort);
-      setTeachers(filtered);
-      setLoading(false);
-    });
+    const unsub = live(
+      () => api.get("/teachers"),
+      (rows) => {
+        const data = rows;
+        const filtered = data.filter(
+          (t) => !t.disabled && t.verificationStatus === "approved",
+        );
+        filtered.sort(featuredSort);
+        setTeachers(filtered);
+        setLoading(false);
+      },
+    );
     return () => unsub();
   }, []);
 
   // Fetched to know which mentors currently have an open (unfilled) research
   // or project seat, for the Opening filter.
   useEffect(() => {
-    const unsub = live(() => api.get("/research"), (rows) => {
-      setResearch(rows);
-    });
+    const unsub = live(
+      () => api.get("/research"),
+      (rows) => {
+        setResearch(rows);
+      },
+    );
     return () => unsub();
   }, []);
 
   useEffect(() => {
-    const unsub = live(() => api.get("/projects"), (rows) => {
-      setProjects(rows);
-    });
+    const unsub = live(
+      () => api.get("/projects"),
+      (rows) => {
+        setProjects(rows);
+      },
+    );
     return () => unsub();
   }, []);
 
   const researchAreaOptions = useMemo(
-    () => [...new Set(teachers.map((t) => t.researchArea).filter(Boolean))].sort(),
+    () =>
+      [...new Set(teachers.map((t) => t.researchArea).filter(Boolean))].sort(),
     [teachers],
   );
 
@@ -141,7 +131,8 @@ export default function Tutors({ standalone = false }) {
     const q = search.trim().toLowerCase();
     let list = teachers.filter((t) => {
       if (q) {
-        const haystack = `${t.name || ""} ${t.expertise || ""} ${t.bio || ""} ${t.major || ""} ${t.researchArea || ""}`.toLowerCase();
+        const haystack =
+          `${t.name || ""} ${t.expertise || ""} ${t.bio || ""} ${t.major || ""} ${t.researchArea || ""}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       if (
@@ -189,279 +180,145 @@ export default function Tutors({ standalone = false }) {
 
   const visibleTeachers = filteredTeachers.slice(0, visibleCount);
 
-  function renderCard(teacher) {
+  function initials(name = "") {
+    return name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((w) => w[0].toUpperCase())
+      .join("");
+  }
+
+  function renderCard(t) {
+    const openResearch = openResearchTeacherIds.has(t.id);
+    const openProject = openProjectTeacherIds.has(t.id);
+    const name = formatMentorName(t.name, {
+      mentorType: t.mentorType,
+      degree: t.degree,
+    });
     return (
-      <div
-        key={teacher.id}
+      <article
+        key={t.id}
         className={`${styles.card} reveal`}
-        onClick={() => navigate(`/teacher/${teacher.id}`)}
-        style={{ cursor: "pointer" }}
+        onClick={() => navigate(`/teacher/${t.id}`)}
       >
-        {/* Avatar */}
-        <div className={styles.avatarWrapper}>
-          {teacher.photoURL ? (
-            <img
-              src={teacher.photoURL}
-              alt={teacher.name}
-              className={styles.avatar}
-            />
-          ) : (
-            <InitialsAvatar
-              name={teacher.name}
-              seed={teacher.id}
-              className={styles.avatar}
-              fontSize='2.5rem'
-            />
-          )}
-        </div>
-
-        <h1 style={{ margin: "0 0 8px", fontSize: 26 }}>
-          {formatMentorName(teacher.name, {
-            mentorType: teacher.mentorType,
-            degree: teacher.degree,
-          })}
-        </h1>
-
-        <div
-          style={{
-            display: "flex",
-            gap: 6,
-            flexWrap: "wrap",
-            justifyContent: "center",
-            marginBottom: 8,
-          }}
-        >
-          {teacher.gender && (
-            <span
-              style={{
-                fontSize: 11,
-                background: "var(--surface)",
-                color: "var(--muted)",
-                padding: "2px 10px",
-                borderRadius: 20,
-                fontWeight: 600,
-              }}
-            >
-              {teacher.gender === "Male" ? "👨" : "👩"} {teacher.gender}
-            </span>
-          )}
-          {teacher.degree && (
-            <span
-              style={{
-                fontSize: 11,
-                background: "var(--primary-soft)",
-                color: "var(--primary-hover)",
-                padding: "2px 10px",
-                borderRadius: 20,
-                fontWeight: 600,
-              }}
-            >
-              🎓 {teacher.degree}
-            </span>
-          )}
-        </div>
-        {teacher.major && (
-          <span
-            style={{
-              fontSize: 11,
-              background: "rgba(154,119,43,0.1)",
-              color: "var(--accent)",
-              padding: "2px 10px",
-              borderRadius: 20,
-              fontWeight: 600,
-            }}
-          >
-            🔬 {teacher.major}
+        <div className={styles.portrait}>
+          {/* Initials sit underneath; a photo that fails to load hides itself. */}
+          <span className={styles.initials} aria-hidden='true'>
+            {initials(t.name)}
           </span>
-        )}
-
-        {teacher.expertise && (
-          <p
-            style={{
-              fontSize: 13,
-              color: "var(--muted)",
-              marginBottom: 6,
-              textAlign: "center",
-              fontWeight: 600,
-            }}
-          >
-            💡 {teacher.expertise}
-          </p>
-        )}
-
-        {teacher.bio && <p className={styles.bio}>{teacher.bio}</p>}
-
-        {teacher.projects && teacher.projects.length > 0 && (
-          <p
-            style={{
-              fontSize: 12,
-              color: "var(--muted)",
-              marginBottom: 6,
-              textAlign: "center",
-            }}
-          >
-            💡 {teacher.projects.length} project idea
-            {teacher.projects.length > 1 ? "s" : ""} available
-          </p>
-        )}
-
-        <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>
-          Click to view full profile →
-        </p>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <>
-        {standalone && <Navbar />}
-        <section id='tutors' ref={sectionRef} className={styles.section}>
-          <div className={styles.inner}>
-            <div className={`${styles.header} reveal`}>
-              <h2 className={styles.title}>Meet Our Research Mentors</h2>
-              <p className={styles.sub}>
-                Expert mentors ready to help you learn anything.
-              </p>
-            </div>
-            <div className={styles.grid}>
-              {[1, 2, 3].map((i) => (
-                <SkeletonCard key={i} />
-              ))}
-            </div>
-          </div>
-        </section>
-        {standalone && <Footer />}
-      </>
-    );
-  }
-
-  // On the homepage, an empty mentor section reads as "we have no mentors" -
-  // leave it out until there's someone to show.
-  if (!standalone && !loading && teachers.length === 0) return null;
-
-  if (!standalone) {
-    return (
-      <section id='tutors' ref={sectionRef} className={styles.section}>
-        <div className={styles.inner}>
-          <div className={`${styles.header} reveal`}>
-            <h2 className={styles.title}>Meet Our Research Mentors</h2>
-            <p className={styles.sub}>
-              Join world-class researchers and explore cutting-edge research
-              topics that match your passion, curiosity, and future ambitions.
-            </p>
-          </div>
-          <div className={styles.grid}>
-            {visibleTeachers.map(renderCard)}
-          </div>
-          {visibleCount < filteredTeachers.length && (
-            <div style={{ textAlign: "center", marginTop: 32 }}>
-              <button
-                onClick={() => setVisibleCount((c) => c + 20)}
-                style={{
-                  padding: "12px 32px",
-                  borderRadius: 10,
-                  border: "2px solid #111111",
-                  background: "white",
-                  color: "#111111",
-                  fontSize: 14,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                Show more (
-                {filteredTeachers.length - visibleCount} more)
-              </button>
-            </div>
+          {t.photoURL && (
+            <img
+              src={t.photoURL}
+              alt=''
+              className={styles.photo}
+              onError={(e) => (e.currentTarget.style.display = "none")}
+            />
+          )}
+          {(openResearch || openProject) && (
+            <span className={styles.open}>
+              Open:{" "}
+              {[openResearch && "Research", openProject && "Project"]
+                .filter(Boolean)
+                .join(" & ")}
+            </span>
           )}
         </div>
-      </section>
+        <div className={styles.body}>
+          <h2 className={styles.name}>
+            <Link
+              to={`/teacher/${t.id}`}
+              className={styles.nameLink}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {name}
+            </Link>
+          </h2>
+          <p className={styles.meta}>
+            {[t.degree, t.university].filter(Boolean).join(" · ")}
+          </p>
+          {(t.expertise || t.researchArea || t.major) && (
+            <p className={styles.field}>
+              {t.expertise || t.researchArea || t.major}
+            </p>
+          )}
+          {t.bio && <p className={styles.bio}>{t.bio}</p>}
+          <span className={styles.more} aria-hidden='true'>
+            View profile →
+          </span>
+        </div>
+      </article>
     );
   }
 
   return (
-    <>
+    <div ref={sectionRef} className={list.page}>
       <Navbar />
-      <section id='tutors' ref={sectionRef} className={styles.section}>
-        <div
-          style={{
-            maxWidth: 1300,
-            margin: "0 auto",
-            display: "flex",
-            gap: 32,
-            alignItems: "flex-start",
-            flexWrap: "wrap",
-          }}
-        >
-          {/* Filters sidebar */}
-          <aside
-            style={{
-              width: 240,
-              flexShrink: 0,
-              background: "white",
-              borderRadius: 16,
-              padding: 20,
-              boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 4,
-              }}
-            >
-              <h3 style={{ margin: 0, fontSize: 16 }}>Filters</h3>
-              <button
-                onClick={clearFilters}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#111111",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                }}
+
+      <header className={list.head}>
+        <div className={list.wrap}>
+          <p className='section-label'>PhD mentors</p>
+          <h1 className={list.title}>Mentors.</h1>
+          <div className={list.headBottom}>
+            <p className={list.sub}>
+              Every mentor is a PhD student or above, verified and
+              background-checked before they work with students.
+            </p>
+            <div className={list.searchRow}>
+              <label className={list.srOnly} htmlFor='mentor-search'>
+                Search mentors
+              </label>
+              <input
+                id='mentor-search'
+                type='search'
+                className={list.search}
+                placeholder='Search by name, field or topic'
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <label className={list.srOnly} htmlFor='mentor-sort'>
+                Sort
+              </label>
+              <select
+                id='mentor-sort'
+                className={list.sort}
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
               >
-                Clear all
-              </button>
+                {SORT_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    Sort: {o.label}
+                  </option>
+                ))}
+              </select>
             </div>
+          </div>
+        </div>
+      </header>
 
-            {researchAreaOptions.length > 0 && (
-              <>
-                <p style={filterLabel}>Research Area</p>
-                <div
-                  style={{
-                    maxHeight: 180,
-                    overflowY: "auto",
-                    paddingRight: 4,
-                  }}
-                >
-                  {researchAreaOptions.map((r) => (
-                    <label key={r} style={checkboxRow}>
-                      <input
-                        type='checkbox'
-                        checked={selectedResearchAreas.includes(r)}
-                        onChange={() =>
-                          toggleValue(
-                            selectedResearchAreas,
-                            setSelectedResearchAreas,
-                            r,
-                          )
-                        }
-                      />
-                      {r}
-                    </label>
-                  ))}
-                </div>
-              </>
-            )}
+      <div className={`${list.wrap} ${list.body}`}>
+        <button
+          type='button'
+          className={list.filterToggle}
+          onClick={() => setFiltersOpen(!filtersOpen)}
+          aria-expanded={filtersOpen}
+        >
+          Filters <span aria-hidden='true'>{filtersOpen ? "−" : "+"}</span>
+        </button>
 
-            <p style={filterLabel}>Opening</p>
+        <aside
+          className={`${list.sidebar} ${filtersOpen ? list.sidebarOpen : ""}`}
+        >
+          <div className={list.sidebarHead}>
+            <span>Filters</span>
+            <button type='button' className={list.clear} onClick={clearFilters}>
+              Clear all
+            </button>
+          </div>
+          <fieldset className={list.group}>
+            <legend className={list.groupTitle}>Open seats in</legend>
             {OPENING_OPTIONS.map((o) => (
-              <label key={o.value} style={checkboxRow}>
+              <label key={o.value} className={list.check}>
                 <input
                   type='checkbox'
                   checked={selectedOpenings.includes(o.value)}
@@ -472,138 +329,95 @@ export default function Tutors({ standalone = false }) {
                 {o.label}
               </label>
             ))}
-          </aside>
+          </fieldset>
+          {researchAreaOptions.length > 0 && (
+            <fieldset className={list.group}>
+              <legend className={list.groupTitle}>Research area</legend>
+              {researchAreaOptions.map((r) => (
+                <label key={r} className={list.check}>
+                  <input
+                    type='checkbox'
+                    checked={selectedResearchAreas.includes(r)}
+                    onChange={() =>
+                      toggleValue(
+                        selectedResearchAreas,
+                        setSelectedResearchAreas,
+                        r,
+                      )
+                    }
+                  />
+                  {r}
+                </label>
+              ))}
+            </fieldset>
+          )}
+        </aside>
 
-          {/* Main content */}
-          <div style={{ flex: "1 1 600px", minWidth: 0 }}>
-            <div className={`${styles.header} reveal`} style={{ marginBottom: 24 }}>
-              <h2 className={styles.title}>Meet Our Research Mentors</h2>
-              <p className={styles.sub}>
-                Join world-class researchers and explore cutting-edge research
-                topics that match your passion, curiosity, and future
-                ambitions.
-              </p>
+        <main className={list.main}>
+          {loading ? (
+            <div className={styles.grid}>
+              {[1, 2, 3].map((i) => (
+                <SkeletonCard key={i} />
+              ))}
             </div>
-
-            <div
-              style={{
-                display: "flex",
-                gap: 12,
-                flexWrap: "wrap",
-                marginBottom: 16,
-              }}
-            >
-              <input
-                type='text'
-                placeholder='Search mentors...'
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                style={{
-                  flex: "1 1 260px",
-                  padding: "12px 16px",
-                  borderRadius: 10,
-                  border: "1px solid #ddd",
-                  fontSize: 14,
-                  boxSizing: "border-box",
-                }}
-              />
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                style={{
-                  padding: "12px 16px",
-                  borderRadius: 10,
-                  border: "1px solid #ddd",
-                  fontSize: 14,
-                  background: "white",
-                }}
+          ) : teachers.length === 0 ? (
+            <div className={list.empty}>
+              <p className={list.emptyTitle}>Our mentor team is growing.</p>
+              <p>
+                Tell us what you'd like to research and we'll match you with the
+                right mentor.
+              </p>
+              <Link
+                to='/tell-us-what-you-need'
+                className='btn-primary'
+                style={{ marginTop: 12 }}
               >
-                {SORT_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    Sort: {o.label}
-                  </option>
-                ))}
-              </select>
+                Tell us what you need →
+              </Link>
             </div>
-
-            {teachers.length > 0 && (
-              <p style={{ color: "var(--muted)", fontSize: 13, margin: "0 0 20px" }}>
+          ) : (
+            <>
+              <p className={list.count} aria-live='polite'>
                 {filteredTeachers.length} of {teachers.length} mentor
-                {teachers.length === 1 ? "" : "s"} match your filters
+                {teachers.length === 1 ? "" : "s"}
               </p>
-            )}
-
-            {teachers.length === 0 ? (
-              <div className={styles.empty}>
-                <p>
-                  Our mentor team is growing. Tell us what you'd like to
-                  research and we'll match you with the right mentor.
-                </p>
-                <button
-                  onClick={() => navigate("/tell-us-what-you-need")}
-                  style={{
-                    marginTop: 12,
-                    padding: "10px 20px",
-                    borderRadius: 8,
-                    border: "none",
-                    background: "var(--primary)",
-                    color: "white",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                  }}
-                >
-                  Tell us what you need →
-                </button>
-              </div>
-            ) : filteredTeachers.length === 0 ? (
-              <div className={styles.empty}>
-                <p>No mentors match your filters.</p>
-                <button
-                  onClick={clearFilters}
-                  style={{
-                    marginTop: 12,
-                    padding: "8px 20px",
-                    borderRadius: 8,
-                    border: "none",
-                    background: "#111111",
-                    color: "white",
-                    cursor: "pointer",
-                  }}
-                >
-                  Clear filters
-                </button>
-              </div>
-            ) : (
-              <>
-                <div className={styles.grid}>
-                  {visibleTeachers.map(renderCard)}
+              {filteredTeachers.length === 0 ? (
+                <div className={list.empty}>
+                  <p className={list.emptyTitle}>No matches.</p>
+                  <p>No mentors match your filters.</p>
+                  <button
+                    type='button'
+                    className='btn-ghost'
+                    onClick={clearFilters}
+                  >
+                    Clear filters
+                  </button>
                 </div>
-                {visibleCount < filteredTeachers.length && (
-                  <div style={{ textAlign: "center", marginTop: 32 }}>
-                    <button
-                      onClick={() => setVisibleCount((c) => c + 20)}
-                      style={{
-                        padding: "12px 32px",
-                        borderRadius: 10,
-                        border: "2px solid #111111",
-                        background: "white",
-                        color: "#111111",
-                        fontSize: 14,
-                        fontWeight: 700,
-                        cursor: "pointer",
-                      }}
-                    >
-                      Show more (
-                      {filteredTeachers.length - visibleCount} more)
-                    </button>
+              ) : (
+                <>
+                  <div className={styles.grid}>
+                    {visibleTeachers.map(renderCard)}
                   </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </section>
+                  {visibleCount < filteredTeachers.length && (
+                    <div className={styles.moreRow}>
+                      <button
+                        type='button'
+                        className='btn-ghost'
+                        onClick={() => setVisibleCount((c) => c + 20)}
+                      >
+                        Show more ({filteredTeachers.length - visibleCount}{" "}
+                        more)
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </main>
+      </div>
+
       <Footer />
-    </>
+    </div>
   );
 }

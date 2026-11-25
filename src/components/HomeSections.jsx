@@ -19,7 +19,9 @@ function initials(name = "") {
 function VettingCard({ wide }) {
   return (
     <div className={`${styles.vetting} ${wide ? styles.vettingWide : ""}`}>
-      <p className={styles.vettingTitle}>Every mentor is a PhD student or above.</p>
+      <p className={styles.vettingTitle}>
+        Every mentor is a PhD student or above.
+      </p>
       <p className={styles.vettingText}>
         Degree verified · Reviewed by our team · Background-checked before going
         live
@@ -39,7 +41,10 @@ export function MentorStrip() {
         (rows) =>
           setMentors(
             rows
-              .filter((t) => !t.disabled && t.name && t.verificationStatus === "approved")
+              .filter(
+                (t) =>
+                  !t.disabled && t.name && t.verificationStatus === "approved",
+              )
               .sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt))
               .slice(0, 3),
           ),
@@ -51,17 +56,29 @@ export function MentorStrip() {
     <section id='mentors' className={styles.mentors}>
       <div className={mentors.length ? styles.mentorGrid : undefined}>
         {mentors.map((m) => (
-          <Link key={m.id} to={`/teacher/${m.id}`} className={styles.mentorCard}>
-            {m.photoURL ? (
-              <img src={m.photoURL} alt='' className={styles.mentorPhoto} />
-            ) : (
-              <span className={styles.mentorInitials} aria-hidden='true'>
-                {initials(m.name)}
-              </span>
+          <Link
+            key={m.id}
+            to={`/teacher/${m.id}`}
+            className={styles.mentorCard}
+          >
+            {/* Initials sit underneath; a photo that fails to load hides itself. */}
+            <span className={styles.mentorInitials} aria-hidden='true'>
+              {initials(m.name)}
+            </span>
+            {m.photoURL && (
+              <img
+                src={m.photoURL}
+                alt=''
+                className={styles.mentorPhoto}
+                onError={(e) => (e.currentTarget.style.display = "none")}
+              />
             )}
             <span className={styles.mentorInfo}>
               <span className={styles.mentorName}>
-                {formatMentorName(m.name, { mentorType: m.mentorType, degree: m.degree })}
+                {formatMentorName(m.name, {
+                  mentorType: m.mentorType,
+                  degree: m.degree,
+                })}
               </span>
               <span className={styles.mentorMeta}>
                 {[m.expertise || m.researchArea || m.major, m.university]
@@ -132,7 +149,9 @@ export function StudentWork() {
         () => api.get("/showcase?limit=3"),
         (rows) =>
           setEntries(
-            [...rows].sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt)).slice(0, 3),
+            [...rows]
+              .sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt))
+              .slice(0, 3),
           ),
       ),
     [],
@@ -154,7 +173,9 @@ export function StudentWork() {
         <span className={styles.workMeta}>
           {[s.outputType, s.studentName].filter(Boolean).join(" · ")}
         </span>
-        <span className={big ? styles.workTitleBig : styles.workTitle}>{s.title}</span>
+        <span className={big ? styles.workTitleBig : styles.workTitle}>
+          {s.title}
+        </span>
       </span>
     </Link>
   );
@@ -170,7 +191,9 @@ export function StudentWork() {
       <div className={styles.workGrid}>
         {card(featured, true)}
         {rest.length > 0 && (
-          <div className={styles.workSide}>{rest.map((s) => card(s, false))}</div>
+          <div className={styles.workSide}>
+            {rest.map((s) => card(s, false))}
+          </div>
         )}
       </div>
     </section>
