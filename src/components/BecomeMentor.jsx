@@ -8,15 +8,37 @@ import { api } from "../api";
 import { MENTOR_TYPES } from "../utils/mentorVerification";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import styles from "./BecomeMentor.module.css";
+import auth from "./TeacherAuth.module.css";
 
 const NOT_ELIGIBLE = "not_eligible";
 
 const STEPS = [
-  { title: "Quick start", time: "2 minutes", text: "Tell us who you are. We'll email you a link to continue." },
-  { title: "Your application", time: "About 10 minutes", text: "Your profile, proof of your PhD status and your CV. Saved as you go." },
-  { title: "Review", time: "About 3 business days", text: "Our team reviews every application. Sometimes we'll ask for a short video interview." },
-  { title: "Onboarding", time: "A few days", text: "Read our Mentor Guidelines. We run a background check on every mentor before they work with students." },
-  { title: "Go live", time: "", text: "Your profile is published and students can apply for your research." },
+  {
+    title: "Quick start",
+    time: "2 minutes",
+    text: "Tell us who you are. We'll email you a link to continue.",
+  },
+  {
+    title: "Your application",
+    time: "About 10 minutes",
+    text: "Your profile, proof of your PhD status and your CV. Saved as you go.",
+  },
+  {
+    title: "Review",
+    time: "About 3 business days",
+    text: "Our team reviews every application. Sometimes we'll ask for a short video interview.",
+  },
+  {
+    title: "Onboarding",
+    time: "A few days",
+    text: "Read our Mentor Guidelines. We run a background check on every mentor before they work with students.",
+  },
+  {
+    title: "Go live",
+    time: "",
+    text: "Your profile is published and students can apply for your research.",
+  },
 ];
 
 const FAQ = [
@@ -41,27 +63,6 @@ const FAQ = [
     a: "Our students are minors. Every mentor passes a background check before going live - it's one of the reasons families trust us.",
   },
 ];
-
-const inputStyle = {
-  width: "100%",
-  padding: 12,
-  borderRadius: 8,
-  border: "1px solid #ddd",
-  boxSizing: "border-box",
-  fontSize: 15,
-  fontFamily: "inherit",
-  marginBottom: 14,
-};
-
-const labelStyle = { display: "block", fontSize: 13, fontWeight: 600, color: "#475569", marginBottom: 6 };
-
-const sectionTitle = {
-  fontSize: "1.9rem",
-  fontWeight: 600,
-  margin: "0 0 20px",
-  fontFamily: "var(--font-serif)",
-  color: "var(--ink)",
-};
 
 export default function BecomeMentor() {
   const [form, setForm] = useState({
@@ -108,7 +109,9 @@ export default function BecomeMentor() {
       } else if (err.code === "WEAK_PASSWORD") {
         setError("Password should be at least 6 characters.");
       } else if (err.code === "EMAIL_IN_USE") {
-        setError("This email already has a HappyResearch account. Please log in instead.");
+        setError(
+          "This email already has a HappyResearch account. Please log in instead.",
+        );
       } else if (err.code === "INVALID_EMAIL") {
         setError("Please enter a valid email address.");
       } else if (err.code === "RATE_LIMITED") {
@@ -121,169 +124,278 @@ export default function BecomeMentor() {
     }
   }
 
+  function field(name, label, props = {}, hint) {
+    return (
+      <div className={auth.field}>
+        <label className={auth.label} htmlFor={`bm-${name}`}>
+          {label}
+          {hint && <span className={styles.hint}> {hint}</span>}
+        </label>
+        <input
+          id={`bm-${name}`}
+          className={auth.input}
+          name={name}
+          value={form[name]}
+          onChange={handleChange}
+          {...props}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
+    <div className={styles.page}>
       <Navbar />
 
-      {/* Hero - the same calm opening as the homepage */}
-      <section style={{ padding: "150px 24px 24px" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <span className='rule' />
-          <div className='section-label'>Become a Mentor</div>
-          <h1 className='page-title' style={{ fontSize: "clamp(2.4rem, 5vw, 3.6rem)", maxWidth: 820 }}>
-            Guide the next generation of researchers.
+      {/* Hero */}
+      <section className={styles.hero}>
+        <div className={styles.wrap}>
+          <p className='section-label'>Become a mentor</p>
+          <h1 className={styles.h1}>
+            Guide the next generation of{" "}
+            <span className='mark'>researchers</span>.
           </h1>
-          <p className='page-sub' style={{ margin: "0 0 28px" }}>
-            Mentor a motivated student through a real research project in your
-            field - online, on your schedule, and paid per project.
-          </p>
-          <a href='#apply' className='btn-primary'>
-            Apply in 2 minutes →
-          </a>
+          <div className={styles.heroBottom}>
+            <p className={styles.heroSub}>
+              Mentor a motivated student through a real research project in your
+              field. Online, on your schedule, and paid per project.
+            </p>
+            <div className={styles.actions}>
+              <a href='#apply' className='btn-primary'>
+                Apply in 2 minutes →
+              </a>
+              <Link to='/mentor/guidelines' className='btn-ghost'>
+                Mentor Guidelines
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
-      <div style={{ maxWidth: 960, margin: "0 auto", padding: "56px 24px" }}>
-        {/* Who can apply + what it looks like */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24, marginBottom: 56 }}>
-          <div style={{ background: "white", borderRadius: 16, padding: 28, border: "1px solid var(--border)" }}>
-            <h2 style={{ ...sectionTitle, fontSize: "1.3rem" }}>Who can apply</h2>
-            <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.9, color: "#334155" }}>
+      {/* Who can apply + what it looks like */}
+      <section className={styles.wrap}>
+        <div className={styles.twoCol}>
+          <div className={styles.col}>
+            <h2 className={styles.colTitle}>Who can apply.</h2>
+            <ul className={styles.rows}>
               {MENTOR_TYPES.map((t) => (
                 <li key={t.value}>{t.plural}</li>
               ))}
             </ul>
           </div>
-          <div style={{ background: "white", borderRadius: 16, padding: 28, border: "1px solid var(--border)" }}>
-            <h2 style={{ ...sectionTitle, fontSize: "1.3rem" }}>What mentoring looks like</h2>
-            <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.9, color: "#334155" }}>
+          <div className={styles.col}>
+            <h2 className={styles.colTitle}>What mentoring looks like.</h2>
+            <ul className={styles.rows}>
               <li>10 one-hour online sessions over about 3 months</li>
-              <li>A real project in your field, from idea to finished result</li>
+              <li>
+                A real project in your field, from idea to finished result
+              </li>
               <li>You propose the research topics</li>
               <li>We handle matching, scheduling and payments</li>
               <li>Paid per project</li>
             </ul>
           </div>
         </div>
+      </section>
 
-        {/* How it works */}
-        <h2 style={sectionTitle}>How it works</h2>
-        <ol style={{ listStyle: "none", padding: 0, margin: "0 0 56px", display: "grid", gap: 12 }}>
-          {STEPS.map((s, i) => (
-            <li key={s.title} style={{ display: "flex", gap: 16, background: "white", borderRadius: 12, padding: "16px 20px", alignItems: "flex-start", border: "1px solid var(--border)" }}>
-              <span style={{ flexShrink: 0, width: 32, height: 32, borderRadius: "50%", background: "#111111", color: "white", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {i + 1}
-              </span>
-              <div>
-                <strong style={{ color: "#111111" }}>{s.title}</strong>
-                {s.time && <span style={{ color: "#94a3b8", fontSize: 13 }}> · {s.time}</span>}
-                <p style={{ margin: "4px 0 0", color: "#475569", lineHeight: 1.6 }}>{s.text}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-
-        {/* FAQ */}
-        <h2 style={sectionTitle}>Questions</h2>
-        <div style={{ display: "grid", gap: 10, marginBottom: 56 }}>
-          {FAQ.map((f) => (
-            <details key={f.q} style={{ background: "white", borderRadius: 12, padding: "14px 20px", border: "1px solid var(--border)" }}>
-              <summary style={{ cursor: "pointer", fontWeight: 600, color: "#111111" }}>{f.q}</summary>
-              <p style={{ margin: "10px 0 0", color: "#475569", lineHeight: 1.6 }}>{f.a}</p>
-            </details>
-          ))}
-          <p style={{ fontSize: 14, color: "#64748b", margin: "6px 0 0" }}>
-            Want to know more about how mentors work with students? Read our{" "}
-            <Link to='/mentor/guidelines' style={{ color: "#111111" }}>Mentor Guidelines</Link>.
-          </p>
+      {/* How it works */}
+      <section className={styles.dark}>
+        <div className={styles.wrap}>
+          <h2 className={styles.bigTitle}>
+            From application to your first student.
+          </h2>
+          <ol className={styles.steps}>
+            {STEPS.map((s, i) => (
+              <li key={s.title} className={styles.step}>
+                <span className={styles.stepNum}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className={styles.stepTitle}>{s.title}</span>
+                <span className={styles.stepText}>
+                  {s.text}
+                  {s.time && <span className={styles.stepTime}>{s.time}</span>}
+                </span>
+              </li>
+            ))}
+          </ol>
         </div>
+      </section>
 
-        {/* Quick start */}
-        <section id='apply' style={{ background: "white", borderRadius: 16, padding: "32px 28px", maxWidth: 560, margin: "0 auto", border: "1px solid var(--border)" }}>
-          {sent ? (
-            <div style={{ textAlign: "center" }}>
-              <p style={{ fontSize: 48, margin: "0 0 8px" }}>📧</p>
-              <h2 style={{ ...sectionTitle, marginBottom: 8 }}>Check your email</h2>
-              <p style={{ color: "#475569", lineHeight: 1.6, margin: 0 }}>
-                We've sent a link to <strong>{form.email}</strong> to confirm
-                your email and continue your application. It takes about 10
-                minutes, and your progress is saved as you go. If you don't
-                see it, check your spam folder.
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
-              <h2 style={{ ...sectionTitle, marginBottom: 6 }}>Start your application</h2>
-              <p style={{ color: "#64748b", fontSize: 14, margin: "0 0 20px" }}>
-                Takes about 2 minutes.
-              </p>
+      {/* FAQ */}
+      <section className={styles.faq}>
+        <div className={`${styles.wrap} ${styles.faqInner}`}>
+          <div className={styles.faqHead}>
+            <h2 className={styles.bigTitle}>Questions.</h2>
+            <p className={styles.faqNote}>
+              More on how mentors work with students in our{" "}
+              <Link to='/mentor/guidelines'>Mentor Guidelines</Link>.
+            </p>
+          </div>
+          <div className={styles.faqList}>
+            {FAQ.map((f) => (
+              <details key={f.q} className={styles.faqItem}>
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <label style={labelStyle}>Full name</label>
-              <input name='name' value={form.name} onChange={handleChange} required style={inputStyle} placeholder='Dr. Jane Smith' />
+      {/* Quick start */}
+      <section id='apply' className={styles.apply}>
+        <div className={`${styles.wrap} ${styles.applyInner}`}>
+          <div className={styles.applyHead}>
+            <h2 className={styles.applyTitle}>Start your application.</h2>
+            <p className={styles.applyText}>
+              Two minutes now. We'll email you a link to finish the rest, and
+              your progress is saved as you go.
+            </p>
+          </div>
 
-              <label style={labelStyle}>Email</label>
-              <input name='email' type='email' value={form.email} onChange={handleChange} required style={inputStyle} placeholder='jane@university.edu' />
-
-              <label style={labelStyle}>Your current role</label>
-              <select name='mentorType' value={form.mentorType} onChange={handleChange} required style={inputStyle}>
-                <option value=''>Select your role</option>
-                {MENTOR_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
-                ))}
-                <option value={NOT_ELIGIBLE}>Master's student, undergraduate, or other</option>
-              </select>
-
-              {form.mentorType === NOT_ELIGIBLE ? (
-                <p style={{ background: "#fff8dc", color: "#111111", borderRadius: 8, padding: "12px 14px", fontSize: 14, lineHeight: 1.6 }}>
-                  Thank you for your interest! Our mentors are currently PhD
-                  students and above. We'd love to hear from you once you've
-                  started a PhD program.
-                </p>
-              ) : (
-                <>
-                  <label style={labelStyle}>University or organization</label>
-                  <input name='university' value={form.university} onChange={handleChange} required style={inputStyle} placeholder='e.g. Johns Hopkins University' />
-
-                  <label style={labelStyle}>Field of research</label>
-                  <input name='researchArea' value={form.researchArea} onChange={handleChange} required style={inputStyle} placeholder='e.g. Neuroscience' />
-
-                  <label style={labelStyle}>
-                    Profile link <span style={{ fontWeight: 400, color: "#94a3b8" }}>(optional - LinkedIn, Google Scholar or university page)</span>
-                  </label>
-                  <input name='website' type='url' value={form.website} onChange={handleChange} style={inputStyle} placeholder='https://' />
-
-                  <label style={labelStyle}>Password</label>
-                  <input name='password' type='password' value={form.password} onChange={handleChange} required style={inputStyle} placeholder='At least 6 characters' autoComplete='new-password' />
-
-                  <label style={labelStyle}>Confirm password</label>
-                  <input name='confirmPassword' type='password' value={form.confirmPassword} onChange={handleChange} required style={inputStyle} placeholder='••••••••' autoComplete='new-password' />
-
-                  {error && <p style={{ color: "#a01f13", fontSize: 14, margin: "0 0 12px" }}>{error}</p>}
-                  {alreadyStarted && (
-                    <p style={{ background: "#fff8dc", color: "#111111", borderRadius: 8, padding: "12px 14px", fontSize: 14, lineHeight: 1.6, margin: "0 0 12px" }}>
-                      You've already started an application with this email.{" "}
-                      <Link to='/teacher/login' style={{ color: "#111111", fontWeight: 700 }}>Log in</Link>{" "}
-                      to continue where you left off.
-                    </p>
-                  )}
-
-                  <button
-                    type='submit'
-                    disabled={submitting}
-                    style={{ width: "100%", padding: 14, borderRadius: 10, border: "none", background: "#111111", color: "white", fontWeight: 700, fontSize: 16, cursor: "pointer" }}
+          <div className={styles.formCard}>
+            {sent ? (
+              <div role='status'>
+                <div className={auth.doneIcon} aria-hidden='true'>
+                  <svg
+                    width='26'
+                    height='26'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='#111111'
+                    strokeWidth='2.4'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
                   >
-                    {submitting ? "Sending..." : "Continue →"}
-                  </button>
-                  <p style={{ fontSize: 13, color: "#94a3b8", textAlign: "center", margin: "14px 0 0" }}>
-                    Already applied?{" "}
-                    <Link to='/teacher/login' style={{ color: "#111111" }}>Log in</Link> to continue.
+                    <path d='M20 6 9 17l-5-5' />
+                  </svg>
+                </div>
+                <h3 className={auth.title}>Check your email</h3>
+                <p className={auth.bodyText} style={{ marginBottom: 0 }}>
+                  We've sent a link to <strong>{form.email}</strong> to confirm
+                  your email and continue your application. It takes about 10
+                  minutes. If you don't see it, check your spam folder.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className={auth.form}>
+                {field("name", "Full name", {
+                  required: true,
+                  autoComplete: "name",
+                  placeholder: "Dr. Jane Smith",
+                })}
+                {field("email", "Email", {
+                  type: "email",
+                  required: true,
+                  autoComplete: "email",
+                  placeholder: "jane@university.edu",
+                })}
+
+                <div className={auth.field}>
+                  <label className={auth.label} htmlFor='bm-mentorType'>
+                    Your current role
+                  </label>
+                  <select
+                    id='bm-mentorType'
+                    className={auth.input}
+                    name='mentorType'
+                    value={form.mentorType}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value=''>Select your role</option>
+                    {MENTOR_TYPES.map((t) => (
+                      <option key={t.value} value={t.value}>
+                        {t.label}
+                      </option>
+                    ))}
+                    <option value={NOT_ELIGIBLE}>
+                      Master's student, undergraduate, or other
+                    </option>
+                  </select>
+                </div>
+
+                {form.mentorType === NOT_ELIGIBLE ? (
+                  <p className={auth.notice} style={{ margin: 0 }}>
+                    Thank you for your interest! Our mentors are currently PhD
+                    students and above. We'd love to hear from you once you've
+                    started a PhD program.
                   </p>
-                </>
-              )}
-            </form>
-          )}
-        </section>
-      </div>
+                ) : (
+                  <>
+                    {field("university", "University or organization", {
+                      required: true,
+                      placeholder: "e.g. Johns Hopkins University",
+                    })}
+                    {field("researchArea", "Field of research", {
+                      required: true,
+                      placeholder: "e.g. Neuroscience",
+                    })}
+                    {field(
+                      "website",
+                      "Profile link",
+                      { type: "url", placeholder: "https://" },
+                      "(optional: LinkedIn, Google Scholar or university page)",
+                    )}
+                    <div className={auth.row}>
+                      {field("password", "Password", {
+                        type: "password",
+                        required: true,
+                        autoComplete: "new-password",
+                        placeholder: "6+ characters",
+                      })}
+                      {field("confirmPassword", "Confirm", {
+                        type: "password",
+                        required: true,
+                        autoComplete: "new-password",
+                      })}
+                    </div>
+
+                    {error && (
+                      <p
+                        className={auth.error}
+                        role='alert'
+                        style={{ margin: 0 }}
+                      >
+                        {error}
+                      </p>
+                    )}
+                    {alreadyStarted && (
+                      <p
+                        className={auth.notice}
+                        role='alert'
+                        style={{ margin: 0 }}
+                      >
+                        You've already started an application with this email.{" "}
+                        <Link
+                          to='/teacher/login'
+                          style={{ color: "inherit", fontWeight: 700 }}
+                        >
+                          Log in
+                        </Link>{" "}
+                        to continue where you left off.
+                      </p>
+                    )}
+
+                    <button
+                      type='submit'
+                      className={auth.btn}
+                      disabled={submitting}
+                    >
+                      {submitting ? "Sending..." : "Continue →"}
+                    </button>
+                    <p className={auth.switch} style={{ marginTop: 4 }}>
+                      Already applied? <Link to='/teacher/login'>Log in</Link>{" "}
+                      to continue.
+                    </p>
+                  </>
+                )}
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

@@ -123,6 +123,12 @@ h2 {
   box-decoration-break: clone;
 }
 
+/* Keeps the highlight (drawn under the text so it doesn't cover the line
+   above) from slipping behind a section's own background. */
+:has(> .mark) {
+  isolation: isolate;
+}
+
 /* Older markup still renders this short line; Concept C doesn't use it. */
 .rule {
   display: none;
