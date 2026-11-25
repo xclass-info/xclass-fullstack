@@ -87,8 +87,8 @@ export function pickIcon(seed) {
 // doesn't read as one flat color.
 export function TopicIcon({ seed, size = 44 }) {
   const { Icon, teal } = pickIcon(seed);
-  const bg = teal ? "var(--primary-soft)" : "rgba(154,119,43,0.12)";
-  const fg = teal ? "var(--primary-hover)" : "var(--accent)";
+  const bg = teal ? "var(--surface)" : "var(--lime)";
+  const fg = "var(--ink)";
   return (
     <div
       style={{

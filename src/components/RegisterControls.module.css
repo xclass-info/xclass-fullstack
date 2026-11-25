@@ -1,0 +1,204 @@
+.seats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.seats .seatCount {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+.seats .applyBtn {
+  width: auto;
+  margin-left: auto;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+}
+
+.seatsLarge {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.seatCount {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.applyBtn {
+  width: 100%;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 999px;
+  padding: 16px 24px;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.applyBtn:hover {
+  background: #2b2b2b;
+}
+
+.applyBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.full {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.prompt {
+  margin-top: 12px;
+  background: var(--bg);
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.promptActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.primary,
+.secondary {
+  flex: 1 1 100px;
+  text-align: center;
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.primary {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+.secondary {
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  padding: 9px 16px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+}
+
+.modal {
+  background: var(--bg);
+  border-radius: 24px;
+  padding: 32px;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.modalKicker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.modalTitle {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.modalText {
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.close {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: none;
+  color: var(--ink);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.applicant {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.applicantLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.applicantName {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.applicantEmail {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.error {
+  background: #fdf0ee;
+  color: #a01f13;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}

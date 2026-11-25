@@ -5,53 +5,23 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { seatsStatus } from "../utils/format";
 import { seatsLeft, totalSeats, registerForItem } from "../utils/registration";
+import styles from "./RegisterControls.module.css";
 
 // Shown in place of a silent redirect when a logged-out visitor clicks
 // "Apply now" - explains why, and lets them choose log in vs sign up
 // instead of being yanked to another page with no warning.
 export function LoginPrompt({ from }) {
   return (
-    <div
-      style={{
-        marginTop: 10,
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
-        borderRadius: 10,
-        padding: "14px 16px",
-      }}
-    >
-      <p style={{ margin: "0 0 10px", fontSize: 14, color: "var(--text)" }}>
-        You'll need a student account to register for this.
-      </p>
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <Link
-          to='/student/login'
-          state={{ from }}
-          style={{
-            padding: "8px 18px",
-            borderRadius: 8,
-            background: "#111111",
-            color: "white",
-            fontWeight: 700,
-            fontSize: 14,
-            textDecoration: "none",
-          }}
-        >
+    <div className={styles.prompt} role='status'>
+      <p>You'll need a student account to apply.</p>
+      <div className={styles.promptActions}>
+        <Link to='/student/login' state={{ from }} className={styles.primary}>
           Log in
         </Link>
         <Link
           to='/student/register'
           state={{ from }}
-          style={{
-            padding: "8px 18px",
-            borderRadius: 8,
-            border: "1px solid var(--border)",
-            background: "white",
-            color: "var(--primary-hover)",
-            fontWeight: 700,
-            fontSize: 14,
-            textDecoration: "none",
-          }}
+          className={styles.secondary}
         >
           Sign up
         </Link>
@@ -63,42 +33,29 @@ export function LoginPrompt({ from }) {
 // Seat count plus an Apply now button while seats remain. Research posts
 // only ever have a single seat, so the count is redundant there - just the
 // button shows.
-export function SeatsRow({ kind, item, onRegister }) {
+// `large` stacks a big seat count over a full-width button (detail-page side
+// card); the default is one compact row for cards in a list.
+export function SeatsRow({ kind, item, onRegister, large = false }) {
   const left = seatsLeft(kind, item);
   if (left === null) return null;
   const showCount = kind !== "research";
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: showCount ? "space-between" : "flex-end",
-        alignItems: "center",
-        gap: 12,
-        flexWrap: "wrap",
-        marginTop: 10,
-      }}
-    >
+    <div className={large ? styles.seatsLarge : styles.seats}>
       {showCount && (
-        <span style={{ fontSize: 14, color: "var(--muted)", fontWeight: 600 }}>
-          👥 {seatsStatus(totalSeats(kind, item), item.enrolledCount)}
+        <span className={styles.seatCount}>
+          {seatsStatus(totalSeats(kind, item), item.enrolledCount)}
         </span>
       )}
-      {left > 0 && (
+      {left > 0 ? (
         <button
+          type='button'
+          className={styles.applyBtn}
           onClick={() => onRegister(kind, item)}
-          style={{
-            padding: "12px 30px",
-            borderRadius: 10,
-            border: "none",
-            background: "#111111",
-            color: "white",
-            fontSize: 16,
-            fontWeight: 700,
-            cursor: "pointer",
-          }}
         >
-          Apply now
+          Apply now →
         </button>
+      ) : (
+        <span className={styles.full}>No seats left right now</span>
       )}
     </div>
   );
@@ -128,7 +85,8 @@ export function RegisterModal({ kind, item, student, onClose }) {
     } catch (err) {
       console.error(err);
       setFormError(
-        REGISTER_ERRORS[err.message] || "Something went wrong. Please try again.",
+        REGISTER_ERRORS[err.message] ||
+          "Something went wrong. Please try again.",
       );
     } finally {
       setSubmitting(false);
@@ -136,127 +94,64 @@ export function RegisterModal({ kind, item, student, onClose }) {
   }
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.5)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 200,
-        padding: 16,
-      }}
-    >
+    <div className={styles.overlay}>
       <div
-        style={{
-          background: "white",
-          borderRadius: 16,
-          padding: 32,
-          width: "100%",
-          maxWidth: 440,
-          maxHeight: "90vh",
-          overflowY: "auto",
-        }}
+        className={styles.modal}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='register-title'
       >
         {done ? (
-          <div style={{ textAlign: "center", padding: 20 }}>
-            <p style={{ fontSize: 48 }}>⏳</p>
-            <h3>Application submitted!</h3>
-            <p style={{ color: "#888", marginBottom: 20 }}>
-              Your application is pending review — we typically review
-              applications within 48 hours. We'll let you know at{" "}
-              {student.email} once it's approved.
+          <div>
+            <p className={styles.modalKicker}>Application submitted</p>
+            <h3 id='register-title' className={styles.modalTitle}>
+              You're in the queue.
+            </h3>
+            <p className={styles.modalText}>
+              Your application is pending review. We typically review
+              applications within 48 hours, and we'll let you know at{" "}
+              <strong>{student.email}</strong> once it's approved.
             </p>
-            <button
-              onClick={onClose}
-              style={{
-                padding: "10px 24px",
-                borderRadius: 8,
-                border: "none",
-                background: "#111111",
-                color: "white",
-                cursor: "pointer",
-              }}
-            >
+            <button type='button' onClick={onClose} className={styles.applyBtn}>
               Done
             </button>
           </div>
         ) : (
           <>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-                gap: 12,
-                marginBottom: 16,
-              }}
-            >
-              <h3 style={{ margin: 0 }}>Apply: {item.title}</h3>
+            <div className={styles.modalHead}>
+              <div>
+                <p className={styles.modalKicker}>Apply</p>
+                <h3 id='register-title' className={styles.modalTitle}>
+                  {item.title}
+                </h3>
+              </div>
               <button
+                type='button'
                 onClick={onClose}
-                style={{
-                  background: "none",
-                  border: "none",
-                  fontSize: 20,
-                  cursor: "pointer",
-                }}
+                className={styles.close}
+                aria-label='Close'
               >
                 ✕
               </button>
             </div>
 
-            <div
-              style={{
-                background: "var(--bg)",
-                border: "1px solid var(--border)",
-                borderRadius: 10,
-                padding: "12px 14px",
-                marginBottom: 16,
-              }}
-            >
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "var(--muted)",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.03em",
-                  margin: "0 0 4px",
-                }}
-              >
-                Applying as
-              </p>
-              <p style={{ margin: 0, fontWeight: 700, color: "var(--text)" }}>
-                {student.name}
-              </p>
-              <p style={{ margin: "2px 0 0", fontSize: 14, color: "var(--muted)" }}>
-                {student.email}
-              </p>
+            <div className={styles.applicant}>
+              <p className={styles.applicantLabel}>Applying as</p>
+              <p className={styles.applicantName}>{student.name}</p>
+              <p className={styles.applicantEmail}>{student.email}</p>
             </div>
             {formError && (
-              <p style={{ color: "var(--pink)", fontSize: 13, margin: "0 0 12px" }}>
+              <p className={styles.error} role='alert'>
                 {formError}
               </p>
             )}
             <button
+              type='button'
               onClick={submit}
               disabled={submitting}
-              style={{
-                width: "100%",
-                padding: 12,
-                marginTop: 8,
-                borderRadius: 8,
-                border: "none",
-                background: "#111111",
-                color: "white",
-                fontSize: 16,
-                cursor: "pointer",
-                opacity: submitting ? 0.6 : 1,
-              }}
+              className={styles.applyBtn}
             >
-              {submitting ? "Submitting..." : "Submit Application"}
+              {submitting ? "Submitting..." : "Submit application →"}
             </button>
           </>
         )}
