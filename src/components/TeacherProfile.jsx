@@ -1,298 +1,134 @@
 // src/components/TeacherProfile.jsx
+// Public mentor profile: portrait + name hero, bio and facts, the mentor's
+// open research and projects (each links to its detail page), and a
+// 1-on-1 booking dialog.
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { api, getOrNull, live, seg, toMillis } from "../api";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { safeUrl, LESSON_STRUCTURE_LABEL } from "../utils/format";
+import { safeUrl, seatsStatus, LESSON_STRUCTURE_LABEL } from "../utils/format";
 import { SeatsRow, RegisterModal, LoginPrompt } from "./RegisterControls";
 import { useStudentAuth } from "../utils/useStudentAuth";
-import InitialsAvatar from "./InitialsAvatar";
 import { formatMentorName } from "../utils/mentorName";
 import { mentorTypeLabel } from "../utils/mentorVerification";
-
 import { toPrereqArray } from "../utils/prerequisites";
+import styles from "./TeacherProfile.module.css";
+import reg from "./RegisterControls.module.css";
+import auth from "./TeacherAuth.module.css";
 
-const cardStyle = {
-  background: "white",
-  borderRadius: 12,
-  padding: 28,
-  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-  border: "1px solid #eef1f3",
-  marginBottom: 24,
-};
-const itemStyle = {
-  padding: 20,
-  borderRadius: 12,
-  background: "var(--bg)",
-  border: "1px solid var(--border)",
-  transition: "transform 0.15s, box-shadow 0.15s, border-color 0.15s",
-};
-
-function liftOn(e) {
-  e.currentTarget.style.transform = "translateY(-2px)";
-  e.currentTarget.style.boxShadow = "0 8px 20px rgba(17,17,17,0.1)";
-  e.currentTarget.style.borderColor = "#d8e4e8";
-}
-function liftOff(e) {
-  e.currentTarget.style.transform = "translateY(0)";
-  e.currentTarget.style.boxShadow = "none";
-  e.currentTarget.style.borderColor = "var(--border)";
-}
-
-// Small eyebrow + serif heading, reused above each portfolio section -
-// echoes the site's section-label + Source Serif 4 convention elsewhere.
-function SectionHeading({ eyebrow, title }) {
-  return (
-    <div style={{ marginBottom: 20 }}>
-      <p
-        style={{
-          margin: "0 0 4px",
-          fontSize: 12,
-          fontWeight: 600,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: "#111111",
-        }}
-      >
-        {eyebrow}
-      </p>
-      <h3
-        style={{
-          margin: 0,
-          fontFamily: "var(--font-serif)",
-          fontSize: 26,
-          fontWeight: 600,
-          color: "var(--ink)",
-        }}
-      >
-        {title}
-      </h3>
-    </div>
-  );
-}
-
-const BADGES = {
-  registration: {
-    label: "Registration",
-    color: "#92400e",
-    bg: "rgba(217,119,6,0.08)",
-    border: "rgba(217,119,6,0.3)",
-  },
-  active: {
-    label: "Active",
-    color: "var(--mint)",
-    bg: "rgba(31,111,74,0.08)",
-    border: "rgba(31,111,74,0.3)",
-  },
-  completed: {
-    label: "Completed",
-    color: "var(--muted)",
-    bg: "var(--surface)",
-    border: "var(--border)",
-  },
-};
-
-function StatusBadge({ status }) {
-  const b = BADGES[status] || BADGES.active;
-  return (
-    <span
-      style={{
-        fontSize: 11,
-        fontWeight: 800,
-        textTransform: "uppercase",
-        padding: "3px 10px",
-        borderRadius: 50,
-        border: `2px solid ${b.border}`,
-        color: b.color,
-        background: b.bg,
-        whiteSpace: "nowrap",
-      }}
-    >
-      {b.label}
-    </span>
-  );
-}
-
-// Long descriptions are clamped with a Show more toggle so one research
-// post or project doesn't push everything else off the page.
-function ExpandableText({ text, style }) {
-  const [open, setOpen] = useState(false);
-  const isLong = text.length > 280;
-  return (
-    <>
-      <p
-        style={{
-          ...style,
-          whiteSpace: "pre-wrap",
-          ...(isLong && !open
-            ? {
-                display: "-webkit-box",
-                WebkitLineClamp: 4,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }
-            : {}),
-        }}
-      >
-        {text}
-      </p>
-      {isLong && (
-        <button
-          onClick={() => setOpen(!open)}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#111111",
-            cursor: "pointer",
-            fontSize: 12,
-            fontWeight: 600,
-            padding: 0,
-            marginTop: 4,
-          }}
-        >
-          {open ? "Show less" : "Show more"}
-        </button>
-      )}
-    </>
-  );
-}
-
-// A Polygence-style trailing "Keywords: a, b, c" line, built from whatever
-// real topic/metadata fields are available - grade level, deliverable type,
-// and the mentor's own subject tags - rather than invented keywords.
-function KeywordsLine({ items }) {
-  const list = [...new Set(items.filter(Boolean))];
-  if (list.length === 0) return null;
-  return (
-    <p
-      style={{
-        fontSize: 12,
-        color: "var(--muted)",
-        margin: "10px 0 0",
-        lineHeight: 1.6,
-      }}
-    >
-      <span style={{ fontWeight: 700, color: "var(--muted)" }}>Keywords: </span>
-      {list.join(", ")}
-    </p>
-  );
-}
-
-// Research cards expand in place (like Show more on projects)
-// instead of navigating away.
-function ResearchItem({ r, onRegister, expertiseTags }) {
-  const [open, setOpen] = useState(false);
-  const labelStyle = {
-    margin: "0 0 4px",
-    fontSize: 11,
-    fontWeight: 700,
-    textTransform: "uppercase",
-    letterSpacing: "0.05em",
-  };
-  const bodyStyle = {
-    margin: 0,
-    fontSize: 13,
-    color: "var(--muted)",
-    lineHeight: 1.6,
-    whiteSpace: "pre-wrap",
-  };
-  return (
-    <div style={itemStyle} onMouseEnter={liftOn} onMouseLeave={liftOff}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: 12,
-          marginBottom: 6,
-        }}
-      >
-        <h4 style={{ margin: 0, fontSize: 15, color: "var(--text)" }}>{r.title}</h4>
-        <StatusBadge status={r.stage} />
-      </div>
-      <p
-        style={{
-          ...bodyStyle,
-          color: "var(--muted)",
-          ...(open
-            ? {}
-            : {
-                display: "-webkit-box",
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }),
-        }}
-      >
-        {r.idea}
-      </p>
-      {toPrereqArray(r.prerequisites).length > 0 && (
-        <p style={{ fontSize: 12, color: "var(--muted)", margin: "0 0 4px" }}>
-          ✅ Prerequisites: {toPrereqArray(r.prerequisites).join(", ")}
-        </p>
-      )}
-      <p style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600, margin: "0 0 4px" }}>
-        🕐 {LESSON_STRUCTURE_LABEL}
-      </p>
-      <KeywordsLine
-        items={[r.gradeLevel, r.deliverable, ...expertiseTags]}
-      />
-      <SeatsRow kind='research' item={r} onRegister={onRegister} />
-      {open && (
-        <>
-          <div
-            style={{
-              marginTop: 10,
-              padding: "10px 12px",
-              borderRadius: 8,
-              background: "#f0fdf4",
-              borderLeft: "3px solid #1f6f4a",
-            }}
-          >
-            <p style={{ ...labelStyle, color: "#1f6f4a" }}>Impact</p>
-            <p style={bodyStyle}>{r.impact}</p>
-          </div>
-          {r.details && (
-            <div
-              style={{
-                marginTop: 10,
-                padding: "10px 12px",
-                borderRadius: 8,
-                background: "white",
-                border: "1px solid #eee",
-              }}
-            >
-              <p style={{ ...labelStyle, color: "#aaa" }}>Additional details</p>
-              <p style={bodyStyle}>{r.details}</p>
-            </div>
-          )}
-        </>
-      )}
-      <button
-        onClick={() => setOpen(!open)}
-        style={{
-          background: "none",
-          border: "none",
-          color: "#111111",
-          cursor: "pointer",
-          fontSize: 12,
-          fontWeight: 600,
-          padding: 0,
-          marginTop: 8,
-        }}
-      >
-        {open ? "Show less" : "Show more"}
-      </button>
-    </div>
-  );
-}
+const STAGE_LABEL = { active: "Active", completed: "Completed" };
 
 const newestFirst = (a, b) => toMillis(b.createdAt) - toMillis(a.createdAt);
 
+function initials(name = "") {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
+
+// "2026-12-03" + "16:00" -> "Thu, Dec 3 · 4:00 PM"
+function slotLabel(slot) {
+  const d = new Date(`${slot.date}T${slot.time}`);
+  if (Number.isNaN(d.getTime())) return `${slot.date} ${slot.time}`;
+  const day = d.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+  const time = d.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  return `${day} · ${time}`;
+}
+
+// One research topic or project. Items from the research/projects
+// collections link to their detail page; the older per-profile project
+// list has no page, so those cards aren't clickable.
+function ProgramCard({ kind, item, detailPath, fieldKey, onRegister }) {
+  const navigate = useNavigate();
+  const stage = item.stage || "active";
+  const prereqs = toPrereqArray(item.prerequisites);
+  // Research always has a single seat, so the count only shows for projects.
+  const showSeats = kind === "project" && Boolean(item.seats);
+  const href = detailPath ? `${detailPath}/${item.id}` : null;
+  return (
+    <article
+      className={`${styles.card} ${href ? styles.cardClickable : ""}`}
+      onClick={href ? () => navigate(href) : undefined}
+    >
+      <div className={styles.cardTop}>
+        <span className={styles.kind}>
+          {kind === "research" ? "Research" : "Project"}
+        </span>
+        {item.stage && (
+          <span
+            className={`${styles.stage} ${stage === "completed" ? styles.stageDone : ""}`}
+          >
+            {STAGE_LABEL[stage] || STAGE_LABEL.active}
+          </span>
+        )}
+      </div>
+      <h3 className={styles.cardTitle}>
+        {href ? (
+          <Link
+            to={href}
+            className={styles.cardLink}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {item.title}
+          </Link>
+        ) : (
+          item.title
+        )}
+      </h3>
+      {item[fieldKey] && <p className={styles.cardText}>{item[fieldKey]}</p>}
+      <div className={styles.tags}>
+        {item.gradeLevel && (
+          <span className={styles.tag}>{item.gradeLevel}</span>
+        )}
+        <span className={styles.tag}>{LESSON_STRUCTURE_LABEL}</span>
+      </div>
+      {(item.deliverable || prereqs.length > 0 || showSeats) && (
+        <dl className={styles.cardFacts}>
+          {item.deliverable && (
+            <div>
+              <dt>You'll produce</dt>
+              <dd>{item.deliverable}</dd>
+            </div>
+          )}
+          {prereqs.length > 0 && (
+            <div>
+              <dt>Prerequisites</dt>
+              <dd>{prereqs.join(", ")}</dd>
+            </div>
+          )}
+          {showSeats && (
+            <div>
+              <dt>Seats</dt>
+              <dd>{seatsStatus(item.seats, item.enrolledCount)}</dd>
+            </div>
+          )}
+        </dl>
+      )}
+      <div className={styles.cardFoot} onClick={(e) => e.stopPropagation()}>
+        {href && (
+          <Link to={href} className={styles.more}>
+            Read more →
+          </Link>
+        )}
+        <SeatsRow hideCount kind={kind} item={item} onRegister={onRegister} />
+      </div>
+    </article>
+  );
+}
+
 export default function TeacherProfile() {
   const { teacherId } = useParams();
-  const navigate = useNavigate();
   const location = useLocation();
   const { student } = useStudentAuth();
   const [teacher, setTeacher] = useState(null);
@@ -302,12 +138,14 @@ export default function TeacherProfile() {
   const [form, setForm] = useState({ name: "", email: "" });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [bookError, setBookError] = useState("");
   const [booked, setBooked] = useState(false);
   const [showBooking, setShowBooking] = useState(false);
   const [research, setResearch] = useState([]);
   const [projects, setProjects] = useState([]);
   const [registering, setRegistering] = useState(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [photoFailed, setPhotoFailed] = useState(false);
 
   useEffect(() => {
     const unsub = live(
@@ -322,14 +160,20 @@ export default function TeacherProfile() {
 
   useEffect(() => {
     async function fetchSlots() {
-      const rows = await api.get(`/teachers/${seg(teacherId)}/availability`);
-      const available = rows
-        .filter((s) => !s.booked)
-        .sort(
-          (a, b) =>
-            new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`),
+      try {
+        const rows = await api.get(`/teachers/${seg(teacherId)}/availability`);
+        setSlots(
+          rows
+            .filter((s) => !s.booked)
+            .sort(
+              (a, b) =>
+                new Date(`${a.date}T${a.time}`) -
+                new Date(`${b.date}T${b.time}`),
+            ),
         );
-      setSlots(available);
+      } catch (err) {
+        console.error(err);
+      }
     }
     fetchSlots();
   }, [teacherId]);
@@ -340,14 +184,15 @@ export default function TeacherProfile() {
     async function loadPortfolio() {
       const byTeacher = (name) =>
         api.get(`/${name}?teacherId=${seg(teacherId)}`);
-      const toList = (rows) => [...rows].sort(newestFirst);
       try {
         const [r, p] = await Promise.all([
           byTeacher("research"),
           byTeacher("projects"),
         ]);
-        setResearch(toList(r).filter((x) => x.status === "published"));
-        setProjects(toList(p));
+        setResearch(
+          [...r].sort(newestFirst).filter((x) => x.status === "published"),
+        );
+        setProjects([...p].sort(newestFirst));
       } catch (err) {
         console.error(err);
       }
@@ -355,11 +200,22 @@ export default function TeacherProfile() {
     loadPortfolio();
   }, [teacherId]);
 
+  // Close dialogs with Escape.
+  useEffect(() => {
+    if (!showBooking && !showLoginPrompt) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setShowBooking(false);
+        setShowLoginPrompt(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showBooking, showLoginPrompt]);
+
   function openRegister(kind, item) {
     // Registering requires a logged-in student account, so it can be tied
     // to the student's record and reliably show up on their dashboard.
-    // Rather than silently redirecting to login, show an inline prompt so
-    // the choice (log in vs sign up) is explicit.
     if (!student) {
       setShowLoginPrompt(true);
       return;
@@ -368,16 +224,21 @@ export default function TeacherProfile() {
   }
 
   function validate() {
-    const newErrors = {};
-    if (!form.name.trim()) newErrors.name = "Required";
-    if (!form.email.trim()) newErrors.email = "Required";
+    const e = {};
+    if (!form.name.trim()) e.name = "Please enter your name.";
+    if (!form.email.trim()) e.email = "Please enter your email.";
     else if (!/\S+@\S+\.\S+/.test(form.email))
-      newErrors.email = "Invalid email";
-    return newErrors;
+      e.email = "That email doesn't look right.";
+    return e;
   }
 
-  async function handleBook() {
-    if (!selectedSlot) return alert("Please select a time slot");
+  async function handleBook(e) {
+    e.preventDefault();
+    setBookError("");
+    if (!selectedSlot) {
+      setBookError("Pick a time first.");
+      return;
+    }
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -393,651 +254,371 @@ export default function TeacherProfile() {
         studentEmail: form.email,
       });
       setBooked(true);
+      setSlots((prev) => prev.filter((s) => s.id !== selectedSlot.id));
     } catch (err) {
       console.error(err);
-      alert("Something went wrong. Please try again.");
+      setBookError("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
   }
 
-  if (loading) {
+  function closeBooking() {
+    setShowBooking(false);
+    if (booked) {
+      setBooked(false);
+      setSelectedSlot(null);
+    }
+  }
+
+  if (loading || !teacher || teacher.verificationStatus !== "approved") {
     return (
-      <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
+      <div className={styles.page}>
         <Navbar />
-        <div
-          style={{ padding: "120px 32px", textAlign: "center", color: "#aaa" }}
-        >
-          Loading teacher profile...
+        <div className={`${styles.wrap} ${styles.state}`}>
+          {loading ? (
+            <p className={styles.muted}>Loading...</p>
+          ) : (
+            <>
+              <h1 className={styles.stateTitle}>Mentor not found.</h1>
+              <p className={styles.muted}>
+                This profile may have been removed or isn't public yet.
+              </p>
+              <Link to='/tutors' className='btn-ghost'>
+                ← All mentors
+              </Link>
+            </>
+          )}
         </div>
+        {!loading && <Footer />}
       </div>
     );
   }
 
-  if (!teacher || teacher.verificationStatus !== "approved") {
-    return (
-      <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
-        <Navbar />
-        <div style={{ padding: "120px 32px", textAlign: "center" }}>
-          <p>Teacher not found.</p>
-          <button
-            onClick={() => navigate("/")}
-            style={{
-              marginTop: 16,
-              padding: "10px 24px",
-              borderRadius: 8,
-              border: "none",
-              background: "#111111",
-              color: "white",
-              cursor: "pointer",
-            }}
-          >
-            ← Back to Home
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // The "Expertise" tag row draws on whichever of these subject fields the
-  // mentor has, deduped - real teacher docs don't have a dedicated
-  // multi-tag field, so this reuses what's already there.
   const expertiseTags = [
     ...new Set(
-      [teacher.major, teacher.researchArea, teacher.expertise].filter(
-        Boolean,
-      ),
+      [teacher.major, teacher.researchArea, teacher.expertise].filter(Boolean),
     ),
   ];
-
   const displayName = formatMentorName(teacher.name, {
     mentorType: teacher.mentorType,
     degree: teacher.degree,
   });
+  const credentials = [teacher.degree, teacher.university]
+    .filter(Boolean)
+    .join(" · ");
+  const legacyProjects = teacher.projects || [];
+  const programCount =
+    research.length + projects.length + legacyProjects.length;
+  const website = teacher.website ? safeUrl(teacher.website) : null;
 
-  const projectsTotal = projects.length + (teacher.projects?.length || 0);
-  const stats = [
+  const facts = [
     research.length > 0 && {
+      label: "Research topics",
       value: research.length,
-      label: research.length === 1 ? "Research Topic" : "Research Topics",
+      big: true,
     },
-    projectsTotal > 0 && {
-      value: projectsTotal,
-      label: projectsTotal === 1 ? "Project" : "Projects",
+    projects.length + legacyProjects.length > 0 && {
+      label: "Projects",
+      value: projects.length + legacyProjects.length,
+      big: true,
     },
     teacher.yearsOfExperience && {
+      label: "Years of experience",
       value: teacher.yearsOfExperience,
-      label: "Years Exp.",
+      big: true,
+    },
+    teacher.languages && { label: "Languages", value: teacher.languages },
+    teacher.gender && { label: "Gender", value: teacher.gender },
+    teacher.website && {
+      label: "Website",
+      value: website ? (
+        <a href={website} target='_blank' rel='noreferrer'>
+          {teacher.website.replace(/^https?:\/\//, "")}
+        </a>
+      ) : (
+        teacher.website
+      ),
     },
   ].filter(Boolean);
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
+    <div className={styles.page}>
       <Navbar />
 
-      <div
-        style={{ maxWidth: 1180, margin: "0 auto", padding: "100px 24px 60px" }}
-      >
-        {/* Back button */}
-        <button
-          onClick={() => navigate(-1)}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#111111",
-            cursor: "pointer",
-            fontSize: 14,
-            marginBottom: 20,
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-        >
-          ← Back
-        </button>
+      {/* ---- Hero ---- */}
+      <header className={`${styles.wrap} ${styles.head}`}>
+        <Link to='/tutors' className={styles.back}>
+          ← All mentors
+        </Link>
+        <div className={styles.hero}>
+          <div className={styles.portrait}>
+            <span className={styles.initials} aria-hidden='true'>
+              {initials(teacher.name)}
+            </span>
+            {teacher.photoURL && !photoFailed && (
+              <img
+                src={teacher.photoURL}
+                alt={teacher.name}
+                className={styles.photo}
+                onError={() => setPhotoFailed(true)}
+              />
+            )}
+          </div>
 
-        <div
-          style={{
-            display: "flex",
-            gap: 32,
-            flexWrap: "wrap",
-          }}
-        >
-          {/* Sidebar — avatar, facts, stats, CTA */}
-          <aside
-            style={{
-              flex: "0 0 320px",
-              width: 320,
-            }}
-          >
-            <div
-              style={{
-                ...cardStyle,
-                textAlign: "center",
-                marginBottom: 0,
-                position: "sticky",
-                top: 92,
-              }}
-            >
-              {teacher.photoURL ? (
-                <img
-                  src={teacher.photoURL}
-                  alt={teacher.name}
-                  style={{
-                    width: 150,
-                    height: 150,
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    background: "#fff8dc",
-                    border: "4px solid #fff",
-                    boxShadow: "0 0 0 3px #e3eff3",
-                    margin: "0 auto 16px",
-                  }}
-                />
-              ) : (
-                <InitialsAvatar
-                  name={teacher.name}
-                  seed={teacher.id}
-                  fontSize='2.6rem'
-                  style={{
-                    width: 150,
-                    height: 150,
-                    borderRadius: "50%",
-                    border: "4px solid #fff",
-                    boxShadow: "0 0 0 3px #e3eff3",
-                    margin: "0 auto 16px",
-                  }}
-                />
-              )}
-
-              <h1
-                style={{
-                  margin: "0 0 2px",
-                  fontFamily: "var(--font-display)",
-                  fontSize: 24,
-                  fontWeight: 700,
-                  color: "var(--text)",
-                }}
-              >
-                {displayName}
-              </h1>
-              <p style={{ margin: "0 0 10px", fontSize: 13, color: "#111111", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                Research Mentor
-              </p>
-
+          <div className={styles.intro}>
+            <div className={styles.kicker}>
+              <span className='section-label' style={{ margin: 0 }}>
+                Mentor
+              </span>
               {teacher.mentorType && (
-                <div style={{ marginBottom: 14 }}>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 6,
-                      background: "rgba(22,101,52,0.08)",
-                      color: "#14532d",
-                      border: "1px solid rgba(22,101,52,0.25)",
-                      borderRadius: 20,
-                      padding: "4px 12px",
-                      fontSize: 12,
-                      fontWeight: 700,
-                    }}
-                  >
-                    ✓ Verified {mentorTypeLabel(teacher.mentorType)}
-                  </span>
-                </div>
+                <span className={styles.verified}>
+                  ✓ Verified {mentorTypeLabel(teacher.mentorType)}
+                </span>
               )}
-
-              {(teacher.degree || teacher.university) && (
-                <p style={{ margin: "0 0 18px", fontSize: 13.5, color: "var(--muted)" }}>
-                  {[teacher.degree, teacher.university]
-                    .filter(Boolean)
-                    .join(" at ")}
-                </p>
-              )}
-
-              {/* Expertise tags */}
+            </div>
+            <h1 className={styles.name}>{displayName}</h1>
+            {credentials && <p className={styles.cred}>{credentials}</p>}
+            <div className={styles.introBottom}>
               {expertiseTags.length > 0 && (
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 6,
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    paddingTop: 16,
-                    borderTop: "1px solid #eef1f3",
-                  }}
-                >
-                  {expertiseTags.map((tag) => (
-                    <span
-                      key={tag}
-                      style={{
-                        fontSize: 11.5,
-                        background: "#fff8dc",
-                        color: "#111111",
-                        border: "1px solid #111111",
-                        padding: "4px 11px",
-                        borderRadius: 20,
-                        fontWeight: 600,
-                      }}
-                    >
-                      {tag}
+                <div className={styles.expertise}>
+                  {expertiseTags.map((t) => (
+                    <span key={t} className={styles.expTag}>
+                      {t}
                     </span>
                   ))}
                 </div>
               )}
-
-              {/* Stats row */}
-              {stats.length > 0 && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: 0,
-                    marginTop: 18,
-                    paddingTop: 18,
-                    borderTop: "1px solid #eef1f3",
-                  }}
+              <div className={styles.actions}>
+                <button
+                  type='button'
+                  className='btn-primary'
+                  onClick={() => setShowBooking(true)}
                 >
-                  {stats.map((s, i) => (
-                    <div
-                      key={s.label}
-                      style={{
-                        flex: 1,
-                        padding: "0 8px",
-                        borderLeft: i > 0 ? "1px solid #eef1f3" : "none",
-                      }}
-                    >
-                      <p
-                        style={{
-                          margin: "0 0 2px",
-                          fontSize: 20,
-                          fontWeight: 700,
-                          color: "#111111",
-                          fontFamily: "var(--font-display)",
-                        }}
-                      >
-                        {s.value}
-                      </p>
-                      <p style={{ margin: 0, fontSize: 11, color: "var(--muted)", lineHeight: 1.3 }}>
-                        {s.label}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <button
-                onClick={() => setShowBooking(true)}
-                style={{
-                  width: "100%",
-                  marginTop: 20,
-                  padding: "14px 20px",
-                  borderRadius: 12,
-                  border: "none",
-                  background: "#111111",
-                  color: "white",
-                  fontSize: 15.5,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                Book a consultation
-              </button>
-
-              {(teacher.gender || teacher.languages || teacher.website) && (
-                <div
-                  style={{
-                    marginTop: 16,
-                    paddingTop: 16,
-                    borderTop: "1px solid #eef1f3",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 6,
-                    fontSize: 12.5,
-                    color: "var(--muted)",
-                  }}
-                >
-                  {teacher.gender && <span>{teacher.gender}</span>}
-                  {teacher.languages && <span>🗣 {teacher.languages}</span>}
-                  {teacher.website &&
-                    (safeUrl(teacher.website) ? (
-                      <a
-                        href={safeUrl(teacher.website)}
-                        target='_blank'
-                        rel='noreferrer'
-                        style={{ color: "#111111" }}
-                      >
-                        {teacher.website}
-                      </a>
-                    ) : (
-                      <span>{teacher.website}</span>
-                    ))}
-                </div>
-              )}
-            </div>
-          </aside>
-
-          {/* Main column — bio, research, projects */}
-          <main style={{ flex: "1 1 600px", minWidth: 0 }}>
-            {/* About */}
-            {teacher.bio && (
-              <div style={cardStyle}>
-                <SectionHeading eyebrow='About' title='Bio' />
-                <p
-                  style={{
-                    fontSize: 14.5,
-                    color: "var(--muted)",
-                    lineHeight: 1.75,
-                    margin: 0,
-                  }}
-                >
-                  {teacher.bio}
-                </p>
+                  Book a 1-on-1 session
+                </button>
+                {programCount > 0 && (
+                  <a href='#programs' className='btn-ghost'>
+                    See open programs
+                  </a>
+                )}
               </div>
-            )}
+            </div>
+          </div>
+        </div>
+      </header>
 
-        {/* Research */}
-        {research.length > 0 && (
-          <div style={cardStyle}>
-            <SectionHeading eyebrow='Portfolio' title='Research' />
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {/* ---- About + facts ---- */}
+      {(teacher.bio || facts.length > 0) && (
+        <section className={`${styles.wrap} ${styles.about}`}>
+          <div className={styles.aboutHead}>
+            <h2 className={styles.sectionTitle}>About.</h2>
+          </div>
+          <div className={styles.aboutBody}>
+            {teacher.bio && <p className={styles.bio}>{teacher.bio}</p>}
+            {facts.length > 0 && (
+              <dl className={styles.facts}>
+                {facts.map((f) => (
+                  <div key={f.label} className={f.big ? styles.factBig : ""}>
+                    <dt>{f.label}</dt>
+                    <dd>{f.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* ---- Programs ---- */}
+      {programCount > 0 && (
+        <section id='programs' className={styles.programs}>
+          <div className={styles.wrap}>
+            <h2 className={styles.sectionTitle}>Work with this mentor.</h2>
+            <p className={styles.programsSub}>
+              Every program is {LESSON_STRUCTURE_LABEL.replace(" · ", ", ")}{" "}
+              with this mentor, and ends in something you made.
+            </p>
+            <div className={styles.grid}>
               {research.map((r) => (
-                <ResearchItem
+                <ProgramCard
                   key={r.id}
-                  r={r}
+                  kind='research'
+                  item={r}
+                  detailPath='/research'
+                  fieldKey='idea'
                   onRegister={openRegister}
-                  expertiseTags={expertiseTags}
+                />
+              ))}
+              {projects.map((p) => (
+                <ProgramCard
+                  key={p.id}
+                  kind='project'
+                  item={p}
+                  detailPath='/projects'
+                  fieldKey='description'
+                  onRegister={openRegister}
+                />
+              ))}
+              {legacyProjects.map((p, i) => (
+                <ProgramCard
+                  key={p.id || `legacy-${i}`}
+                  kind='project'
+                  item={p}
+                  fieldKey='description'
+                  onRegister={openRegister}
                 />
               ))}
             </div>
           </div>
-        )}
+        </section>
+      )}
 
-        {/* Projects (new collection first, then the older per-profile list) */}
-        {[...projects, ...(teacher.projects || [])].length > 0 && (
-          <div style={cardStyle}>
-            <SectionHeading eyebrow='Portfolio' title='Projects' />
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {[...projects, ...(teacher.projects || [])].map((project) => (
-                <div
-                  key={project.id}
-                  style={itemStyle}
-                  onMouseEnter={liftOn}
-                  onMouseLeave={liftOff}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      gap: 12,
-                      marginBottom: 6,
-                    }}
-                  >
-                    <h4 style={{ margin: 0, fontSize: 15, color: "var(--text)" }}>
-                      {project.title}
-                    </h4>
-                    {project.stage && <StatusBadge status={project.stage} />}
-                  </div>
-                  {project.description && (
-                    <ExpandableText
-                      text={project.description}
-                      style={{
-                        margin: 0,
-                        fontSize: 13,
-                        color: "var(--muted)",
-                        lineHeight: 1.6,
-                      }}
-                    />
-                  )}
-                  {toPrereqArray(project.prerequisites).length > 0 && (
-                    <p style={{ fontSize: 12, color: "var(--muted)", margin: "6px 0 0" }}>
-                      ✅ Prerequisites: {toPrereqArray(project.prerequisites).join(", ")}
-                    </p>
-                  )}
-                  <p style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600, margin: "6px 0 0" }}>
-                    🕐 {LESSON_STRUCTURE_LABEL}
-                  </p>
-                  <KeywordsLine
-                    items={[
-                      project.gradeLevel,
-                      project.deliverable,
-                      ...expertiseTags,
-                    ]}
-                  />
-                  <SeatsRow
-                    kind='project'
-                    item={project}
-                    onRegister={openRegister}
-                  />
-                  {project.learning && (
-                    <div
-                      style={{
-                        marginTop: 10,
-                        padding: "10px 12px",
-                        borderRadius: 8,
-                        background: "#f0fdf4",
-                        borderLeft: "3px solid #1f6f4a",
-                      }}
-                    >
-                      <p
-                        style={{
-                          margin: "0 0 4px",
-                          fontSize: 11,
-                          fontWeight: 700,
-                          color: "#1f6f4a",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                        }}
-                      >
-                        What students will learn
-                      </p>
-                      <ExpandableText
-                        text={project.learning}
-                        style={{
-                          margin: 0,
-                          fontSize: 13,
-                          color: "var(--muted)",
-                          lineHeight: 1.6,
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-          </main>
+      {/* ---- Booking band ---- */}
+      <section className={styles.band}>
+        <div className={`${styles.wrap} ${styles.bandInner}`}>
+          <h2 className={styles.bandTitle}>Have a question for this mentor?</h2>
+          <button
+            type='button'
+            className='btn-lime'
+            onClick={() => setShowBooking(true)}
+          >
+            Book a 1-on-1 session →
+          </button>
         </div>
-      </div>
+      </section>
 
-      {/* ── Booking Modal ── */}
+      {/* ---- Booking dialog ---- */}
       {showBooking && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 200,
-            padding: 16,
-          }}
-        >
+        <div className={reg.overlay} onClick={closeBooking}>
           <div
-            style={{
-              background: "white",
-              borderRadius: 18,
-              padding: 32,
-              width: "100%",
-              maxWidth: 440,
-              maxHeight: "90vh",
-              overflowY: "auto",
-              boxShadow: "0 20px 50px rgba(0,0,0,0.2)",
-            }}
+            className={reg.modal}
+            role='dialog'
+            aria-modal='true'
+            aria-labelledby='booking-title'
+            onClick={(e) => e.stopPropagation()}
           >
             {booked ? (
-              <div style={{ textAlign: "center", padding: 20 }}>
-                <p style={{ fontSize: 48 }}>✅</p>
-                <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, fontFamily: "var(--font-display)" }}>
-                  Booking Request Sent!
+              <div>
+                <p className={reg.modalKicker}>1-on-1 session</p>
+                <h3 id='booking-title' className={reg.modalTitle}>
+                  Request sent.
                 </h3>
-                <p style={{ color: "var(--muted)", marginBottom: 20 }}>
-                  {teacher.name} will confirm your session soon.
+                <p className={reg.modalText}>
+                  {displayName} will confirm your session by email at{" "}
+                  <strong>{form.email}</strong>.
                 </p>
                 <button
-                  onClick={() => {
-                    setShowBooking(false);
-                    setBooked(false);
-                  }}
-                  style={{
-                    padding: "10px 24px",
-                    borderRadius: 8,
-                    border: "none",
-                    background: "#111111",
-                    color: "white",
-                    cursor: "pointer",
-                  }}
+                  type='button'
+                  className={reg.applyBtn}
+                  onClick={closeBooking}
                 >
                   Done
                 </button>
               </div>
             ) : (
-              <>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 20,
-                  }}
-                >
-                  <h3
-                    style={{
-                      margin: 0,
-                      fontFamily: "var(--font-display)",
-                    }}
-                  >
-                    Book with {teacher.name}
-                  </h3>
+              <form onSubmit={handleBook} noValidate>
+                <div className={reg.modalHead}>
+                  <div>
+                    <p className={reg.modalKicker}>1-on-1 session</p>
+                    <h3 id='booking-title' className={reg.modalTitle}>
+                      Book with {displayName}
+                    </h3>
+                  </div>
                   <button
-                    onClick={() => setShowBooking(false)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      fontSize: 20,
-                      cursor: "pointer",
-                    }}
+                    type='button'
+                    className={reg.close}
+                    onClick={closeBooking}
+                    aria-label='Close'
                   >
                     ✕
                   </button>
                 </div>
 
-                <h4 style={{ marginBottom: 8 }}>Select a Slot</h4>
+                <p className={styles.formLabel}>Pick a time</p>
                 {slots.length === 0 ? (
-                  <p style={{ color: "var(--muted)", fontSize: 14, marginBottom: 16 }}>
-                    No available slots.
+                  <p className={styles.noSlots}>
+                    No open times right now. Check back soon, or{" "}
+                    <Link to='/tell-us-what-you-need'>
+                      tell us what you need
+                    </Link>{" "}
+                    and we'll set something up.
                   </p>
                 ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 8,
-                      marginBottom: 20,
-                    }}
-                  >
+                  <div className={styles.slots}>
                     {slots.map((slot) => (
-                      <div
+                      <button
+                        type='button'
                         key={slot.id}
-                        onClick={() => setSelectedSlot(slot)}
-                        style={{
-                          padding: "10px 16px",
-                          borderRadius: 8,
-                          border: `2px solid ${selectedSlot?.id === slot.id ? "#111111" : "#eee"}`,
-                          background:
-                            selectedSlot?.id === slot.id ? "#eff6ff" : "white",
-                          cursor: "pointer",
-                          fontSize: 14,
+                        aria-pressed={selectedSlot?.id === slot.id}
+                        className={`${styles.slot} ${selectedSlot?.id === slot.id ? styles.slotOn : ""}`}
+                        onClick={() => {
+                          setSelectedSlot(slot);
+                          setBookError("");
                         }}
                       >
-                        📅 {slot.date} &nbsp; ⏰ {slot.time} &nbsp; (
-                        {slot.duration} min){" "}
-                        {slot.price > 0 ? `· $${slot.price}` : "· Free"}
-                      </div>
+                        <span className={styles.slotWhen}>
+                          {slotLabel(slot)}
+                        </span>
+                        <span className={styles.slotMeta}>
+                          {slot.duration} min ·{" "}
+                          {slot.price > 0 ? `$${slot.price}` : "Free"}
+                        </span>
+                      </button>
                     ))}
                   </div>
                 )}
 
-                <h4 style={{ marginBottom: 8 }}>Your Details</h4>
-                <input
-                  placeholder='Your full name'
-                  value={form.name}
-                  onChange={(e) => {
-                    setForm({ ...form, name: e.target.value });
-                    setErrors({ ...errors, name: "" });
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: 10,
-                    borderRadius: 8,
-                    border: `1px solid ${errors.name ? "var(--pink)" : "var(--border)"}`,
-                    marginBottom: 8,
-                    boxSizing: "border-box",
-                  }}
-                />
-                {errors.name && (
-                  <p style={{ color: "var(--pink)", fontSize: 12, marginBottom: 8 }}>
-                    {errors.name}
-                  </p>
+                {slots.length > 0 && (
+                  <>
+                    <p className={styles.formLabel}>Your details</p>
+                    <div className={styles.fields}>
+                      <input
+                        className={`${auth.input} ${errors.name ? auth.inputError : ""}`}
+                        placeholder='Your full name'
+                        aria-label='Your full name'
+                        value={form.name}
+                        onChange={(e) => {
+                          setForm({ ...form, name: e.target.value });
+                          setErrors({ ...errors, name: "" });
+                        }}
+                      />
+                      {errors.name && (
+                        <p className={auth.errorMsg}>{errors.name}</p>
+                      )}
+                      <input
+                        className={`${auth.input} ${errors.email ? auth.inputError : ""}`}
+                        placeholder='Your email'
+                        aria-label='Your email'
+                        type='email'
+                        value={form.email}
+                        onChange={(e) => {
+                          setForm({ ...form, email: e.target.value });
+                          setErrors({ ...errors, email: "" });
+                        }}
+                      />
+                      {errors.email && (
+                        <p className={auth.errorMsg}>{errors.email}</p>
+                      )}
+                    </div>
+                    {bookError && <p className={reg.error}>{bookError}</p>}
+                    <button
+                      type='submit'
+                      className={reg.applyBtn}
+                      disabled={submitting}
+                    >
+                      {submitting
+                        ? "Sending request..."
+                        : "Request this time →"}
+                    </button>
+                  </>
                 )}
-
-                <input
-                  placeholder='Your email'
-                  type='email'
-                  value={form.email}
-                  onChange={(e) => {
-                    setForm({ ...form, email: e.target.value });
-                    setErrors({ ...errors, email: "" });
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: 10,
-                    borderRadius: 8,
-                    border: `1px solid ${errors.email ? "var(--pink)" : "var(--border)"}`,
-                    marginBottom: 16,
-                    boxSizing: "border-box",
-                  }}
-                />
-                {errors.email && (
-                  <p style={{ color: "var(--pink)", fontSize: 12, marginBottom: 8 }}>
-                    {errors.email}
-                  </p>
-                )}
-
-                <button
-                  onClick={handleBook}
-                  disabled={submitting || slots.length === 0}
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: 8,
-                    border: "none",
-                    background: "#111111",
-                    color: "white",
-                    fontSize: 16,
-                    cursor: "pointer",
-                    opacity: slots.length === 0 ? 0.5 : 1,
-                  }}
-                >
-                  {submitting ? "Sending Request..." : "Request Booking →"}
-                </button>
-              </>
+              </form>
             )}
           </div>
         </div>
       )}
+
       {registering && student && (
         <RegisterModal
           kind={registering.kind}
@@ -1046,28 +627,21 @@ export default function TeacherProfile() {
           onClose={() => setRegistering(null)}
         />
       )}
+
       {showLoginPrompt && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 200,
-            padding: 16,
-          }}
-          onClick={() => setShowLoginPrompt(false)}
-        >
+        <div className={reg.overlay} onClick={() => setShowLoginPrompt(false)}>
           <div
-            style={{ maxWidth: 360, width: "100%" }}
+            className={styles.loginBox}
+            role='dialog'
+            aria-modal='true'
+            aria-label='Log in to apply'
             onClick={(e) => e.stopPropagation()}
           >
             <LoginPrompt from={location.pathname} />
           </div>
         </div>
       )}
+
       <Footer />
     </div>
   );

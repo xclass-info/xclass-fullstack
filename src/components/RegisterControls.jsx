@@ -35,10 +35,17 @@ export function LoginPrompt({ from }) {
 // button shows.
 // `large` stacks a big seat count over a full-width button (detail-page side
 // card); the default is one compact row for cards in a list.
-export function SeatsRow({ kind, item, onRegister, large = false }) {
+// `hideCount` drops the count when the card already shows it elsewhere.
+export function SeatsRow({
+  kind,
+  item,
+  onRegister,
+  large = false,
+  hideCount = false,
+}) {
   const left = seatsLeft(kind, item);
   if (left === null) return null;
-  const showCount = kind !== "research";
+  const showCount = kind !== "research" && !hideCount;
   return (
     <div className={large ? styles.seatsLarge : styles.seats}>
       {showCount && (
