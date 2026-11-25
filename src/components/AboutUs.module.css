@@ -1,0 +1,270 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.wrap {
+  max-width: 1232px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.title {
+  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+  letter-spacing: -0.045em;
+  line-height: 1;
+  margin-bottom: 0;
+}
+
+/* ---- Hero ---- */
+.hero {
+  padding: 152px 0 120px;
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 8vw, 7rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  max-width: 1100px;
+  margin-bottom: 32px;
+}
+
+.heroSub {
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: #2b2b2b;
+  max-width: 620px;
+  border-top: 2px solid var(--ink);
+  padding-top: 28px;
+  margin-bottom: 56px;
+}
+
+.banner {
+  display: block;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+  border-radius: 24px;
+}
+
+/* ---- Founder letter ---- */
+.letter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px 64px;
+  padding-bottom: 120px;
+}
+
+.letterHead {
+  flex: 1 1 300px;
+}
+
+.letterBody {
+  flex: 2 1 560px;
+  max-width: 720px;
+  border-top: 2px solid var(--ink);
+  padding-top: 28px;
+}
+
+.letterBody p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #2b2b2b;
+  margin-bottom: 20px;
+}
+
+.letterBody p:last-child {
+  margin-bottom: 0;
+}
+
+.quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin: 40px 0;
+  padding-left: 24px;
+  border-left: 6px solid var(--lime);
+}
+
+.letterBody .strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ---- Mission (lime-free, big statement on the surface colour) ---- */
+.mission {
+  background: var(--surface);
+  padding: 120px 0;
+}
+
+.missionText {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.6vw, 3rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  max-width: 1100px;
+}
+
+/* ---- What we do (dark rows) ---- */
+.dark {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 120px 0;
+}
+
+.darkTitle {
+  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+  letter-spacing: -0.045em;
+  line-height: 1;
+  margin-bottom: 56px;
+  color: var(--bg);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 32px 0;
+  border-top: 1px solid #333333;
+  color: var(--bg);
+  text-decoration: none;
+}
+
+.row:last-child {
+  border-bottom: 1px solid #333333;
+}
+
+.rowTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.2vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  flex: 1 1 300px;
+}
+
+.rowText {
+  font-size: 1.05rem;
+  color: #bdbdbd;
+  flex: 1 1 380px;
+  line-height: 1.55;
+}
+
+.rowArrow {
+  font-size: 1.75rem;
+  color: var(--lime);
+  transition: transform 0.2s;
+}
+
+.row:hover .rowArrow {
+  transform: translateX(6px);
+}
+
+.row:hover .rowTitle {
+  color: var(--lime);
+}
+
+/* ---- Why ---- */
+.why {
+  padding: 120px 0 88px;
+}
+
+.whyGrid {
+  list-style: none;
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px 32px;
+}
+
+.whyItem {
+  border-top: 2px solid var(--ink);
+  padding-top: 20px;
+}
+
+.whyNum {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.whyTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin: 12px 0 10px;
+}
+
+.whyText {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ---- Numbers ---- */
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 32px;
+  padding: 32px 0 120px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  border-top: 2px solid var(--ink);
+  padding-top: 20px;
+}
+
+.statNum {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.statLabel {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    padding: 120px 0 88px;
+  }
+  .heroSub {
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+  }
+  .banner {
+    aspect-ratio: 4 / 3;
+    border-radius: 18px;
+  }
+  .letter {
+    padding-bottom: 88px;
+  }
+  .mission,
+  .dark {
+    padding: 88px 0;
+  }
+  .why {
+    padding: 88px 0 56px;
+  }
+  .numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+    padding-bottom: 88px;
+  }
+}
