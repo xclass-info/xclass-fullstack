@@ -17,7 +17,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(238, 242, 234, 0.92);
+  background: rgba(249, 246, 240, 0.92);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
 }
@@ -33,7 +33,7 @@
 .wordmark {
   font-family: var(--font-display);
   font-size: 1.3rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--ink);
   text-decoration: none;
@@ -70,10 +70,10 @@
 
 .h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 5.76vw, 4.68rem);
-  font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 4.15vw, 3.37rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--ink);
   margin-bottom: 32px;
   overflow-wrap: anywhere;
@@ -85,7 +85,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 20px 40px;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 22px;
 }
 
@@ -95,7 +95,7 @@
   align-items: center;
   gap: 8px 14px;
   font-size: 1.1rem;
-  color: #34493d;
+  color: #4d564a;
 }
 
 .live {
@@ -139,12 +139,12 @@
 }
 
 .tab:hover {
-  border-color: #c9d4c3;
+  border-color: #dcd7ca;
 }
 
 .tabOn,
 .tabOn:hover {
-  background: var(--ink);
+  background: var(--deep);
   border-color: var(--ink);
   color: var(--bg);
 }
@@ -187,8 +187,8 @@
 
 .sectionTitle {
   font-size: clamp(1.9rem, 3.6vw, 2.8rem);
-  letter-spacing: -0.015em;
-  line-height: 1.02;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
 }
 
 .sectionSub {
@@ -234,8 +234,8 @@
 .statNum {
   font-family: var(--font-display);
   font-size: 3rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 400;
+  letter-spacing: -0.01em;
   line-height: 1;
   color: var(--ink);
 }
@@ -255,7 +255,7 @@
 
 .rows {
   list-style: none;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
 }
 
 .row {
@@ -266,7 +266,7 @@
   width: 100%;
   padding: 24px 0;
   border: none;
-  border-bottom: 1px solid #c9d4c3;
+  border-bottom: 1px solid #dcd7ca;
   background: none;
   text-align: left;
   font-family: var(--font-sans);
@@ -278,7 +278,7 @@
   flex: 1 1 260px;
   font-family: var(--font-display);
   font-size: clamp(1.35rem, 2.4vw, 1.8rem);
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.01em;
 }
 
@@ -318,7 +318,7 @@
   font-weight: 500;
   color: var(--ink);
   background: #ffffff;
-  border: 1.5px solid #c9d4c3;
+  border: 1.5px solid #dcd7ca;
   border-radius: 999px;
   padding: 8px 16px;
   cursor: pointer;
@@ -330,7 +330,7 @@
 
 .chipOn,
 .chipOn:hover {
-  background: var(--ink);
+  background: var(--deep);
   border-color: var(--ink);
   color: var(--bg);
 }
@@ -352,14 +352,14 @@
   font-weight: 600;
   color: var(--ink);
   background: none;
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: 999px;
   padding: 8px 16px;
   cursor: pointer;
 }
 
 .newBtn:hover {
-  background: var(--ink);
+  background: var(--deep);
   color: var(--bg);
 }
 
@@ -386,7 +386,7 @@
 .emptyTitle {
   font-family: var(--font-display);
   font-size: 1.9rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--ink);
 }
@@ -442,7 +442,7 @@
 .cardTitle {
   font-family: var(--font-display);
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.008em;
   margin-bottom: 10px;
@@ -462,7 +462,7 @@
 .cardDesc {
   font-size: 0.96rem;
   line-height: 1.55;
-  color: #34493d;
+  color: #4d564a;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -512,7 +512,7 @@
   font-weight: 600;
   color: var(--ink);
   background: none;
-  border: 1.5px solid #c9d4c3;
+  border: 1.5px solid #dcd7ca;
   border-radius: 999px;
   padding: 7px 14px;
   cursor: pointer;
@@ -523,13 +523,13 @@
 }
 
 .smallPrimary {
-  background: var(--ink);
+  background: var(--deep);
   border-color: var(--ink);
   color: var(--bg);
 }
 
 .smallPrimary:hover {
-  background: #34493d;
+  background: #4d564a;
 }
 
 .smallDanger {
@@ -720,7 +720,7 @@
 .calendar :global(.rbc-toolbar-label) {
   font-family: var(--font-display);
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.005em;
 }
 
@@ -729,20 +729,20 @@
   font-size: 0.88rem;
   font-weight: 500;
   color: var(--ink);
-  border-color: #c9d4c3;
+  border-color: #dcd7ca;
   padding: 6px 14px;
 }
 
 .calendar :global(.rbc-btn-group button.rbc-active),
 .calendar :global(.rbc-btn-group button.rbc-active:hover) {
-  background: var(--ink);
+  background: var(--deep);
   border-color: var(--ink);
   color: var(--bg);
   box-shadow: none;
 }
 
 .calendar :global(.rbc-today) {
-  background: #f3f6ef;
+  background: #f4f2ec;
 }
 
 .calendar :global(.rbc-header) {
@@ -791,7 +791,7 @@
 }
 
 .legendOpen::before {
-  background: var(--ink);
+  background: var(--deep);
 }
 
 .legendBooked::before {
@@ -818,7 +818,7 @@
 .requestWhen {
   font-family: var(--font-display);
   font-size: 1.35rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.005em;
   margin-bottom: 4px;
 }

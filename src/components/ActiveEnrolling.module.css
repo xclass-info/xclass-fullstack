@@ -92,7 +92,7 @@
 
 .name {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.005em;
   font-size: 1.5rem;
   color: var(--text);
@@ -125,7 +125,7 @@
   font-weight: 500;
   color: var(--ink);
   padding-top: 16px;
-  border-top: 1px solid #c9d4c3;
+  border-top: 1px solid #dcd7ca;
 }
 
 .liveDot {

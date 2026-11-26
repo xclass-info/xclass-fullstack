@@ -7,37 +7,42 @@
 }
 
 :root {
-  /* Concept A, "Calm Sage": a soft sage page, deep green ink, Fraunces for
-     headlines, Inter for text, terracotta for the main buttons and a soft
-     peach for highlights. */
+  /* "Warm Practice" style (from the user's Figma reference): warm cream
+     page, deep green text, Lora headlines in regular weight, Inter for text,
+     muted sage green for buttons and dark bands, soft sage and sand tints,
+     thin pale rules. */
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-display: "Lora", Georgia, "Times New Roman", serif;
   /* Old name kept so every page that asks for the "statement" font gets
      the display face. */
   --font-serif: var(--font-display);
-  --ink: #22372c;
-  /* Soft highlight (chips, bands, highlights on dark sections). The old
+  --ink: #2a352c;
+  /* Deep green for dark bands, active chips and dark buttons. */
+  --deep: #3f5144;
+  /* Soft sand tint (chips, bands, highlights on dark sections). The old
      name is kept so existing styles pick it up. */
-  --lime: #f6ded3;
-  --border-strong: #22372c;
-  --primary: #22372c;
-  --primary-hover: #22372c;
-  --primary-soft: #dce6d6;
-  --accent: #b4502f;
-  --accent-hover: #9c4427;
-  --bg: #eef2ea;
-  --surface: #dce6d6;
+  --lime: #ece5d9;
+  --border-strong: #2a352c;
+  --primary: #2a352c;
+  --primary-hover: #2a352c;
+  --primary-soft: #eceee4;
+  --accent: #52654e;
+  --accent-hover: #43553f;
+  --bg: #f9f6f0;
+  --surface: #eceee4;
   --card: #ffffff;
-  --border: #d3dccd;
-  --coral: #b4502f;
-  --yellow: #22372c;
-  --blue: #22372c;
-  --mint: #2e6b4a;
+  --border: #e4e0d5;
+  /* Thin divider lines between sections and list rows. */
+  --rule: #dcd7ca;
+  --coral: #52654e;
+  --yellow: #2a352c;
+  --blue: #2a352c;
+  --mint: #52654e;
   --purple: #6d3f6b;
   --pink: #a01f13;
-  --orange: #b4502f;
-  --text: #22372c;
-  --muted: #4f6357;
+  --orange: #52654e;
+  --text: #2a352c;
+  --muted: #5f675b;
   --radius: 12px;
   --radius-card: 20px;
   --radius-lg: 20px;
@@ -85,9 +90,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 14px;
@@ -100,11 +105,11 @@ h3 {
 }
 
 h2 {
-  font-size: clamp(2.1rem, 4.6vw, 3.6rem);
-  font-weight: 600;
-  line-height: 1.02;
+  font-size: clamp(2rem, 3.6vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.15;
   margin-bottom: 16px;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
@@ -119,7 +124,6 @@ h2 {
 /* A highlighted word in a headline: <span class="mark">PhD mentor</span> */
 .mark {
   color: var(--accent);
-  font-style: italic;
 }
 
 /* Keeps the highlight (drawn under the text so it doesn't cover the line
@@ -134,7 +138,7 @@ h2 {
   width: 48px;
   height: 4px;
   border-radius: 2px;
-  background: var(--ink);
+  background: var(--deep);
   margin-bottom: 28px;
 }
 
@@ -144,7 +148,7 @@ h2 {
   color: #ffffff;
   padding: 15px 26px;
   border-radius: 999px;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
   font-size: 1rem;
   line-height: 1.2;
@@ -175,7 +179,7 @@ h2 {
 /* Secondary action: an outlined pill. */
 .btn-ghost {
   display: inline-block;
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   color: var(--ink);
   padding: 13px 24px;
   border-radius: 999px;
@@ -230,10 +234,10 @@ h2 {
 /* Page titles on inner pages: the same tight display type as the homepage. */
 .page-title {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 6vw, 4.6rem);
-  font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.018em;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--ink);
   margin-bottom: 16px;
 }

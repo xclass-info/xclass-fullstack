@@ -10,8 +10,8 @@
 }
 
 .title {
-  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-  letter-spacing: -0.018em;
+  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
+  letter-spacing: -0.01em;
   line-height: 1;
   margin-bottom: 0;
 }
@@ -23,10 +23,10 @@
 
 .h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 5.76vw, 5.04rem);
-  font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 4.15vw, 3.63rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--ink);
   max-width: 1100px;
   margin-bottom: 32px;
@@ -35,9 +35,9 @@
 .heroSub {
   font-size: 1.25rem;
   line-height: 1.55;
-  color: #34493d;
+  color: #4d564a;
   max-width: 620px;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 28px;
   margin-bottom: 56px;
 }
@@ -65,14 +65,14 @@
 .letterBody {
   flex: 2 1 560px;
   max-width: 720px;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 28px;
 }
 
 .letterBody p {
   font-size: 1.15rem;
   line-height: 1.7;
-  color: #34493d;
+  color: #4d564a;
   margin-bottom: 20px;
 }
 
@@ -83,7 +83,7 @@
 .quote {
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 2.6vw, 2rem);
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.2;
   letter-spacing: -0.008em;
   color: var(--ink);
@@ -125,14 +125,14 @@
 
 /* ---- What we do (dark rows) ---- */
 .dark {
-  background: var(--ink);
+  background: var(--deep);
   color: var(--bg);
   padding: 120px 0;
 }
 
 .darkTitle {
-  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-  letter-spacing: -0.018em;
+  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
+  letter-spacing: -0.01em;
   line-height: 1;
   margin-bottom: 56px;
   color: var(--bg);
@@ -145,26 +145,26 @@
   align-items: baseline;
   justify-content: space-between;
   padding: 32px 0;
-  border-top: 1px solid #3a5245;
+  border-top: 1px solid #566a59;
   color: var(--bg);
   text-decoration: none;
 }
 
 .row:last-child {
-  border-bottom: 1px solid #3a5245;
+  border-bottom: 1px solid #566a59;
 }
 
 .rowTitle {
   font-family: var(--font-display);
   font-size: clamp(1.7rem, 3.2vw, 2.5rem);
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.01em;
   flex: 1 1 300px;
 }
 
 .rowText {
   font-size: 1.05rem;
-  color: #c3d1c6;
+  color: #d5ddd2;
   flex: 1 1 380px;
   line-height: 1.55;
 }
@@ -197,13 +197,13 @@
 }
 
 .whyItem {
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 20px;
 }
 
 .whyNum {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 400;
   color: var(--muted);
 }
 
@@ -233,15 +233,15 @@
   display: flex;
   flex-direction: column-reverse;
   gap: 8px;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 20px;
 }
 
 .statNum {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 6vw, 5rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 4.32vw, 3.6rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
   line-height: 1;
 }
 

@@ -18,7 +18,7 @@ export default function InitialsAvatar({
         background: avatarGradient(seed ?? name),
         color: "#fff",
         fontFamily: "var(--font-display)",
-        fontWeight: 600,
+        fontWeight: 400,
         fontSize: fontSize ?? "1.4rem",
         flexShrink: 0,
         ...style,

@@ -34,7 +34,7 @@ function FAQItem({ item, open, onToggle }) {
     <div
       className='reveal'
       style={{
-        borderTop: "2px solid var(--ink)",
+        borderTop: "1px solid var(--rule)",
         padding: "24px 0",
       }}
     >
@@ -52,7 +52,7 @@ function FAQItem({ item, open, onToggle }) {
           padding: 0,
           textAlign: "left",
           fontSize: 20,
-          fontWeight: 600,
+          fontWeight: 400,
           fontFamily: "var(--font-display)",
           letterSpacing: "-0.01em",
           color: "var(--text)",
@@ -60,7 +60,15 @@ function FAQItem({ item, open, onToggle }) {
         }}
       >
         {item.q}
-        <span aria-hidden='true' style={{ fontSize: 28, fontWeight: 400, flexShrink: 0, marginLeft: 16 }}>
+        <span
+          aria-hidden='true'
+          style={{
+            fontSize: 28,
+            fontWeight: 400,
+            flexShrink: 0,
+            marginLeft: 16,
+          }}
+        >
           {open ? "−" : "+"}
         </span>
       </button>
@@ -98,16 +106,18 @@ export default function FAQSection() {
         <div className='reveal' style={{ flex: "1 1 320px" }}>
           <h2
             style={{
-              fontSize: "clamp(2.4rem, 5.5vw, 4.5rem)",
-              letterSpacing: "-0.045em",
-              lineHeight: 1,
+              fontSize: "clamp(2rem, 3.6vw, 2.9rem)",
+              letterSpacing: "-0.01em",
+              lineHeight: 1.15,
             }}
           >
             Questions parents ask.
           </h2>
         </div>
 
-        <div style={{ flex: "2 1 520px", borderBottom: "2px solid var(--ink)" }}>
+        <div
+          style={{ flex: "2 1 520px", borderBottom: "1px solid var(--rule)" }}
+        >
           {FAQS.map((item, i) => (
             <FAQItem
               key={item.q}

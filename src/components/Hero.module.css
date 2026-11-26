@@ -10,10 +10,10 @@
 
 .h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 6.84vw, 6.12rem);
-  font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 4.92vw, 4.41rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--ink);
   margin-bottom: 48px;
 }
@@ -24,7 +24,7 @@
   gap: 32px;
   justify-content: space-between;
   align-items: flex-end;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 28px;
 }
 
@@ -33,7 +33,7 @@
   max-width: 520px;
   font-size: 1.25rem;
   line-height: 1.55;
-  color: #34493d;
+  color: #4d564a;
 }
 
 .actions {

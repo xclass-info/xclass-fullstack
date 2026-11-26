@@ -59,14 +59,14 @@ const primaryBtn = {
   padding: "12px 24px",
   borderRadius: 8,
   border: "none",
-  background: "#22372c",
+  background: "#2a352c",
   color: "white",
   fontWeight: 700,
   fontSize: 15,
   cursor: "pointer",
 };
-const secondaryBtn = { ...primaryBtn, background: "white", color: "#22372c", border: "1px solid #22372c" };
-const serif = { fontFamily: "var(--font-display)", color: "#22372c" };
+const secondaryBtn = { ...primaryBtn, background: "white", color: "#2a352c", border: "1px solid #2a352c" };
+const serif = { fontFamily: "var(--font-display)", color: "#2a352c" };
 
 function Timeline({ status }) {
   const current = stageIndex(status);
@@ -81,11 +81,11 @@ function Timeline({ status }) {
               style={{
                 height: 6,
                 borderRadius: 3,
-                background: done ? "#1f6f4a" : active ? "#22372c" : "#e2e8f0",
+                background: done ? "#1f6f4a" : active ? "#2a352c" : "#e2e8f0",
                 marginBottom: 8,
               }}
             />
-            <span style={{ fontSize: 13, fontWeight: active ? 700 : 500, color: done || active ? "#22372c" : "#94a3b8" }}>
+            <span style={{ fontSize: 13, fontWeight: active ? 700 : 500, color: done || active ? "#2a352c" : "#94a3b8" }}>
               {done ? "✓ " : ""}
               {s.label}
             </span>
@@ -96,7 +96,7 @@ function Timeline({ status }) {
   );
 }
 
-function Notice({ color = "#22372c", bg = "#f5f8fa", children }) {
+function Notice({ color = "#2a352c", bg = "#f5f8fa", children }) {
   return (
     <div style={{ background: bg, borderLeft: `4px solid ${color}`, padding: "12px 16px", borderRadius: 6, margin: "0 0 20px", fontSize: 14, lineHeight: 1.6, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
       {children}
@@ -112,7 +112,7 @@ function FileField({ title, help, current, accept, onUpload, busy }) {
       {current && (
         <p style={{ fontSize: 14, margin: "0 0 8px" }}>
           <span style={{ color: "#1f6f4a", fontWeight: 600 }}>✓ Uploaded</span> ·{" "}
-          <a href={current} target='_blank' rel='noopener noreferrer' style={{ color: "#22372c" }}>View</a>
+          <a href={current} target='_blank' rel='noopener noreferrer' style={{ color: "#2a352c" }}>View</a>
         </p>
       )}
       <input type='file' accept={accept} disabled={busy} onChange={(e) => e.target.files[0] && onUpload(e.target.files[0])} />
@@ -135,14 +135,14 @@ function PreviewCard({ app }) {
         </div>
       )}
       <h3 style={{ ...serif, margin: "12px 0 4px" }}>{name || "Your name"}</h3>
-      <p style={{ margin: 0, fontSize: 13, color: "#22372c", fontWeight: 700 }}>
+      <p style={{ margin: 0, fontSize: 13, color: "#2a352c", fontWeight: 700 }}>
         {app.mentorType ? mentorTypeLabel(app.mentorType) : "Your role"}
       </p>
       <p style={{ margin: "6px 0 0", fontSize: 13, color: "#64748b" }}>
         {[app.degree, app.university].filter(Boolean).join(" · ") || "Degree · University"}
       </p>
       {app.researchArea && (
-        <span style={{ display: "inline-block", marginTop: 10, fontSize: 12, padding: "3px 10px", borderRadius: 20, background: "#fff8dc", color: "#22372c" }}>
+        <span style={{ display: "inline-block", marginTop: 10, fontSize: 12, padding: "3px 10px", borderRadius: 20, background: "#fff8dc", color: "#2a352c" }}>
           {app.researchArea}
         </span>
       )}
@@ -353,7 +353,7 @@ export default function MentorApplication() {
             <p style={{ color: "#64748b" }}>
               You're logged in with an account that isn't a mentor account.
               To apply as a mentor, log out and use the{" "}
-              <Link to='/become-a-mentor' style={{ color: "#22372c" }}>Become a Mentor</Link> page with a different email.
+              <Link to='/become-a-mentor' style={{ color: "#2a352c" }}>Become a Mentor</Link> page with a different email.
             </p>
           </div>
         </div>
@@ -397,9 +397,9 @@ export default function MentorApplication() {
                   style={{
                     padding: "8px 14px",
                     borderRadius: 20,
-                    border: i === step ? "2px solid #22372c" : "1px solid #e2e8f0",
+                    border: i === step ? "2px solid #2a352c" : "1px solid #e2e8f0",
                     background: i === step ? "#e3eff3" : "white",
-                    color: "#22372c",
+                    color: "#2a352c",
                     fontWeight: i === step ? 700 : 500,
                     cursor: "pointer",
                     fontSize: 14,
@@ -526,7 +526,7 @@ export default function MentorApplication() {
                   <>
                     <h2 style={{ ...serif, marginTop: 0 }}>Review & submit</h2>
                     {missing.filter((m) => !["workAuthorized"].includes(m)).length > 0 && (
-                      <Notice color='#22372c' bg='#fff8dc'>
+                      <Notice color='#2a352c' bg='#fff8dc'>
                         <strong>Still to do:</strong>
                         {missing
                           .filter((m) => m !== "workAuthorized")
@@ -560,7 +560,7 @@ export default function MentorApplication() {
                       <input type='checkbox' checked={submit.agreeTerms} onChange={(e) => setSubmit({ ...submit, agreeTerms: e.target.checked })} style={{ marginTop: 3 }} />
                       <span>
                         I have read and agree to the{" "}
-                        <Link to='/mentor/guidelines' target='_blank' style={{ color: "#22372c" }}>Mentor Guidelines</Link>, including the student-safety rules.
+                        <Link to='/mentor/guidelines' target='_blank' style={{ color: "#2a352c" }}>Mentor Guidelines</Link>, including the student-safety rules.
                       </span>
                     </label>
                     <label style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 18, fontSize: 14, lineHeight: 1.5 }}>
@@ -631,7 +631,7 @@ export default function MentorApplication() {
                 ) : (
                   <>
                     <p style={{ fontSize: 14, color: "#64748b", margin: "6px 0 10px" }}>
-                      Please read the <Link to='/mentor/guidelines' target='_blank' style={{ color: "#22372c" }}>Mentor Guidelines</Link> (about 5 minutes).
+                      Please read the <Link to='/mentor/guidelines' target='_blank' style={{ color: "#2a352c" }}>Mentor Guidelines</Link> (about 5 minutes).
                     </p>
                     <label style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 14, marginBottom: 12 }}>
                       <input type='checkbox' checked={guidelinesChecked} onChange={(e) => setGuidelinesChecked(e.target.checked)} />

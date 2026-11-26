@@ -25,10 +25,10 @@
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 7.2vw, 6.12rem);
-  font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 5.18vw, 4.41rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--ink);
   margin-bottom: 36px;
 }
@@ -39,7 +39,7 @@
   gap: 24px 48px;
   justify-content: space-between;
   align-items: flex-end;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 24px;
 }
 
@@ -48,7 +48,7 @@
   max-width: 520px;
   font-size: 1.2rem;
   line-height: 1.55;
-  color: #34493d;
+  color: #4d564a;
 }
 
 .searchRow {
@@ -65,7 +65,7 @@
   font-size: 1rem;
   color: var(--ink);
   background: #ffffff;
-  border: 1.5px solid #c9d4c3;
+  border: 1.5px solid #dcd7ca;
   border-radius: 999px;
   padding: 13px 20px;
   min-width: 0;
@@ -84,7 +84,7 @@
 .sort:focus {
   outline: none;
   border-color: var(--ink);
-  box-shadow: 0 0 0 3px rgba(180, 80, 47, 0.3);
+  box-shadow: 0 0 0 3px rgba(82, 101, 78, 0.3);
 }
 
 /* ---- Body ---- */
@@ -103,12 +103,12 @@
   align-items: center;
   background: none;
   border: none;
-  border-top: 2px solid var(--ink);
-  border-bottom: 1px solid #c9d4c3;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid #dcd7ca;
   padding: 16px 0;
   font-family: var(--font-display);
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--ink);
   cursor: pointer;
 }
@@ -133,11 +133,11 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 14px;
   font-family: var(--font-display);
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .clear {
@@ -155,7 +155,7 @@
 
 .group {
   border: none;
-  border-bottom: 1px solid #c9d4c3;
+  border-bottom: 1px solid #dcd7ca;
   padding: 16px 0 12px;
   margin: 0;
 }
@@ -200,7 +200,7 @@
   font-size: 0.95rem;
   color: var(--muted);
   margin-bottom: 20px;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 14px;
 }
 
@@ -251,7 +251,7 @@
 .cardTitle {
   font-family: var(--font-display);
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.008em;
   margin-bottom: 14px;
@@ -300,7 +300,7 @@
 .fieldText {
   font-size: 0.95rem;
   line-height: 1.55;
-  color: #34493d;
+  color: #4d564a;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -373,7 +373,7 @@
 .emptyTitle {
   font-family: var(--font-display);
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--ink);
 }

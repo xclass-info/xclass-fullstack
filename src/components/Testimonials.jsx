@@ -7,7 +7,7 @@ const TESTIMONIALS = [
     name: "Sophia L.",
     info: "11th Grade · Astrophysics Research Student",
     initials: "SL",
-    gradient: "linear-gradient(135deg, #22372c, #22372c)",
+    gradient: "linear-gradient(135deg, #2a352c, #2a352c)",
     featured: false,
   },
   {
@@ -16,7 +16,7 @@ const TESTIMONIALS = [
     name: "Marcus T.",
     info: "12th Grade · AI & Computer Vision Research Student",
     initials: "MT",
-    gradient: "linear-gradient(135deg, #22372c, #22372c)",
+    gradient: "linear-gradient(135deg, #2a352c, #2a352c)",
     featured: true,
   },
   {
@@ -44,7 +44,7 @@ const TESTIMONIALS = [
     name: "Priya M.",
     info: "10th Grade · Robotics Research Student",
     initials: "PM",
-    gradient: "linear-gradient(135deg, #1f6f4a, #22372c)",
+    gradient: "linear-gradient(135deg, #1f6f4a, #2a352c)",
     featured: false,
   },
   {

@@ -23,8 +23,8 @@
 }
 
 .stateTitle {
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
-  letter-spacing: -0.018em;
+  font-size: clamp(2.2rem, 4.32vw, 3.24rem);
+  letter-spacing: -0.01em;
   line-height: 1;
 }
 
@@ -69,10 +69,10 @@
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 6vw, 5.2rem);
-  font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 4.32vw, 3.74rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--ink);
   max-width: 1050px;
   margin-bottom: 32px;
@@ -82,7 +82,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 24px;
 }
 
@@ -111,7 +111,7 @@
 }
 
 .section {
-  border-top: 1px solid #c9d4c3;
+  border-top: 1px solid #dcd7ca;
   padding: 28px 0 32px;
 }
 
@@ -144,7 +144,7 @@
 .text {
   font-size: 1.15rem;
   line-height: 1.7;
-  color: #34493d;
+  color: #4d564a;
   white-space: pre-wrap;
 }
 
@@ -221,7 +221,7 @@
   gap: 14px;
   padding: 7px 0;
   font-size: 0.9rem;
-  color: #34493d;
+  color: #4d564a;
   border-bottom: 1px solid var(--bg);
 }
 
@@ -231,7 +231,7 @@
 
 .lessonNum {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 400;
   color: var(--muted);
   min-width: 22px;
 }

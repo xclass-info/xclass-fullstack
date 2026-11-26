@@ -57,7 +57,7 @@ export const VERIFICATION_STATUS = {
     color: "#92400e",
     bg: "rgba(217,119,6,0.08)",
   },
-  submitted: { label: "In review", color: "#22372c", bg: "#e3eff3" },
+  submitted: { label: "In review", color: "#2a352c", bg: "#e3eff3" },
   changes_requested: {
     label: "Changes requested",
     color: "#a01f13",
@@ -65,7 +65,7 @@ export const VERIFICATION_STATUS = {
   },
   interview_requested: {
     label: "Interview requested",
-    color: "#22372c",
+    color: "#2a352c",
     bg: "#fff8dc",
   },
   onboarding: { label: "Onboarding", color: "#1f6f4a", bg: "#f0fdf4" },

@@ -59,7 +59,7 @@ export default function AdminEmailLog({ onFindPerson }) {
                 </div>
                 {e.error && <div style={{ fontSize: 12, color: "#a01f13", marginTop: 4 }}>{e.error}</div>}
               </div>
-              <button style={smallBtn("#22372c", true)} onClick={() => onFindPerson(e.toEmail)}>Find person</button>
+              <button style={smallBtn("#2a352c", true)} onClick={() => onFindPerson(e.toEmail)}>Find person</button>
             </div>
           ))
         )}

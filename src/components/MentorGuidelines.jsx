@@ -53,7 +53,7 @@ export default function MentorGuidelines() {
     <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
       <Navbar />
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "120px 24px 60px" }}>
-        <h1 style={{ fontFamily: "var(--font-display)", color: "#22372c", margin: "0 0 10px" }}>
+        <h1 style={{ fontFamily: "var(--font-display)", color: "#2a352c", margin: "0 0 10px" }}>
           Mentor Guidelines
         </h1>
         <p style={{ color: "#475569", lineHeight: 1.7, margin: "0 0 28px" }}>
@@ -63,7 +63,7 @@ export default function MentorGuidelines() {
         </p>
         {SECTIONS.map((s) => (
           <section key={s.title} style={{ background: "white", borderRadius: 14, padding: "22px 26px", marginBottom: 16, boxShadow: "0 1px 8px rgba(0,0,0,0.05)" }}>
-            <h2 style={{ fontSize: "1.15rem", color: "#22372c", margin: "0 0 12px" }}>{s.title}</h2>
+            <h2 style={{ fontSize: "1.15rem", color: "#2a352c", margin: "0 0 12px" }}>{s.title}</h2>
             <ul style={{ margin: 0, paddingLeft: 20, color: "#334155", lineHeight: 1.75 }}>
               {s.points.map((p) => (
                 <li key={p} style={{ marginBottom: 6 }}>{p}</li>

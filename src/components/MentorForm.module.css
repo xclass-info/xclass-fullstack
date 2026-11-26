@@ -26,8 +26,8 @@
 
 .title {
   font-size: clamp(1.9rem, 3.4vw, 2.6rem);
-  letter-spacing: -0.015em;
-  line-height: 1.05;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
   margin-bottom: 10px;
 }
 
@@ -108,7 +108,7 @@
   flex-shrink: 0;
   width: 48px;
   border-radius: 12px;
-  border: 1.5px solid #c9d4c3;
+  border: 1.5px solid #dcd7ca;
   background: #ffffff;
   color: #a01f13;
   font-size: 1.2rem;
@@ -140,7 +140,7 @@
 
 .file::file-selector-button {
   margin-right: 12px;
-  border: 2px solid var(--ink);
+  border: 1px solid var(--rule);
   border-radius: 999px;
   background: none;
   padding: 8px 16px;

@@ -65,7 +65,7 @@ export default function ResetPassword() {
               height='26'
               viewBox='0 0 24 24'
               fill='none'
-              stroke='#22372c'
+              stroke='#2a352c'
               strokeWidth='2.4'
               strokeLinecap='round'
               strokeLinejoin='round'

@@ -23,8 +23,8 @@
 }
 
 .stateTitle {
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
-  letter-spacing: -0.018em;
+  font-size: clamp(2.2rem, 4.32vw, 3.24rem);
+  letter-spacing: -0.01em;
   line-height: 1;
 }
 
@@ -79,9 +79,9 @@
   justify-content: center;
   font-family: var(--font-display);
   font-size: 6rem;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  color: #5f7366;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #7b8576;
 }
 
 .intro {
@@ -110,10 +110,10 @@
 
 .name {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 5.04vw, 4.32rem);
-  font-weight: 600;
+  font-size: clamp(2.2rem, 3.63vw, 3.11rem);
+  font-weight: 400;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: var(--ink);
   margin-bottom: 20px;
   overflow-wrap: anywhere;
@@ -122,13 +122,13 @@
 .cred {
   font-size: 1.3rem;
   line-height: 1.45;
-  color: #34493d;
+  color: #4d564a;
   margin-bottom: 40px;
 }
 
 .introBottom {
   margin-top: auto;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 28px;
   display: flex;
   flex-direction: column;
@@ -158,8 +158,8 @@
 
 /* ---- About ---- */
 .sectionTitle {
-  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-  letter-spacing: -0.018em;
+  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
+  letter-spacing: -0.01em;
   line-height: 1;
   margin-bottom: 0;
 }
@@ -179,14 +179,14 @@
   flex: 2 1 560px;
   min-width: 0;
   max-width: 760px;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 28px;
 }
 
 .bio {
   font-size: 1.2rem;
   line-height: 1.7;
-  color: #34493d;
+  color: #4d564a;
   white-space: pre-wrap;
   margin-bottom: 40px;
 }
@@ -198,7 +198,7 @@
 }
 
 .facts > div {
-  border-top: 1px solid #c9d4c3;
+  border-top: 1px solid #dcd7ca;
   padding-top: 14px;
   min-width: 0;
 }
@@ -227,8 +227,8 @@
 .factBig dd {
   font-family: var(--font-display);
   font-size: 3rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 400;
+  letter-spacing: -0.01em;
   line-height: 1;
 }
 
@@ -304,7 +304,7 @@
 .cardTitle {
   font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.008em;
   margin-bottom: 12px;
@@ -324,7 +324,7 @@
 .cardText {
   font-size: 0.98rem;
   line-height: 1.55;
-  color: #34493d;
+  color: #4d564a;
   white-space: pre-wrap;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -409,7 +409,7 @@
 
 /* ---- Booking band ---- */
 .band {
-  background: var(--ink);
+  background: var(--deep);
   color: var(--bg);
   padding: 104px 0;
 }
@@ -423,8 +423,8 @@
 }
 
 .bandTitle {
-  font-size: clamp(2.2rem, 5vw, 4rem);
-  letter-spacing: -0.018em;
+  font-size: clamp(2.2rem, 3.6vw, 2.88rem);
+  letter-spacing: -0.01em;
   line-height: 1;
   color: var(--bg);
   max-width: 760px;
@@ -479,7 +479,7 @@
 }
 
 .slot:hover {
-  border-color: #c9d4c3;
+  border-color: #dcd7ca;
 }
 
 .slotOn,
@@ -494,7 +494,7 @@
 
 .slotMeta {
   font-size: 0.9rem;
-  color: #34493d;
+  color: #4d564a;
 }
 
 .fields {

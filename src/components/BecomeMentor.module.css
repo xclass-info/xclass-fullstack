@@ -16,10 +16,10 @@
 
 .h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 5.76vw, 5.04rem);
-  font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 4.15vw, 3.63rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--ink);
   max-width: 1100px;
   margin-bottom: 44px;
@@ -31,7 +31,7 @@
   gap: 32px;
   justify-content: space-between;
   align-items: flex-end;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding-top: 28px;
 }
 
@@ -40,7 +40,7 @@
   max-width: 560px;
   font-size: 1.25rem;
   line-height: 1.55;
-  color: #34493d;
+  color: #4d564a;
 }
 
 .actions {
@@ -63,32 +63,32 @@
 
 .colTitle {
   font-size: clamp(1.8rem, 3vw, 2.4rem);
-  letter-spacing: -0.012em;
-  line-height: 1.05;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
   margin-bottom: 24px;
 }
 
 .rows {
   list-style: none;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
 }
 
 .rows li {
   padding: 16px 0;
-  border-bottom: 1px solid #c9d4c3;
+  border-bottom: 1px solid #dcd7ca;
   font-size: 1.1rem;
 }
 
 /* ---- How it works (dark) ---- */
 .dark {
-  background: var(--ink);
+  background: var(--deep);
   color: var(--bg);
   padding: 120px 0;
 }
 
 .bigTitle {
-  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-  letter-spacing: -0.018em;
+  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
+  letter-spacing: -0.01em;
   line-height: 1;
   margin-bottom: 0;
   max-width: 900px;
@@ -109,16 +109,16 @@
   gap: 12px 32px;
   align-items: baseline;
   padding: 28px 0;
-  border-top: 1px solid #3a5245;
+  border-top: 1px solid #566a59;
 }
 
 .step:last-child {
-  border-bottom: 1px solid #3a5245;
+  border-bottom: 1px solid #566a59;
 }
 
 .stepNum {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 400;
   color: var(--lime);
   width: 40px;
 }
@@ -126,7 +126,7 @@
 .stepTitle {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 3vw, 2.4rem);
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.01em;
   flex: 1 1 260px;
 }
@@ -135,7 +135,7 @@
   flex: 1 1 380px;
   font-size: 1.05rem;
   line-height: 1.55;
-  color: #c3d1c6;
+  color: #d5ddd2;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -177,11 +177,11 @@
 
 .faqList {
   flex: 2 1 520px;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
 }
 
 .faqItem {
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--rule);
   padding: 22px 0;
 }
 
@@ -193,7 +193,7 @@
   gap: 16px;
   font-family: var(--font-display);
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: -0.01em;
   min-height: 32px;
 }
@@ -240,9 +240,9 @@
 }
 
 .applyTitle {
-  font-size: clamp(2.6rem, 5.04vw, 4.32rem);
-  letter-spacing: -0.02em;
-  line-height: 1.04;
+  font-size: clamp(2.2rem, 3.63vw, 3.11rem);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
   margin-bottom: 24px;
 }
 

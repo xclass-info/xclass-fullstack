@@ -57,7 +57,7 @@ export default function ProjectSection() {
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px)";
                 e.currentTarget.style.boxShadow = "0 12px 28px rgba(0,0,0,0.1)";
-                e.currentTarget.style.borderColor = "#22372c";
+                e.currentTarget.style.borderColor = "#2a352c";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)";
@@ -125,7 +125,7 @@ export default function ProjectSection() {
               display: "inline-block",
               padding: "12px 32px",
               borderRadius: 32,
-              background: "#22372c",
+              background: "#2a352c",
               color: "white",
               textDecoration: "none",
               fontWeight: 600,

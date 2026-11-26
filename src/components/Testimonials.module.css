@@ -11,8 +11,8 @@
 }
 
 .title {
-  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-  letter-spacing: -0.018em;
+  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
+  letter-spacing: -0.01em;
   line-height: 1;
   margin: 0;
 }
@@ -76,7 +76,7 @@
 }
 
 .featured {
-  background: var(--ink);
+  background: var(--deep);
   color: var(--bg);
 }
 
@@ -112,7 +112,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 400;
   font-size: 0.9rem;
   color: var(--ink);
   flex-shrink: 0;
@@ -131,7 +131,7 @@
 }
 
 .featured .info {
-  color: #c3d1c6;
+  color: #d5ddd2;
 }
 
 @media (max-width: 760px) {

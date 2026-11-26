@@ -153,7 +153,7 @@ export default function OneOnOneSection() {
               display: "inline-block",
               padding: "12px 32px",
               borderRadius: 32,
-              background: "#22372c",
+              background: "#2a352c",
               color: "white",
               textDecoration: "none",
               fontWeight: 600,
