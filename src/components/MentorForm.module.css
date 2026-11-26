@@ -1,0 +1,157 @@
+/* Shared bits for the mentor dashboard's research / project / student work
+   forms. Inputs, labels and buttons come from TeacherAuth.module.css. */
+
+.wrap {
+  max-width: 720px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 36px;
+}
+
+.back {
+  background: none;
+  border: none;
+  padding: 6px 0;
+  margin-bottom: 20px;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.back:hover {
+  opacity: 0.6;
+}
+
+.title {
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 10px;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  margin-bottom: 32px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.count {
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.countOver {
+  color: #a01f13;
+  font-weight: 600;
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 4px;
+}
+
+.hint a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-top: 8px;
+}
+
+.actions > button:first-child {
+  width: auto;
+  flex: 1 1 220px;
+}
+
+.prereqList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prereqRow {
+  display: flex;
+  gap: 8px;
+}
+
+.removeBtn {
+  flex-shrink: 0;
+  width: 48px;
+  border-radius: 12px;
+  border: 1.5px solid #cfccc2;
+  background: #ffffff;
+  color: #a01f13;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.removeBtn:hover {
+  border-color: #a01f13;
+}
+
+.addBtn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.file {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+}
+
+.file::file-selector-button {
+  margin-right: 12px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: none;
+  padding: 8px 16px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .wrap {
+    padding: 24px 20px;
+  }
+}

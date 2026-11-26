@@ -1,18 +1,19 @@
+// src/components/TeacherDashboard.jsx
+// A live mentor's dashboard: greeting and summary, then tabs for an
+// overview, their content (research, projects, student work), 1-on-1
+// availability, booking requests and their public profile details.
 import { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { api, live, seg, toMillis } from "../api";
 import { onAuthStateChanged, logout } from "../auth";
-import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./TeacherDashboard.module.css";
-
+import auth from "./TeacherAuth.module.css";
 import Availability from "./Availability";
 import BookingRequests from "./BookingRequests";
-import { SkeletonDashboardCard } from "./Skeleton";
 import ResearchForm from "./ResearchForm";
 import ProjectForm from "./ProjectForm";
 import ShowcaseForm from "./ShowcaseForm";
 import ContentCard from "./ContentCard";
-import { statusInfo } from "../utils/mentorVerification";
-
 import Footer from "./Footer";
 import { safeUrl } from "../utils/format";
 
@@ -22,26 +23,356 @@ const PATH_BY_KIND = {
   showcase: "showcase",
 };
 
-const NAV_ITEMS = [
-  { id: "overview", label: "🏠 Overview" },
-  { id: "content", label: "📚 Content", group: "My Content" },
-  { id: "availability", label: "🗓 Availability", group: "Scheduling" },
-  { id: "bookings", label: "📬 Bookings", group: "Scheduling" },
-  { id: "profile", label: "👤 Profile", group: "Account" },
+const TABS = [
+  { id: "overview", label: "Overview" },
+  { id: "content", label: "Content" },
+  { id: "availability", label: "Availability" },
+  { id: "bookings", label: "Bookings" },
+  { id: "profile", label: "Profile" },
+];
+
+const NEW_LABEL = {
+  research: "Research topic",
+  project: "Project",
+  showcase: "Student work",
+};
+
+const DEGREE_GROUPS = [
+  ["Secondary Education", ["High School Diploma", "GED"]],
+  [
+    "Undergraduate",
+    [
+      "Associate's Degree",
+      "Bachelor of Arts (BA)",
+      "Bachelor of Science (BS)",
+      "Bachelor of Education (BEd)",
+      "Bachelor of Engineering (BEng)",
+    ],
+  ],
+  [
+    "Graduate",
+    [
+      "Master of Arts (MA)",
+      "Master of Science (MS)",
+      "Master of Education (MEd)",
+      "Master of Business Administration (MBA)",
+      "Master of Engineering (MEng)",
+      "Master of Fine Arts (MFA)",
+    ],
+  ],
+  [
+    "Doctorate",
+    [
+      "Doctor of Philosophy (PhD)",
+      "Doctor of Education (EdD)",
+      "Doctor of Medicine (MD)",
+      "Doctor of Law (JD)",
+      "Doctor of Business Administration (DBA)",
+      "Doctor of Engineering (DEng)",
+    ],
+  ],
+  ["Other", ["Professional Certification", "Vocational Training", "Other"]],
+];
+
+const PROFILE_FIELDS = [
+  "gender",
+  "degree",
+  "expertise",
+  "researchArea",
+  "bio",
+  "university",
+  "yearsOfExperience",
+  "languages",
+  "website",
 ];
 
 function profileFromTeacherData(data) {
-  return {
-    gender: data.gender || "",
-    degree: data.degree || "",
-    expertise: data.expertise || "",
-    researchArea: data.researchArea || "",
-    bio: data.bio || "",
-    university: data.university || "",
-    yearsOfExperience: data.yearsOfExperience || "",
-    languages: data.languages || "",
-    website: data.website || "",
-  };
+  return Object.fromEntries(PROFILE_FIELDS.map((k) => [k, data[k] || ""]));
+}
+
+const countWords = (s) => (s || "").trim().split(/\s+/).filter(Boolean).length;
+
+function ProfileTab({ teacher, onSaved }) {
+  const [editing, setEditing] = useState(false);
+  const [profile, setProfile] = useState(() => profileFromTeacherData(teacher));
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const words = countWords(profile.bio);
+
+  function startEdit() {
+    setProfile(profileFromTeacherData(teacher));
+    setError("");
+    setEditing(true);
+  }
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    if (name === "bio" && countWords(value) > 300) return;
+    setProfile((prev) => ({ ...prev, [name]: value }));
+    setError("");
+  }
+
+  async function save(e) {
+    e.preventDefault();
+    if (!profile.degree) return setError("Please select your degree.");
+    if (!profile.university.trim())
+      return setError("Please enter your university.");
+    if (!profile.expertise.trim())
+      return setError("Please enter your area of expertise.");
+    if (!profile.languages.trim())
+      return setError("Please enter the languages you speak.");
+    setSaving(true);
+    try {
+      await api.patch("/teachers/me", profile);
+      onSaved(profile);
+      setEditing(false);
+    } catch (err) {
+      console.error(err);
+      setError("Couldn't save your profile. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const view = (value) =>
+    value ? value : <span className={styles.notSet}>Not set</span>;
+  const website = safeUrl(teacher.website);
+
+  return (
+    <div>
+      <div className={styles.sectionHead}>
+        <div>
+          <h2 className={styles.sectionTitle}>Your profile.</h2>
+          <p className={styles.sectionSub}>
+            This is what students see on your public mentor page.{" "}
+            <Link to={`/teacher/${teacher.id}`}>View it →</Link>
+          </p>
+        </div>
+        {!editing && (
+          <button type='button' className='btn-primary' onClick={startEdit}>
+            Edit profile
+          </button>
+        )}
+      </div>
+
+      <div className={styles.panel}>
+        {editing ? (
+          <form onSubmit={save} noValidate>
+            <div className={styles.formGrid}>
+              <div className={auth.field}>
+                <label className={auth.label} htmlFor='p-degree'>
+                  Degree <span className={styles.req}>*</span>
+                </label>
+                <select
+                  id='p-degree'
+                  name='degree'
+                  className={auth.input}
+                  value={profile.degree}
+                  onChange={handleChange}
+                >
+                  <option value=''>Select your highest degree</option>
+                  {profile.degree &&
+                    !DEGREE_GROUPS.some(([, o]) =>
+                      o.includes(profile.degree),
+                    ) && (
+                      <option value={profile.degree}>{profile.degree}</option>
+                    )}
+                  {DEGREE_GROUPS.map(([group, options]) => (
+                    <optgroup key={group} label={group}>
+                      {options.map((o) => (
+                        <option key={o} value={o}>
+                          {o}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+              <div className={auth.field}>
+                <label className={auth.label} htmlFor='p-university'>
+                  University or institution{" "}
+                  <span className={styles.req}>*</span>
+                </label>
+                <input
+                  id='p-university'
+                  name='university'
+                  className={auth.input}
+                  value={profile.university}
+                  onChange={handleChange}
+                  placeholder='e.g. MIT, Stanford University'
+                />
+              </div>
+              <div className={auth.field}>
+                <label className={auth.label} htmlFor='p-expertise'>
+                  Area of expertise <span className={styles.req}>*</span>
+                </label>
+                <input
+                  id='p-expertise'
+                  name='expertise'
+                  className={auth.input}
+                  value={profile.expertise}
+                  onChange={handleChange}
+                  placeholder='e.g. Machine Learning'
+                />
+              </div>
+              <div className={auth.field}>
+                <label className={auth.label} htmlFor='p-research'>
+                  Research area
+                </label>
+                <input
+                  id='p-research'
+                  name='researchArea'
+                  className={auth.input}
+                  value={profile.researchArea}
+                  onChange={handleChange}
+                  placeholder='e.g. Computer Vision'
+                />
+              </div>
+              <div className={auth.field}>
+                <label className={auth.label} htmlFor='p-languages'>
+                  Languages <span className={styles.req}>*</span>
+                </label>
+                <input
+                  id='p-languages'
+                  name='languages'
+                  className={auth.input}
+                  value={profile.languages}
+                  onChange={handleChange}
+                  placeholder='e.g. English, Spanish'
+                />
+              </div>
+              <div className={auth.field}>
+                <label className={auth.label} htmlFor='p-years'>
+                  Years of teaching experience
+                </label>
+                <input
+                  id='p-years'
+                  name='yearsOfExperience'
+                  type='number'
+                  min='0'
+                  className={auth.input}
+                  value={profile.yearsOfExperience}
+                  onChange={handleChange}
+                  placeholder='e.g. 5'
+                />
+              </div>
+              <div className={auth.field}>
+                <label className={auth.label} htmlFor='p-gender'>
+                  Gender
+                </label>
+                <select
+                  id='p-gender'
+                  name='gender'
+                  className={auth.input}
+                  value={profile.gender}
+                  onChange={handleChange}
+                >
+                  <option value=''>Prefer not to say</option>
+                  <option value='Male'>Male</option>
+                  <option value='Female'>Female</option>
+                </select>
+              </div>
+              <div className={auth.field}>
+                <label className={auth.label} htmlFor='p-website'>
+                  Website or LinkedIn
+                </label>
+                <input
+                  id='p-website'
+                  name='website'
+                  className={auth.input}
+                  value={profile.website}
+                  onChange={handleChange}
+                  placeholder='https://linkedin.com/in/yourname'
+                />
+              </div>
+              <div className={`${auth.field} ${styles.full}`}>
+                <div className={styles.sectionHead} style={{ margin: 0 }}>
+                  <label className={auth.label} htmlFor='p-bio'>
+                    About you
+                  </label>
+                  <span className={styles.notSet}>{words} / 300 words</span>
+                </div>
+                <textarea
+                  id='p-bio'
+                  name='bio'
+                  rows={10}
+                  className={`${auth.input} ${auth.textarea}`}
+                  value={profile.bio}
+                  onChange={handleChange}
+                  placeholder='Your background, how you like to teach, and what students can expect working with you.'
+                />
+              </div>
+            </div>
+            {error && (
+              <p className={auth.error} style={{ marginTop: 18 }}>
+                {error}
+              </p>
+            )}
+            <div className={styles.formActions}>
+              <button type='submit' className='btn-primary' disabled={saving}>
+                {saving ? "Saving..." : "Save profile"}
+              </button>
+              <button
+                type='button'
+                className='btn-ghost'
+                disabled={saving}
+                onClick={() => setEditing(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        ) : (
+          <dl className={styles.facts}>
+            <div>
+              <dt>Degree</dt>
+              <dd>{view(teacher.degree)}</dd>
+            </div>
+            <div>
+              <dt>University</dt>
+              <dd>{view(teacher.university)}</dd>
+            </div>
+            <div>
+              <dt>Area of expertise</dt>
+              <dd>{view(teacher.expertise)}</dd>
+            </div>
+            <div>
+              <dt>Research area</dt>
+              <dd>{view(teacher.researchArea)}</dd>
+            </div>
+            <div>
+              <dt>Languages</dt>
+              <dd>{view(teacher.languages)}</dd>
+            </div>
+            <div>
+              <dt>Years of experience</dt>
+              <dd>{view(teacher.yearsOfExperience)}</dd>
+            </div>
+            <div>
+              <dt>Gender</dt>
+              <dd>{view(teacher.gender)}</dd>
+            </div>
+            <div>
+              <dt>Website</dt>
+              <dd>
+                {website ? (
+                  <a href={website} target='_blank' rel='noreferrer'>
+                    {teacher.website.replace(/^https?:\/\//, "")}
+                  </a>
+                ) : (
+                  view(teacher.website)
+                )}
+              </dd>
+            </div>
+            <div className={styles.factWide}>
+              <dt>About you</dt>
+              <dd className={styles.bioText}>{view(teacher.bio)}</dd>
+            </div>
+          </dl>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function TeacherDashboard() {
@@ -51,30 +382,13 @@ export default function TeacherDashboard() {
   const [research, setResearch] = useState([]);
   const [projects, setProjects] = useState([]);
   const [showcase, setShowcase] = useState([]);
+  const [pendingBookings, setPendingBookings] = useState(0);
   const [activeForm, setActiveForm] = useState(null); // { kind, item } | null
   const [contentFilter, setContentFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(location.state?.tab || "overview");
 
-  // Profile form state
-  const [profile, setProfile] = useState({
-    gender: "",
-    degree: "",
-    expertise: "",
-    researchArea: "",
-    bio: "",
-    university: "",
-    yearsOfExperience: "",
-    languages: "",
-    website: "",
-  });
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [profileSaving, setProfileSaving] = useState(false);
-  const [profileSaved, setProfileSaved] = useState(false);
-  const [wordCount, setWordCount] = useState(0);
-
   useEffect(() => {
-    let profileLoaded = false;
     let unsubscribeTeacher = () => {};
     let unsubscribeContent = () => {};
     const unsubscribeAuth = onAuthStateChanged((user) => {
@@ -85,28 +399,16 @@ export default function TeacherDashboard() {
         return;
       }
 
-      // Kept fresh, not a one-time fetch: verification status can change
-      // while this tab is open (admin approves it, or the work-email link
-      // gets clicked in another tab) and the dashboard should reflect that
-      // without a refresh. The profile FORM fields only sync in once, on
-      // first load, so a refresh never clobbers an in-progress edit.
+      // Kept fresh: verification status can change while this tab is open.
       unsubscribeTeacher = live(
         () => api.get("/teachers/me"),
         (data) => {
-          // Until a mentor is approved, their application page is their home:
-          // posting content and setting availability open up once they're live.
+          // Until a mentor is approved, their application page is their home.
           if (data.verificationStatus !== "approved") {
             navigate("/mentor/application", { replace: true });
             return;
           }
           setTeacher(data);
-          if (!profileLoaded) {
-            profileLoaded = true;
-            setProfile(profileFromTeacherData(data));
-            setWordCount(
-              (data.bio || "").trim().split(/\s+/).filter(Boolean).length,
-            );
-          }
         },
       );
 
@@ -117,11 +419,13 @@ export default function TeacherDashboard() {
             api.get(`/research?${mine}`),
             api.get(`/projects?${mine}`),
             api.get(`/showcase?${mine}`),
+            api.get("/teachers/me/bookings?status=pending").catch(() => []),
           ]),
-        ([r, p, s]) => {
+        ([r, p, s, b]) => {
           setResearch(r);
           setProjects(p);
           setShowcase(s);
+          setPendingBookings(b.length);
           setLoading(false);
         },
       );
@@ -132,17 +436,7 @@ export default function TeacherDashboard() {
       unsubscribeTeacher();
       unsubscribeContent();
     };
-  }, []);
-
-  function cancelProfileEdit() {
-    if (teacher) {
-      setProfile(profileFromTeacherData(teacher));
-      setWordCount(
-        (teacher.bio || "").trim().split(/\s+/).filter(Boolean).length,
-      );
-    }
-    setIsEditingProfile(false);
-  }
+  }, [navigate]);
 
   function handleLogout() {
     logout();
@@ -172,226 +466,215 @@ export default function TeacherDashboard() {
   }
 
   function startAdd(kind) {
+    setActiveTab("content");
     setContentFilter(kind);
     setActiveForm({ kind, item: null });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function handleProfileChange(e) {
-    const { name, value } = e.target;
-    if (name === "bio") {
-      const words = value.trim().split(/\s+/).filter(Boolean).length;
-      if (words > 300) return; // block over 300 words
-      setWordCount(words);
-    }
-    setProfile((prev) => ({ ...prev, [name]: value }));
+  function goTab(id) {
+    setActiveTab(id);
+    if (id !== "content") setActiveForm(null);
   }
 
-  async function saveProfile() {
-    if (!profile.degree) return alert("Please select your degree.");
-    if (!profile.university.trim())
-      return alert("Please enter your university.");
-    if (!profile.expertise.trim())
-      return alert("Please enter your area of expertise.");
-    if (!profile.languages.trim())
-      return alert("Please enter languages spoken.");
-
-    setProfileSaving(true);
-    try {
-      await api.patch("/teachers/me", profile);
-      setTeacher((prev) => ({ ...prev, ...profile }));
-      setProfileSaved(true);
-      setTimeout(() => {
-        setProfileSaved(false);
-        setIsEditingProfile(false);
-      }, 1200);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save profile. Please try again.");
-    } finally {
-      setProfileSaving(false);
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <h1 className={styles.logo}>🔬 happy<span style={{ color: "#111111" }}>Research</span></h1>
-          </div>
-        </div>
-        <div className={styles.grid}>
-          {[1, 2, 3].map((i) => (
-            <SkeletonDashboardCard key={i} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  const inputStyle = {
-    width: "100%",
-    padding: "10px 12px",
-    borderRadius: 8,
-    border: "1px solid #e2e8f0",
-    fontSize: 14,
-    boxSizing: "border-box",
-    marginTop: 4,
-    fontFamily: "inherit",
-  };
-
-  const labelStyle = {
-    fontSize: 13,
-    color: "#64748b",
-    fontWeight: 600,
-  };
-
-  const fieldStyle = {
-    marginBottom: 16,
-  };
+  const firstName = teacher
+    ? (teacher.name || "")
+        .replace(/^(dr|prof)\.?\s+/i, "")
+        .trim()
+        .split(/\s+/)[0]
+    : "";
 
   const allContent = [
     ...research.map((r) => ({ ...r, kind: "research" })),
     ...projects.map((p) => ({ ...p, kind: "project" })),
     ...showcase.map((s) => ({ ...s, kind: "showcase" })),
   ].sort((a, b) => toMillis(b.createdAt) - toMillis(a.createdAt));
-
   const visibleContent =
     contentFilter === "all"
       ? allContent
       : allContent.filter((i) => i.kind === contentFilter);
+  const openPrograms = [...research, ...projects].filter(
+    (i) => i.stage !== "completed",
+  ).length;
 
-  const vStatus = statusInfo(teacher?.verificationStatus);
-
-  function navCls(id) {
-    return `${styles.navItem} ${activeTab === id ? styles.navItemActive : ""}`.trim();
-  }
-
-  let navGroup = null;
+  const counts = {
+    content: allContent.length,
+    bookings: pendingBookings,
+  };
 
   return (
-    <>
-      <div className={styles.page}>
-        {/* Header */}
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <h1 className={styles.logo}>💻 happy<span style={{ color: "#111111" }}>Research</span></h1>
-            <p className={styles.welcome}>
-              Welcome back, <strong>{teacher?.name}</strong> 👋
-            </p>
-          </div>
-          <div className={styles.headerRight}>
-            <button className={styles.logoutBtn} onClick={handleLogout}>
-              Logout
+    <div className={styles.page}>
+      <header className={styles.bar}>
+        <div className={`${styles.wrap} ${styles.barInner}`}>
+          <Link to='/' className={styles.wordmark}>
+            happyresearch<span>.</span>
+          </Link>
+          <div className={styles.barRight}>
+            {teacher && (
+              <Link
+                to={`/teacher/${teacher.id}`}
+                className={`${styles.barLink} ${styles.hideSm}`}
+              >
+                View public profile
+              </Link>
+            )}
+            <button
+              type='button'
+              className={styles.barLink}
+              onClick={handleLogout}
+            >
+              Log out
             </button>
           </div>
         </div>
-        <div className={styles.layout}>
-          {/* Sidebar nav */}
-          <nav className={styles.sidebar}>
-            {NAV_ITEMS.map((item) => {
-              const showGroupLabel = item.group && item.group !== navGroup;
-              if (showGroupLabel) navGroup = item.group;
-              return (
-                <div key={item.id}>
-                  {showGroupLabel && (
-                    <p className={styles.navGroupLabel}>{item.group}</p>
-                  )}
-                  <button
-                    className={navCls(item.id)}
-                    onClick={() => setActiveTab(item.id)}
-                  >
-                    {item.label}
-                  </button>
-                </div>
-              );
-            })}
-          </nav>
+      </header>
 
-          {/* Main content */}
-          <main className={styles.main}>
-            {/* ── Overview Tab ── */}
-            {activeTab === "overview" && (
-              <div className={styles.section}>
-                <h2 className={styles.sectionTitle}>
-                  Welcome back, {teacher?.name}
-                </h2>
-                <div className={styles.stats}>
-                  <div className={styles.statCard}>
-                    <p className={styles.statNum}>{research.length}</p>
-                    <p className={styles.statLabel}>Research Posts</p>
-                  </div>
-                  <div className={styles.statCard}>
-                    <p className={styles.statNum}>{projects.length}</p>
-                    <p className={styles.statLabel}>Projects</p>
-                  </div>
-                  <div className={styles.statCard}>
-                    <p className={styles.statNum}>{showcase.length}</p>
-                    <p className={styles.statLabel}>Student Work</p>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    background: vStatus.bg,
-                    border: `1px solid ${vStatus.color}33`,
-                    borderRadius: 12,
-                    padding: "18px 22px",
-                    marginBottom: 24,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                    gap: 12,
-                  }}
-                >
-                  <p style={{ margin: 0, fontWeight: 700, color: vStatus.color }}>
-                    ✅ You're verified and live
-                  </p>
-                </div>
-
-                <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+      {loading || !teacher ? (
+        <div className={`${styles.wrap} ${styles.head}`}>
+          <p className={styles.loading}>Loading your dashboard...</p>
+        </div>
+      ) : (
+        <>
+          <section className={styles.head}>
+            <div className={styles.wrap}>
+              <p className='section-label'>Mentor dashboard</p>
+              <h1 className={styles.h1}>Hi, {firstName}.</h1>
+              <div className={styles.headBottom}>
+                <p className={styles.summary}>
+                  <span className={styles.live}>✓ Live</span>
+                  <span>
+                    {openPrograms} open{" "}
+                    {openPrograms === 1 ? "program" : "programs"}
+                    {pendingBookings > 0 &&
+                      ` · ${pendingBookings} booking ${pendingBookings === 1 ? "request" : "requests"} waiting`}
+                  </span>
+                </p>
+                <div className={styles.actions}>
                   <button
-                    className={styles.createBtn}
-                    onClick={() => {
-                      setActiveTab("content");
-                      startAdd("research");
-                    }}
+                    type='button'
+                    className='btn-primary'
+                    onClick={() => startAdd("research")}
                   >
-                    + Add Research
+                    + New research topic
                   </button>
                   <button
-                    className={styles.createBtn}
-                    onClick={() => {
-                      setActiveTab("content");
-                      startAdd("project");
-                    }}
+                    type='button'
+                    className='btn-ghost'
+                    onClick={() => startAdd("project")}
                   >
-                    + Add Project
-                  </button>
-                  <button
-                    className={styles.createBtn}
-                    onClick={() => {
-                      setActiveTab("content");
-                      startAdd("showcase");
-                    }}
-                  >
-                    + Add Student Work
-                  </button>
-                  <button
-                    className={styles.logoutBtn}
-                    onClick={() => setActiveTab("availability")}
-                  >
-                    🗓 Set Availability
+                    + New project
                   </button>
                 </div>
               </div>
-            )}
+            </div>
+          </section>
 
-            {/* ── Content Tab (Research + Projects + Student Work) ── */}
-            {activeTab === "content" && (
-              <div className={styles.section}>
-                {activeForm ? (
+          <div className={styles.wrap}>
+            <nav className={styles.tabs} aria-label='Dashboard sections'>
+              {TABS.map((t) => (
+                <button
+                  key={t.id}
+                  type='button'
+                  aria-current={activeTab === t.id ? "page" : undefined}
+                  className={`${styles.tab} ${activeTab === t.id ? styles.tabOn : ""}`}
+                  onClick={() => goTab(t.id)}
+                >
+                  {t.label}
+                  {t.id === "bookings" && counts.bookings > 0 ? (
+                    <span className={styles.tabAlert}>{counts.bookings}</span>
+                  ) : t.id === "content" && counts.content > 0 ? (
+                    <span className={styles.tabCount}>{counts.content}</span>
+                  ) : null}
+                </button>
+              ))}
+            </nav>
+
+            <main className={styles.body}>
+              {activeTab === "overview" && (
+                <div>
+                  <div className={styles.stats}>
+                    {[
+                      ["Research topics", research.length, "research"],
+                      ["Projects", projects.length, "project"],
+                      ["Student work", showcase.length, "showcase"],
+                    ].map(([label, n, kind]) => (
+                      <button
+                        key={label}
+                        type='button'
+                        className={styles.stat}
+                        onClick={() => {
+                          setContentFilter(kind);
+                          setActiveForm(null);
+                          setActiveTab("content");
+                        }}
+                      >
+                        <span className={styles.statLabel}>{label}</span>
+                        <span className={styles.statNum}>{n}</span>
+                      </button>
+                    ))}
+                    <button
+                      type='button'
+                      className={`${styles.stat} ${pendingBookings > 0 ? styles.statHot : ""}`}
+                      onClick={() => goTab("bookings")}
+                    >
+                      <span className={styles.statLabel}>
+                        Booking requests waiting
+                      </span>
+                      <span className={styles.statNum}>{pendingBookings}</span>
+                    </button>
+                  </div>
+
+                  <div className={styles.sectionHead}>
+                    <h2 className={styles.sectionTitle}>What's next.</h2>
+                  </div>
+                  <ul className={styles.rows}>
+                    {[
+                      [
+                        "Post a research topic",
+                        "One student, ten guided lessons, ending in a paper or presentation.",
+                        () => startAdd("research"),
+                      ],
+                      [
+                        "Post a project",
+                        "A small group builds something real, with you reviewing each step.",
+                        () => startAdd("project"),
+                      ],
+                      [
+                        "Add student work",
+                        "Show finished work on the public Student Work page.",
+                        () => startAdd("showcase"),
+                      ],
+                      [
+                        "Open times for 1-on-1s",
+                        "Add slots to your calendar so students can book a session.",
+                        () => goTab("availability"),
+                      ],
+                      [
+                        "Polish your profile",
+                        "A clear bio and research area help students pick you.",
+                        () => goTab("profile"),
+                      ],
+                    ].map(([title, text, onClick]) => (
+                      <li key={title}>
+                        <button
+                          type='button'
+                          className={styles.row}
+                          onClick={onClick}
+                        >
+                          <span className={styles.rowTitle}>{title}</span>
+                          <span className={styles.rowText}>{text}</span>
+                          <span className={styles.rowArrow} aria-hidden='true'>
+                            →
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {activeTab === "content" &&
+                (activeForm ? (
                   activeForm.kind === "research" ? (
                     <ResearchForm
                       research={activeForm.item}
@@ -409,100 +692,78 @@ export default function TeacherDashboard() {
                     />
                   )
                 ) : (
-                  <>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                        marginBottom: 16,
-                        flexWrap: "wrap",
-                        gap: 12,
-                      }}
-                    >
+                  <div>
+                    <div className={styles.sectionHead}>
                       <div>
-                        <h2 className={styles.sectionTitle} style={{ marginBottom: 4 }}>
-                          Your Content
-                        </h2>
-                        <p style={{ color: "#64748b", fontSize: 13, margin: 0 }}>
-                          Research, projects, and student work, all in one place.
+                        <h2 className={styles.sectionTitle}>Your content.</h2>
+                        <p className={styles.sectionSub}>
+                          Research topics, projects and student work. Students
+                          apply to the first two from your public pages.
                         </p>
                       </div>
-                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                        <button
-                          className={styles.createBtn}
-                          onClick={() => startAdd("research")}
-                        >
-                          + Research
-                        </button>
-                        <button
-                          className={styles.createBtn}
-                          onClick={() => startAdd("project")}
-                        >
-                          + Project
-                        </button>
-                        <button
-                          className={styles.createBtn}
-                          onClick={() => startAdd("showcase")}
-                        >
-                          + Student Work
-                        </button>
+                      <div className={styles.newBtns}>
+                        {Object.entries(NEW_LABEL).map(([kind, label]) => (
+                          <button
+                            key={kind}
+                            type='button'
+                            className={styles.newBtn}
+                            onClick={() => startAdd(kind)}
+                          >
+                            + {label}
+                          </button>
+                        ))}
                       </div>
                     </div>
 
-                    <div className={styles.chipRow}>
+                    <div
+                      className={styles.chips}
+                      role='group'
+                      aria-label='Filter content'
+                    >
                       {[
-                        { id: "all", label: `All (${allContent.length})` },
-                        { id: "research", label: `🔬 Research (${research.length})` },
-                        { id: "project", label: `💡 Projects (${projects.length})` },
-                        { id: "showcase", label: `🏆 Student Work (${showcase.length})` },
-                      ].map((c) => (
+                        ["all", "All", allContent.length],
+                        ["research", "Research", research.length],
+                        ["project", "Projects", projects.length],
+                        ["showcase", "Student work", showcase.length],
+                      ].map(([id, label, n]) => (
                         <button
-                          key={c.id}
-                          className={`${styles.chip} ${contentFilter === c.id ? styles.chipActive : ""}`}
-                          onClick={() => setContentFilter(c.id)}
+                          key={id}
+                          type='button'
+                          aria-pressed={contentFilter === id}
+                          className={`${styles.chip} ${contentFilter === id ? styles.chipOn : ""}`}
+                          onClick={() => setContentFilter(id)}
                         >
-                          {c.label}
+                          {label} <span className={styles.chipCount}>{n}</span>
                         </button>
                       ))}
                     </div>
 
                     {visibleContent.length === 0 ? (
                       <div className={styles.empty}>
-                        <p>
-                          {contentFilter === "showcase"
-                            ? "🏆 Nothing published yet!"
-                            : contentFilter === "project"
-                              ? "💡 No projects posted yet!"
-                              : contentFilter === "research"
-                                ? "🔬 No research posted yet!"
-                                : "✨ Nothing posted yet!"}
+                        <p className={styles.emptyTitle}>
+                          {contentFilter === "all"
+                            ? "Nothing posted yet."
+                            : `No ${NEW_LABEL[contentFilter].toLowerCase()} yet.`}
                         </p>
-                        {contentFilter === "all" ? (
-                          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
-                            <button className={styles.createBtn} onClick={() => startAdd("research")}>
-                              + Add Research
+                        <p>
+                          Once you post something, students can find it and
+                          apply.
+                        </p>
+                        <div className={styles.emptyActions}>
+                          {(contentFilter === "all"
+                            ? ["research", "project", "showcase"]
+                            : [contentFilter]
+                          ).map((kind, i) => (
+                            <button
+                              key={kind}
+                              type='button'
+                              className={i === 0 ? "btn-primary" : "btn-ghost"}
+                              onClick={() => startAdd(kind)}
+                            >
+                              + {NEW_LABEL[kind]}
                             </button>
-                            <button className={styles.createBtn} onClick={() => startAdd("project")}>
-                              + Add Project
-                            </button>
-                            <button className={styles.createBtn} onClick={() => startAdd("showcase")}>
-                              + Add Student Work
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            className={styles.createBtn}
-                            onClick={() => startAdd(contentFilter)}
-                          >
-                            + Add your first{" "}
-                            {contentFilter === "research"
-                              ? "research post"
-                              : contentFilter === "project"
-                                ? "project"
-                                : "Student Work entry"}
-                          </button>
-                        )}
+                          ))}
+                        </div>
                       </div>
                     ) : (
                       <div className={styles.grid}>
@@ -511,7 +772,9 @@ export default function TeacherDashboard() {
                             key={`${item.kind}-${item.id}`}
                             item={item}
                             kind={item.kind}
-                            onEdit={() => setActiveForm({ kind: item.kind, item })}
+                            onEdit={() =>
+                              setActiveForm({ kind: item.kind, item })
+                            }
                             onDelete={() => deleteItem(item.kind, item.id)}
                             onToggleStage={
                               item.kind !== "showcase"
@@ -522,389 +785,25 @@ export default function TeacherDashboard() {
                         ))}
                       </div>
                     )}
-                  </>
-                )}
-              </div>
-            )}
-
-            {/* ── Availability Tab ── */}
-            {activeTab === "availability" && (
-              <div className={styles.section}>
-                <Availability />
-              </div>
-            )}
-            {/* ── Bookings Tab ── */}
-            {activeTab === "bookings" && (
-              <div className={styles.section}>
-                <BookingRequests />
-              </div>
-            )}
-            {/* ── Profile Tab ── */}
-            {activeTab === "profile" && (
-              <div className={styles.section}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    gap: 16,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <div>
-                    <h2 className={styles.sectionTitle}>👤 My Profile</h2>
-                    <p style={{ color: "#64748b", fontSize: 14, marginBottom: 24 }}>
-                      This information will be displayed on your public tutor
-                      profile.
-                    </p>
                   </div>
-                  {!isEditingProfile && (
-                    <button
-                      onClick={() => setIsEditingProfile(true)}
-                      style={{
-                        padding: "10px 20px",
-                        borderRadius: 8,
-                        border: "none",
-                        background: "#111111",
-                        color: "white",
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: "pointer",
-                        flexShrink: 0,
-                      }}
-                    >
-                      ✏️ Edit
-                    </button>
-                  )}
-                </div>
+                ))}
 
-                {!isEditingProfile ? (
-                  <div style={{ maxWidth: 600 }}>
-                    {[
-                      ["Gender", profile.gender],
-                      ["Degree", profile.degree],
-                      ["University / Institution", profile.university],
-                      ["Area of Expertise", profile.expertise],
-                      ["Research Area", profile.researchArea],
-                      [
-                        "Years of Teaching Experience",
-                        profile.yearsOfExperience,
-                      ],
-                      ["Languages Spoken", profile.languages],
-                    ].map(([label, value]) => (
-                      <div style={fieldStyle} key={label}>
-                        <p style={labelStyle}>{label}</p>
-                        <p style={{ margin: "4px 0 0", fontSize: 15 }}>
-                          {value || <span style={{ color: "#94a3b8" }}>Not set</span>}
-                        </p>
-                      </div>
-                    ))}
-                    <div style={fieldStyle}>
-                      <p style={labelStyle}>Personal Website / LinkedIn</p>
-                      {safeUrl(profile.website) ? (
-                        <a
-                          href={safeUrl(profile.website)}
-                          target='_blank'
-                          rel='noreferrer'
-                          style={{
-                            display: "block",
-                            marginTop: 4,
-                            fontSize: 15,
-                            color: "#111111",
-                          }}
-                        >
-                          {profile.website}
-                        </a>
-                      ) : (
-                        <p style={{ margin: "4px 0 0", fontSize: 15, color: "#94a3b8" }}>
-                          Not set
-                        </p>
-                      )}
-                    </div>
-                    <div style={fieldStyle}>
-                      <p style={labelStyle}>About Me</p>
-                      <p
-                        style={{
-                          margin: "4px 0 0",
-                          fontSize: 15,
-                          lineHeight: 1.7,
-                          whiteSpace: "pre-wrap",
-                        }}
-                      >
-                        {profile.bio || (
-                          <span style={{ color: "#94a3b8" }}>Not set</span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div style={{ maxWidth: 600 }}>
-                    {/* Gender */}
-                    <div style={fieldStyle}>
-                      <label style={labelStyle}>
-                        Gender <span style={{ color: "#a01f13" }}>*</span>
-                      </label>
-                      <select
-                        name='gender'
-                        value={profile.gender}
-                        onChange={handleProfileChange}
-                        style={inputStyle}
-                      >
-                        <option value=''>Select gender</option>
-                        <option value='Male'>Male</option>
-                        <option value='Female'>Female</option>
-                      </select>
-                    </div>
-                    {/* Degree */}
-                    <div style={fieldStyle}>
-                      <label style={labelStyle}>
-                        Degree <span style={{ color: "#a01f13" }}>*</span>
-                      </label>
-                      <select
-                        name='degree'
-                        value={profile.degree}
-                        onChange={handleProfileChange}
-                        style={inputStyle}
-                      >
-                        <option value=''>Select your highest degree</option>
-                        <optgroup label='Secondary Education'>
-                          <option value='High School Diploma'>
-                            High School Diploma
-                          </option>
-                          <option value='GED'>GED</option>
-                        </optgroup>
-                        <optgroup label='Undergraduate'>
-                          <option value="Associate's Degree">
-                            Associate's Degree
-                          </option>
-                          <option value='Bachelor of Arts (BA)'>
-                            Bachelor of Arts (BA)
-                          </option>
-                          <option value='Bachelor of Science (BS)'>
-                            Bachelor of Science (BS)
-                          </option>
-                          <option value='Bachelor of Education (BEd)'>
-                            Bachelor of Education (BEd)
-                          </option>
-                          <option value='Bachelor of Engineering (BEng)'>
-                            Bachelor of Engineering (BEng)
-                          </option>
-                        </optgroup>
-                        <optgroup label='Graduate'>
-                          <option value='Master of Arts (MA)'>
-                            Master of Arts (MA)
-                          </option>
-                          <option value='Master of Science (MS)'>
-                            Master of Science (MS)
-                          </option>
-                          <option value='Master of Education (MEd)'>
-                            Master of Education (MEd)
-                          </option>
-                          <option value='Master of Business Administration (MBA)'>
-                            Master of Business Administration (MBA)
-                          </option>
-                          <option value='Master of Engineering (MEng)'>
-                            Master of Engineering (MEng)
-                          </option>
-                          <option value='Master of Fine Arts (MFA)'>
-                            Master of Fine Arts (MFA)
-                          </option>
-                        </optgroup>
-                        <optgroup label='Doctorate'>
-                          <option value='Doctor of Philosophy (PhD)'>
-                            Doctor of Philosophy (PhD)
-                          </option>
-                          <option value='Doctor of Education (EdD)'>
-                            Doctor of Education (EdD)
-                          </option>
-                          <option value='Doctor of Medicine (MD)'>
-                            Doctor of Medicine (MD)
-                          </option>
-                          <option value='Doctor of Law (JD)'>
-                            Doctor of Law (JD)
-                          </option>
-                          <option value='Doctor of Business Administration (DBA)'>
-                            Doctor of Business Administration (DBA)
-                          </option>
-                          <option value='Doctor of Engineering (DEng)'>
-                            Doctor of Engineering (DEng)
-                          </option>
-                        </optgroup>
-                        <optgroup label='Other'>
-                          <option value='Professional Certification'>
-                            Professional Certification
-                          </option>
-                          <option value='Vocational Training'>
-                            Vocational Training
-                          </option>
-                          <option value='Other'>Other</option>
-                        </optgroup>
-                      </select>
-                    </div>
+              {activeTab === "availability" && <Availability />}
+              {activeTab === "bookings" && <BookingRequests />}
+              {activeTab === "profile" && (
+                <ProfileTab
+                  teacher={teacher}
+                  onSaved={(fields) =>
+                    setTeacher((prev) => ({ ...prev, ...fields }))
+                  }
+                />
+              )}
+            </main>
+          </div>
+        </>
+      )}
 
-                    {/* University */}
-                    <div style={fieldStyle}>
-                      <label style={labelStyle}>
-                        University / Institution{" "}
-                        <span style={{ color: "#a01f13" }}>*</span>
-                      </label>
-                      <input
-                        name='university'
-                        value={profile.university}
-                        onChange={handleProfileChange}
-                        placeholder='e.g. MIT, Stanford University'
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    {/* Expertise */}
-                    <div style={fieldStyle}>
-                      <label style={labelStyle}>
-                        Area of Expertise <span style={{ color: "#a01f13" }}>*</span>
-                      </label>
-                      <input
-                        name='expertise'
-                        value={profile.expertise}
-                        onChange={handleProfileChange}
-                        placeholder='e.g. Machine Learning, Web Development'
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    {/* Research Area */}
-                    <div style={fieldStyle}>
-                      <label style={labelStyle}>Research Area </label>
-                      <input
-                        name='researchArea'
-                        value={profile.researchArea}
-                        onChange={handleProfileChange}
-                        placeholder='e.g. Natural Language Processing, Computer Vision'
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    {/* Years of Experience */}
-                    <div style={fieldStyle}>
-                      <label style={labelStyle}>Years of Teaching Experience</label>
-                      <input
-                        name='yearsOfExperience'
-                        type='number'
-                        min='0'
-                        value={profile.yearsOfExperience}
-                        onChange={handleProfileChange}
-                        placeholder='e.g. 5'
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    {/* Languages */}
-                    <div style={fieldStyle}>
-                      <label style={labelStyle}>
-                        Languages Spoken <span style={{ color: "#a01f13" }}>*</span>
-                      </label>
-                      <input
-                        name='languages'
-                        value={profile.languages}
-                        onChange={handleProfileChange}
-                        placeholder='e.g. English, Spanish, Mandarin'
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    {/* Website */}
-                    <div style={fieldStyle}>
-                      <label style={labelStyle}>Personal Website / LinkedIn</label>
-                      <input
-                        name='website'
-                        value={profile.website}
-                        onChange={handleProfileChange}
-                        placeholder='e.g. https://linkedin.com/in/yourname'
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    {/* Bio */}
-                    <div style={fieldStyle}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <label style={labelStyle}>About Me</label>
-                        <span
-                          style={{
-                            fontSize: 12,
-                            color: wordCount > 280 ? "var(--pink)" : "#94a3b8",
-                          }}
-                        >
-                          {wordCount} / 300 words
-                        </span>
-                      </div>
-                      <textarea
-                        name='bio'
-                        value={profile.bio}
-                        onChange={handleProfileChange}
-                        placeholder='Tell students about yourself — your background, teaching style, achievements, and why you love teaching...'
-                        rows={20}
-                        style={{ ...inputStyle, resize: "vertical", lineHeight: 1.6 }}
-                      />
-                      {wordCount >= 300 && (
-                        <p style={{ color: "#a01f13", fontSize: 12, marginTop: 4 }}>
-                          Maximum 300 words reached.
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Save / Cancel buttons */}
-                    <div style={{ display: "flex", gap: 12 }}>
-                      <button
-                        onClick={saveProfile}
-                        disabled={profileSaving}
-                        style={{
-                          padding: "12px 32px",
-                          borderRadius: 8,
-                          border: "none",
-                          background: profileSaved ? "#1f6f4a" : "#111111",
-                          color: "white",
-                          fontSize: 15,
-                          fontWeight: 600,
-                          cursor: "pointer",
-                          transition: "background 0.2s",
-                        }}
-                      >
-                        {profileSaving
-                          ? "Saving..."
-                          : profileSaved
-                            ? "Saved!"
-                            : "Save Profile"}
-                      </button>
-                      <button
-                        onClick={cancelProfileEdit}
-                        disabled={profileSaving}
-                        style={{
-                          padding: "12px 32px",
-                          borderRadius: 8,
-                          border: "1px solid #e2e8f0",
-                          background: "white",
-                          color: "#64748b",
-                          fontSize: 15,
-                          fontWeight: 600,
-                          cursor: "pointer",
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </main>
-        </div>
-      </div>
       <Footer />
-    </>
+    </div>
   );
 }

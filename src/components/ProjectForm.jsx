@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { api, seg } from "../api";
 import styles from "./TeacherAuth.module.css";
+import mf from "./MentorForm.module.css";
 import { DELIVERABLE_OPTIONS } from "../utils/deliverables";
 import { GRADE_RANGE_OPTIONS } from "../utils/gradeRange";
 import { LOCATION_OPTIONS } from "../utils/schedule";
@@ -9,7 +10,12 @@ import { toPrereqArray, MAX_PREREQUISITES } from "../utils/prerequisites";
 import PrerequisitesField from "./PrerequisitesField";
 import { DIFFICULTY_OPTIONS } from "../utils/difficulty";
 
-const WORD_LIMITS = { title: 100, description: 500, learning: 300, details: 300 };
+const WORD_LIMITS = {
+  title: 100,
+  description: 500,
+  learning: 300,
+  details: 300,
+};
 
 function countWords(str) {
   const trimmed = str.trim();
@@ -18,7 +24,7 @@ function countWords(str) {
 
 function WordCount({ count, limit }) {
   return (
-    <span style={{ fontSize: 12, color: count >= limit ? "#a01f13" : "#aaa" }}>
+    <span className={`${mf.count} ${count >= limit ? mf.countOver : ""}`}>
       {count} / {limit} words
     </span>
   );
@@ -116,45 +122,22 @@ export default function ProjectForm({ project, onClose }) {
   }
 
   return (
-    <div style={{ maxWidth: 600 }}>
+    <div className={mf.wrap}>
       {onClose && (
-        <button
-          type='button'
-          onClick={onClose}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#111111",
-            cursor: "pointer",
-            fontSize: 14,
-            marginBottom: 12,
-            padding: 0,
-          }}
-        >
-          ← Back
+        <button type='button' onClick={onClose} className={mf.back}>
+          ← Back to your content
         </button>
       )}
-      <h3 style={{ marginBottom: 4 }}>
-        {isEditing ? "💡 Edit Project" : "💡 Create Project"}
-      </h3>
-      <p style={{ color: "#888", fontSize: 14, marginBottom: 24 }}>
+      <h2 className={mf.title}>{isEditing ? "Edit project" : "New project"}</h2>
+      <p className={mf.sub}>
         {isEditing
           ? "Update your project post."
           : "Share a project idea students can work on with you."}
       </p>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: 28 }}
-      >
+      <form onSubmit={handleSubmit} className={mf.form} noValidate>
         <div className={styles.field}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className={mf.labelRow}>
             <label className={styles.label}>Project Title *</label>
             <WordCount
               count={countWords(form.title)}
@@ -167,19 +150,12 @@ export default function ProjectForm({ project, onClose }) {
             value={form.title}
             onChange={handleChange}
             placeholder='e.g. Build a chatbot with Python'
-            style={{ fontSize: "1.1rem" }}
           />
           {errors.title && <p className={styles.errorMsg}>{errors.title}</p>}
         </div>
 
         <div className={styles.field}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className={mf.labelRow}>
             <label className={styles.label}>Project Description *</label>
             <WordCount
               count={countWords(form.description)}
@@ -193,7 +169,6 @@ export default function ProjectForm({ project, onClose }) {
             onChange={handleChange}
             placeholder='Describe what the project involves...'
             rows={10}
-            style={{ fontSize: "1.1rem" }}
           />
           {errors.description && (
             <p className={styles.errorMsg}>{errors.description}</p>
@@ -201,13 +176,7 @@ export default function ProjectForm({ project, onClose }) {
         </div>
 
         <div className={styles.field}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className={mf.labelRow}>
             <label className={styles.label}>What Students Will Learn *</label>
             <WordCount
               count={countWords(form.learning)}
@@ -221,7 +190,6 @@ export default function ProjectForm({ project, onClose }) {
             onChange={handleChange}
             placeholder='What skills or knowledge will students gain?'
             rows={7}
-            style={{ fontSize: "1.1rem" }}
           />
           {errors.learning && (
             <p className={styles.errorMsg}>{errors.learning}</p>
@@ -229,18 +197,9 @@ export default function ProjectForm({ project, onClose }) {
         </div>
 
         <div className={styles.field}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className={mf.labelRow}>
             <label className={styles.label}>
-              Additional Details{" "}
-              <span style={{ color: "#aaa", fontWeight: 400 }}>
-                (optional)
-              </span>
+              Additional Details <span className={mf.optional}>(optional)</span>
             </label>
             <WordCount
               count={countWords(form.details)}
@@ -254,7 +213,6 @@ export default function ProjectForm({ project, onClose }) {
             onChange={handleChange}
             placeholder='Any additional information...'
             rows={3}
-            style={{ fontSize: "1.1rem" }}
           />
         </div>
 
@@ -265,7 +223,6 @@ export default function ProjectForm({ project, onClose }) {
             name='deliverable'
             value={form.deliverable}
             onChange={handleChange}
-            style={{ fontSize: "1.1rem" }}
           >
             <option value=''>Select an output type</option>
             {DELIVERABLE_OPTIONS.map((d) => (
@@ -286,7 +243,6 @@ export default function ProjectForm({ project, onClose }) {
             name='gradeLevel'
             value={form.gradeLevel}
             onChange={handleChange}
-            style={{ fontSize: "1.1rem" }}
           >
             <option value=''>Select a grade range</option>
             {GRADE_RANGE_OPTIONS.map((g) => (
@@ -307,7 +263,6 @@ export default function ProjectForm({ project, onClose }) {
             name='difficulty'
             value={form.difficulty}
             onChange={handleChange}
-            style={{ fontSize: "1.1rem" }}
           >
             <option value=''>Select a difficulty</option>
             {DIFFICULTY_OPTIONS.map((d) => (
@@ -328,7 +283,7 @@ export default function ProjectForm({ project, onClose }) {
 
         <div className={styles.field}>
           <label className={styles.label}>Schedule *</label>
-          <p style={{ color: "#888", fontSize: 13, margin: "0 0 10px" }}>
+          <p className={mf.hint}>
             10 weekly lessons, 1 hour each, starting from this date/time.
           </p>
           <div className={styles.row}>
@@ -383,46 +338,26 @@ export default function ProjectForm({ project, onClose }) {
             value={form.seats}
             onChange={handleChange}
             placeholder='e.g. 2'
-            style={{ fontSize: "1.1rem" }}
           />
           {errors.seats && <p className={styles.errorMsg}>{errors.seats}</p>}
         </div>
 
-        <div style={{ display: "flex", gap: 12 }}>
-          <button
-            className={styles.btn}
-            type='submit'
-            disabled={loading}
-            style={{ background: saved ? "#1f6f4a" : undefined }}
-          >
+        <div className={mf.actions}>
+          <button className={styles.btn} type='submit' disabled={loading}>
             {loading
               ? isEditing
                 ? "Saving..."
                 : "Creating..."
               : saved
                 ? isEditing
-                  ? "Saved! ✓"
-                  : "Created! ✓"
+                  ? "Saved"
+                  : "Published"
                 : isEditing
                   ? "Save Changes"
-                  : "Create Project 💡"}
+                  : "Publish project"}
           </button>
           {isEditing && onClose && (
-            <button
-              type='button'
-              onClick={onClose}
-              style={{
-                padding: "14px 28px",
-                borderRadius: 50,
-                border: "2.5px solid #cbd5e1",
-                background: "transparent",
-                color: "#475569",
-                cursor: "pointer",
-                fontWeight: 800,
-                fontSize: "1rem",
-                fontFamily: "var(--font-sans)",
-              }}
-            >
+            <button type='button' onClick={onClose} className='btn-ghost'>
               Cancel
             </button>
           )}

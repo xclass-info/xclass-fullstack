@@ -1,15 +1,16 @@
 // src/components/RegistrationList.jsx
-// Mentor-side: who has registered for a research post / project.
+// Mentor-side: who has applied for a research post / project.
 import { useEffect, useState } from "react";
 import { api, live, seg, toMillis, formatDate } from "../api";
+import styles from "./TeacherDashboard.module.css";
 
 // Older registrations predate the review step and have no status field -
 // they were confirmed under the old instant-accept flow, so treat missing
 // status as approved rather than pending.
-const STATUS_BADGE = {
-  pending: { label: "Pending review", color: "#111111", bg: "#fff8dc" },
-  approved: { label: "Approved", color: "#1f6f4a", bg: "#f0fdf4" },
-  rejected: { label: "Rejected", color: "#a01f13", bg: "#fef2f2" },
+const STATUS = {
+  pending: { label: "Pending review", cls: styles.stPending },
+  approved: { label: "Accepted", cls: styles.stApproved },
+  rejected: { label: "Not accepted", cls: styles.stRejected },
 };
 
 export default function RegistrationList({ itemId }) {
@@ -21,7 +22,9 @@ export default function RegistrationList({ itemId }) {
       () => api.get(`/registrations?itemId=${seg(itemId)}`),
       (rows) => {
         setRegs(
-          [...rows].sort((a, b) => toMillis(a.createdAt) - toMillis(b.createdAt)),
+          [...rows].sort(
+            (a, b) => toMillis(a.createdAt) - toMillis(b.createdAt),
+          ),
         );
       },
     );
@@ -30,83 +33,46 @@ export default function RegistrationList({ itemId }) {
 
   if (regs.length === 0) {
     return (
-      <div style={{ marginBottom: 12, fontSize: 13, color: "#94a3b8", fontWeight: 700 }}>
-        👥 No registrations yet
+      <div className={styles.applicants}>
+        <span className={styles.applicantsNone}>No applicants yet</span>
       </div>
     );
   }
 
+  const pending = regs.filter((r) => r.status === "pending").length;
+
   return (
-    <div style={{ marginBottom: 12 }}>
+    <div className={styles.applicants}>
       <button
+        type='button'
+        className={styles.applicantsToggle}
         onClick={() => setOpen(!open)}
-        style={{
-          background: "none",
-          border: "none",
-          color: "#111111",
-          cursor: "pointer",
-          fontSize: 13,
-          fontWeight: 700,
-          padding: 0,
-        }}
+        aria-expanded={open}
       >
-        👥 Registrations ({regs.length}) {open ? "▴" : "▾"}
+        <span>
+          {regs.length} {regs.length === 1 ? "applicant" : "applicants"}
+          {pending > 0 && ` · ${pending} pending`}
+        </span>
+        <span aria-hidden='true'>{open ? "−" : "+"}</span>
       </button>
       {open && (
-        <div
-          style={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            gap: 6,
-          }}
-        >
+        <ul className={styles.applicantList}>
           {regs.map((r) => {
-            const badge = STATUS_BADGE[r.status || "approved"];
+            const st = STATUS[r.status || "approved"] || STATUS.approved;
             return (
-              <div
-                key={r.id}
-                style={{
-                  fontSize: 13,
-                  padding: "8px 10px",
-                  borderRadius: 8,
-                  background: "#f9fafb",
-                  border: "1px solid #eee",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    gap: 8,
-                  }}
-                >
+              <li key={r.id} className={styles.applicant}>
+                <div className={styles.applicantTop}>
                   <strong>{r.studentName}</strong>
-                  <span
-                    style={{
-                      flexShrink: 0,
-                      fontSize: 11,
-                      fontWeight: 700,
-                      padding: "2px 8px",
-                      borderRadius: 50,
-                      color: badge.color,
-                      background: badge.bg,
-                    }}
-                  >
-                    {badge.label}
-                  </span>
+                  <span className={`${styles.st} ${st.cls}`}>{st.label}</span>
                 </div>
-                <div style={{ color: "#666", wordBreak: "break-all" }}>
-                  {r.studentEmail}
+                <div className={styles.applicantEmail}>{r.studentEmail}</div>
+                <div className={styles.applicantDate}>
+                  Applied {formatDate(r.createdAt)}
                 </div>
-                <div style={{ color: "#aaa", fontSize: 11 }}>
-                  {formatDate(r.createdAt)}
-                </div>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
     </div>
   );

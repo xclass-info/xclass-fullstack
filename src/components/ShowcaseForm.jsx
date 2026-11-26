@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { api, seg } from "../api";
 import styles from "./TeacherAuth.module.css";
+import mf from "./MentorForm.module.css";
 import { DELIVERABLE_OPTIONS } from "../utils/deliverables";
 import { safeUrl } from "../utils/format";
 
@@ -17,7 +18,7 @@ function countWords(str) {
 
 function WordCount({ count, limit }) {
   return (
-    <span style={{ fontSize: 12, color: count >= limit ? "#a01f13" : "#aaa" }}>
+    <span className={`${mf.count} ${count >= limit ? mf.countOver : ""}`}>
       {count} / {limit} words
     </span>
   );
@@ -122,45 +123,24 @@ export default function ShowcaseForm({ entry, onClose }) {
   }
 
   return (
-    <div style={{ maxWidth: 600 }}>
+    <div className={mf.wrap}>
       {onClose && (
-        <button
-          type='button'
-          onClick={onClose}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#111111",
-            cursor: "pointer",
-            fontSize: 14,
-            marginBottom: 12,
-            padding: 0,
-          }}
-        >
-          ← Back
+        <button type='button' onClick={onClose} className={mf.back}>
+          ← Back to your content
         </button>
       )}
-      <h3 style={{ marginBottom: 4 }}>
-        {isEditing ? "🏆 Edit Student Work Entry" : "🏆 Add to Student Work"}
-      </h3>
-      <p style={{ color: "#888", fontSize: 14, marginBottom: 24 }}>
+      <h2 className={mf.title}>
+        {isEditing ? "Edit student work" : "Add student work"}
+      </h2>
+      <p className={mf.sub}>
         {isEditing
           ? "Update this finished project."
           : "Publish a student's finished project - this is what visitors see as proof of real outcomes."}
       </p>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: 28 }}
-      >
+      <form onSubmit={handleSubmit} className={mf.form} noValidate>
         <div className={styles.field}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className={mf.labelRow}>
             <label className={styles.label}>Project Title *</label>
             <WordCount
               count={countWords(form.title)}
@@ -172,8 +152,7 @@ export default function ShowcaseForm({ entry, onClose }) {
             name='title'
             value={form.title}
             onChange={handleChange}
-            placeholder="e.g. Can AI Compose Music That Expresses Human Emotion?"
-            style={{ fontSize: "1.1rem" }}
+            placeholder='e.g. Can AI Compose Music That Expresses Human Emotion?'
           />
           {errors.title && <p className={styles.errorMsg}>{errors.title}</p>}
         </div>
@@ -185,8 +164,7 @@ export default function ShowcaseForm({ entry, onClose }) {
             name='studentName'
             value={form.studentName}
             onChange={handleChange}
-            placeholder="e.g. Jamie L."
-            style={{ fontSize: "1.1rem" }}
+            placeholder='e.g. Jamie L.'
           />
           {errors.studentName && (
             <p className={styles.errorMsg}>{errors.studentName}</p>
@@ -200,7 +178,6 @@ export default function ShowcaseForm({ entry, onClose }) {
             name='outputType'
             value={form.outputType}
             onChange={handleChange}
-            style={{ fontSize: "1.1rem" }}
           >
             <option value=''>Select an output type</option>
             {DELIVERABLE_OPTIONS.map((d) => (
@@ -215,13 +192,7 @@ export default function ShowcaseForm({ entry, onClose }) {
         </div>
 
         <div className={styles.field}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <div className={mf.labelRow}>
             <label className={styles.label}>Summary *</label>
             <WordCount
               count={countWords(form.summary)}
@@ -235,7 +206,6 @@ export default function ShowcaseForm({ entry, onClose }) {
             onChange={handleChange}
             placeholder='What did the student do, and what did they find or build?'
             rows={8}
-            style={{ fontSize: "1.1rem" }}
           />
           {errors.summary && (
             <p className={styles.errorMsg}>{errors.summary}</p>
@@ -245,7 +215,7 @@ export default function ShowcaseForm({ entry, onClose }) {
         <div className={styles.field}>
           <label className={styles.label}>
             Link to the Finished Work{" "}
-            <span style={{ color: "#aaa", fontWeight: 400 }}>(optional)</span>
+            <span className={mf.optional}>(optional)</span>
           </label>
           <input
             className={`${styles.input} ${errors.outputUrl ? styles.inputError : ""}`}
@@ -253,7 +223,6 @@ export default function ShowcaseForm({ entry, onClose }) {
             value={form.outputUrl}
             onChange={handleChange}
             placeholder='https://... (paper, site, video, etc.)'
-            style={{ fontSize: "1.1rem" }}
           />
           {errors.outputUrl && (
             <p className={styles.errorMsg}>{errors.outputUrl}</p>
@@ -263,12 +232,12 @@ export default function ShowcaseForm({ entry, onClose }) {
         <div className={styles.field}>
           <label className={styles.label}>
             Upload Paper or Poster{" "}
-            <span style={{ color: "#aaa", fontWeight: 400 }}>
+            <span className={mf.optional}>
               (optional, PDF or image, up to {MAX_FILE_MB}MB)
             </span>
           </label>
           {entry?.fileUrl && !file && (
-            <p style={{ fontSize: 13, color: "var(--muted)", margin: "0 0 8px" }}>
+            <p className={mf.hint}>
               Current file:{" "}
               <a href={entry.fileUrl} target='_blank' rel='noopener noreferrer'>
                 View {entry.fileType === "image" ? "poster" : "paper"}
@@ -280,51 +249,28 @@ export default function ShowcaseForm({ entry, onClose }) {
             type='file'
             accept='application/pdf,image/*'
             onChange={handleFileChange}
-            style={{ fontSize: "0.95rem" }}
+            className={mf.file}
           />
-          {file && (
-            <p style={{ fontSize: 13, color: "var(--muted)", margin: "6px 0 0" }}>
-              Selected: {file.name}
-            </p>
-          )}
+          {file && <p className={mf.hint}>Selected: {file.name}</p>}
           {fileError && <p className={styles.errorMsg}>{fileError}</p>}
         </div>
 
-        <div style={{ display: "flex", gap: 12 }}>
-          <button
-            className={styles.btn}
-            type='submit'
-            disabled={loading}
-            style={{ background: saved ? "#1f6f4a" : undefined }}
-          >
+        <div className={mf.actions}>
+          <button className={styles.btn} type='submit' disabled={loading}>
             {loading
               ? isEditing
                 ? "Saving..."
                 : "Publishing..."
               : saved
                 ? isEditing
-                  ? "Saved! ✓"
-                  : "Published! ✓"
+                  ? "Saved"
+                  : "Published"
                 : isEditing
                   ? "Save Changes"
-                  : "Publish to Student Work 🏆"}
+                  : "Publish to Student Work"}
           </button>
           {isEditing && onClose && (
-            <button
-              type='button'
-              onClick={onClose}
-              style={{
-                padding: "14px 28px",
-                borderRadius: 50,
-                border: "2.5px solid #cbd5e1",
-                background: "transparent",
-                color: "#475569",
-                cursor: "pointer",
-                fontWeight: 800,
-                fontSize: "1rem",
-                fontFamily: "var(--font-sans)",
-              }}
-            >
+            <button type='button' onClick={onClose} className='btn-ghost'>
               Cancel
             </button>
           )}
