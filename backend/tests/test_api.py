@@ -56,7 +56,7 @@ def test_mentor_content_crud_and_ownership(client):
     assert client.delete(f"/api/research/{item['id']}", headers=ha).status_code == 200
 
 
-def test_registration_seats_and_admin_review(client):
+def test_registration_seats_and_admin_review(client, outbox):
     make_user("t@example.com", teacher=True)
     make_user("s1@example.com", student=True, name="S1")
     make_user("s2@example.com", student=True, name="S2")
@@ -73,9 +73,13 @@ def test_registration_seats_and_admin_review(client):
 
     regs = client.get("/api/admin/registrations", headers=hadmin).json
     by_email = {r["studentEmail"]: quote(r["id"], safe="") for r in regs}
-    assert client.post(f"/api/admin/registrations/{by_email['s1@example.com']}/approve", headers=hadmin).status_code == 200
+    approved = client.post(f"/api/admin/registrations/{by_email['s1@example.com']}/approve", headers=hadmin)
+    assert approved.status_code == 200 and approved.json["emailSent"] is True
+    assert outbox[-1].recipients == ["s1@example.com"] and "accepted" in outbox[-1].html
+    assert "Dr. T" in outbox[-1].html and outbox[-1].reply_to == "happyprogramming.us@gmail.com"
+    sent_before_full = len(outbox)
     full = client.post(f"/api/admin/registrations/{by_email['s2@example.com']}/approve", headers=hadmin)
-    assert full.json["code"] == "FULL"
+    assert full.json["code"] == "FULL" and len(outbox) == sent_before_full
     assert db.session.get(Research, item["id"]).enrolledCount == 1
 
     # Student dashboard shows the item and mentor.
@@ -83,7 +87,13 @@ def test_registration_seats_and_admin_review(client):
     assert rows[0]["reg"]["status"] == "approved" and rows[0]["mentorName"] == "Dr. T"
 
     # Rejected -> can reapply.
-    client.post(f"/api/admin/registrations/{by_email['s2@example.com']}/reject", json={"reason": "Not a fit right now."}, headers=hadmin)
+    rejected = client.post(f"/api/admin/registrations/{by_email['s2@example.com']}/reject", json={"reason": "Not a <b>fit</b> right now."}, headers=hadmin)
+    assert rejected.json["emailSent"] is True
+    assert outbox[-1].recipients == ["s2@example.com"] and "Not a &lt;b&gt;fit&lt;/b&gt; right now." in outbox[-1].html
+    # Re-rejecting (e.g. editing the reason) doesn't email again.
+    count = len(outbox)
+    client.post(f"/api/admin/registrations/{by_email['s2@example.com']}/reject", json={"reason": "Seats filled up."}, headers=hadmin)
+    assert len(outbox) == count
     again = client.post("/api/registrations", json={"kind": "research", "itemId": item["id"]}, headers=h2)
     assert again.json["code"] == "FULL"
 
@@ -175,3 +185,22 @@ def test_bookings_reject_wrong_teacher(client):
     db.session.commit()
     res = client.post("/api/bookings/b1/reject", headers=login(client, "o@example.com"))
     assert res.status_code == 404
+
+
+def test_decision_saved_even_if_email_fails(client, monkeypatch):
+    from happyresearch import emails as email_mod
+
+    def boom(*a, **k):
+        raise RuntimeError("smtp down")
+
+    monkeypatch.setattr(email_mod, "send_application_approved", boom)
+    make_user("t@example.com", teacher=True)
+    make_user("s1@example.com", student=True, name="S1")
+    make_user("admin@example.com", admin=True)
+    item = _research(client, login(client, "t@example.com"), seats=1)
+    client.post("/api/registrations", json={"kind": "research", "itemId": item["id"]}, headers=login(client, "s1@example.com"))
+    hadmin = login(client, "admin@example.com")
+    reg_id = quote(client.get("/api/admin/registrations", headers=hadmin).json[0]["id"], safe="")
+    res = client.post(f"/api/admin/registrations/{reg_id}/approve", headers=hadmin)
+    assert res.status_code == 200 and res.json["status"] == "approved" and res.json["emailSent"] is False
+    assert db.session.get(Research, item["id"]).enrolledCount == 1

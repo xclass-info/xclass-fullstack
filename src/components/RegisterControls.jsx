@@ -117,7 +117,7 @@ export function RegisterModal({ kind, item, student, onClose }) {
             <p className={styles.modalText}>
               Your application is pending review. We typically review
               applications within 48 hours, and we'll let you know at{" "}
-              <strong>{student.email}</strong> once it's approved.
+              <strong>{student.email}</strong> as soon as it's decided.
             </p>
             <button type='button' onClick={onClose} className={styles.applyBtn}>
               Done

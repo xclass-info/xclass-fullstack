@@ -313,3 +313,44 @@ def send_team_message(subject, from_name, from_email, message):
         reply_to=from_email,
         kind="team_message",
     )
+
+
+def _program_words(kind):
+    return ("research topic", "/research") if kind == "research" else ("project", "/projects")
+
+
+def send_application_approved(to_email, student_name, kind, title, mentor_name=None):
+    noun, _ = _program_words(kind)
+    with_mentor = f" with {escape(mentor_name)}" if mentor_name else ""
+    send(
+        f"You're in: {title}",
+        to_email,
+        _wrap(f"""
+  <p>Hi {escape(student_name or "there")},</p>
+  <p>Good news! Your application for the {noun} <strong>{escape(title or "")}</strong>{with_mentor} has been accepted.</p>
+  <p>You can see it, along with the program details, on your dashboard.</p>
+  {_button(_frontend("/student/dashboard"), "Go to My Dashboard")}
+  <p style="font-size:14px; color:#555;">Questions? Just reply to this email.</p>
+  {_SIGNOFF}"""),
+        reply_to=current_app.config["TEAM_INBOX"],
+        kind="application_approved",
+    )
+
+
+def send_application_declined(to_email, student_name, kind, title, reason):
+    noun, path = _program_words(kind)
+    body = escape(reason or "").replace("\n", "<br/>")
+    send(
+        f"About your application: {title}",
+        to_email,
+        _wrap(f"""
+  <p>Hi {escape(student_name or "there")},</p>
+  <p>Thank you for applying for the {noun} <strong>{escape(title or "")}</strong>. We're not able to accept this application, and here's why:</p>
+  <div style="background:#f5f8fa; border-left:4px solid #94a3b8; padding:12px 16px; margin:16px 0;">{body}</div>
+  <p>You're welcome to apply for other research topics and projects.</p>
+  {_button(_frontend(path), "See Open Programs")}
+  <p style="font-size:14px; color:#555;">Questions? Just reply to this email.</p>
+  {_SIGNOFF}"""),
+        reply_to=current_app.config["TEAM_INBOX"],
+        kind="application_declined",
+    )

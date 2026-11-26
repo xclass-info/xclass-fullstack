@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { api, live, seg, toMillis, formatDate } from "../api";
 import { onAuthStateChanged, login, logout, sendPasswordReset } from "../auth";
 import { Link } from "react-router-dom";
-import MentorApplicationsAdmin, { needsAdminAction } from "./MentorApplicationsAdmin";
+import MentorApplicationsAdmin, {
+  needsAdminAction,
+} from "./MentorApplicationsAdmin";
 import AdminToday from "./admin/AdminToday";
 import AdminPeople from "./admin/AdminPeople";
 import AdminEmailLog from "./admin/AdminEmailLog";
@@ -140,7 +142,9 @@ export default function AdminDashboard() {
 
   async function handleForgotPassword() {
     if (!email.trim()) {
-      setError("Enter your admin email above first, then click Forgot password.");
+      setError(
+        "Enter your admin email above first, then click Forgot password.",
+      );
       return;
     }
     setResetLoading(true);
@@ -169,7 +173,11 @@ export default function AdminDashboard() {
     if (actionBusy) return;
     setActionBusy(true);
     try {
-      await approveStudentApplication(regId);
+      const res = await approveStudentApplication(regId);
+      if (res?.emailSent === false)
+        alert(
+          "Approved, but the email to the student couldn't be sent. Check the email log, or let them know yourself.",
+        );
     } catch (err) {
       console.error(err);
       alert(
@@ -199,8 +207,12 @@ export default function AdminDashboard() {
     if (actionBusy) return;
     setActionBusy(true);
     try {
-      await rejectStudentApplication(rejectTarget.id, trimmed);
+      const res = await rejectStudentApplication(rejectTarget.id, trimmed);
       setRejectTarget(null);
+      if (res?.emailSent === false)
+        alert(
+          "Rejected, but the email to the student couldn't be sent. Check the email log, or let them know yourself.",
+        );
     } catch (err) {
       console.error(err);
       setRejectError("Something went wrong. Please try again.");
@@ -216,10 +228,17 @@ export default function AdminDashboard() {
 
   // From the email log: find the account behind an address and open it.
   async function findPersonByEmail(address) {
-    const found = await api.get(`/admin/search?q=${encodeURIComponent(address)}`);
-    const match = found.people.find((p) => p.email.toLowerCase() === address.toLowerCase());
+    const found = await api.get(
+      `/admin/search?q=${encodeURIComponent(address)}`,
+    );
+    const match = found.people.find(
+      (p) => p.email.toLowerCase() === address.toLowerCase(),
+    );
     if (match) openPerson(match.id);
-    else alert(`No account uses ${address} (it may be the team inbox or a deleted account).`);
+    else
+      alert(
+        `No account uses ${address} (it may be the team inbox or a deleted account).`,
+      );
   }
 
   function openContent(kind, item) {
@@ -346,8 +365,8 @@ export default function AdminDashboard() {
           )}
           {resetSent && (
             <p style={{ color: "#1f6f4a", fontSize: 13, marginBottom: 12 }}>
-              Password reset email sent to {email.trim()}. Check your inbox
-              (and spam folder).
+              Password reset email sent to {email.trim()}. Check your inbox (and
+              spam folder).
             </p>
           )}
           <form onSubmit={handleLogin}>
@@ -439,10 +458,7 @@ export default function AdminDashboard() {
   }
 
   let visibleResearch = research.filter((r) => {
-    if (
-      researchStatusFilter === "active" &&
-      r.status === "disabled"
-    )
+    if (researchStatusFilter === "active" && r.status === "disabled")
       return false;
     if (researchStatusFilter === "disabled" && r.status !== "disabled")
       return false;
@@ -504,7 +520,13 @@ export default function AdminDashboard() {
 
   // ── Admin dashboard ──
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb", padding: narrow ? 16 : 32 }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f9fafb",
+        padding: narrow ? 16 : 32,
+      }}
+    >
       {/* Header */}
       <div
         style={{
@@ -599,7 +621,9 @@ export default function AdminDashboard() {
         </nav>
 
         <main style={{ flex: 1, minWidth: 0 }}>
-          {tab === "today" && <AdminToday onOpenPerson={openPerson} onGo={setTab} />}
+          {tab === "today" && (
+            <AdminToday onOpenPerson={openPerson} onGo={setTab} />
+          )}
 
           {tab === "people" && (
             <AdminPeople
@@ -613,265 +637,297 @@ export default function AdminDashboard() {
             />
           )}
 
-          {tab === "emails" && <AdminEmailLog onFindPerson={findPersonByEmail} />}
+          {tab === "emails" && (
+            <AdminEmailLog onFindPerson={findPersonByEmail} />
+          )}
 
           {/* ── Research Tab ── */}
-      {tab === "research" && (
-        <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 16,
-            }}
-          >
-            <p style={{ color: "#888", margin: 0 }}>
-              {visibleResearch.length} of {research.length} research entries
-            </p>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              marginBottom: 16,
-              flexWrap: "wrap",
-            }}
-          >
-            <input
-              type='text'
-              placeholder='Search title, idea, mentor...'
-              value={researchSearch}
-              onChange={(e) => setResearchSearch(e.target.value)}
-              style={{ ...filterInputStyle, flex: "1 1 220px" }}
-            />
-            <select
-              value={researchStatusFilter}
-              onChange={(e) => setResearchStatusFilter(e.target.value)}
-              style={filterInputStyle}
-            >
-              <option value='all'>All statuses</option>
-              <option value='active'>Active</option>
-              <option value='disabled'>Disabled</option>
-            </select>
-            <select
-              value={researchSort}
-              onChange={(e) => setResearchSort(e.target.value)}
-              style={filterInputStyle}
-            >
-              <option value='newest'>Newest first</option>
-              <option value='oldest'>Oldest first</option>
-              <option value='title'>Title (A-Z)</option>
-            </select>
-          </div>
-          {visibleResearch.length === 0 ? (
-            <p style={{ color: "#aaa" }}>No research matches these filters.</p>
-          ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-                gap: 16,
-              }}
-            >
-              {visibleResearch.map((r) => (
+          {tab === "research" && (
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 16,
+                }}
+              >
+                <p style={{ color: "#888", margin: 0 }}>
+                  {visibleResearch.length} of {research.length} research entries
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 10,
+                  marginBottom: 16,
+                  flexWrap: "wrap",
+                }}
+              >
+                <input
+                  type='text'
+                  placeholder='Search title, idea, mentor...'
+                  value={researchSearch}
+                  onChange={(e) => setResearchSearch(e.target.value)}
+                  style={{ ...filterInputStyle, flex: "1 1 220px" }}
+                />
+                <select
+                  value={researchStatusFilter}
+                  onChange={(e) => setResearchStatusFilter(e.target.value)}
+                  style={filterInputStyle}
+                >
+                  <option value='all'>All statuses</option>
+                  <option value='active'>Active</option>
+                  <option value='disabled'>Disabled</option>
+                </select>
+                <select
+                  value={researchSort}
+                  onChange={(e) => setResearchSort(e.target.value)}
+                  style={filterInputStyle}
+                >
+                  <option value='newest'>Newest first</option>
+                  <option value='oldest'>Oldest first</option>
+                  <option value='title'>Title (A-Z)</option>
+                </select>
+              </div>
+              {visibleResearch.length === 0 ? (
+                <p style={{ color: "#aaa" }}>
+                  No research matches these filters.
+                </p>
+              ) : (
                 <div
-                  key={r.id}
                   style={{
-                    background: "white",
-                    borderRadius: 12,
-                    padding: 20,
-                    border: `1px solid ${r.status === "disabled" ? "#fca5a5" : "#eee"}`,
-                    opacity: r.status === "disabled" ? 0.7 : 1,
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fill, minmax(320px, 1fr))",
+                    gap: 16,
                   }}
                 >
-                  {r.status === "disabled" && (
-                    <span
+                  {visibleResearch.map((r) => (
+                    <div
+                      key={r.id}
                       style={{
-                        fontSize: 11,
-                        background: "#fee2e2",
-                        color: "#a01f13",
-                        padding: "2px 8px",
-                        borderRadius: 20,
-                        marginBottom: 8,
-                        display: "inline-block",
+                        background: "white",
+                        borderRadius: 12,
+                        padding: 20,
+                        border: `1px solid ${r.status === "disabled" ? "#fca5a5" : "#eee"}`,
+                        opacity: r.status === "disabled" ? 0.7 : 1,
                       }}
                     >
-                      Disabled
-                    </span>
-                  )}
-                  <h3 style={{ margin: "0 0 8px", fontSize: 15 }}>{r.title}</h3>
-                  <p
-                    style={{
-                      fontSize: 13,
-                      color: "#555",
-                      marginBottom: 8,
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {r.idea}
-                  </p>
-                  <p style={{ fontSize: 12, color: "#888", marginBottom: 12 }}>
-                    👩‍🏫 {r.teacherName}
-                  </p>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    <button
-                      onClick={() => {
-                        setEditItem({ ...r });
-                        setEditType("research");
-                      }}
-                      style={btnStyle("#111111")}
-                    >
-                      ✏️ Edit
-                    </button>
-                    <button
-                      onClick={() => handleDisable("research", r.id, r.status)}
-                      style={btnStyle(
-                        r.status === "disabled" ? "#1f6f4a" : "#f59e0b",
+                      {r.status === "disabled" && (
+                        <span
+                          style={{
+                            fontSize: 11,
+                            background: "#fee2e2",
+                            color: "#a01f13",
+                            padding: "2px 8px",
+                            borderRadius: 20,
+                            marginBottom: 8,
+                            display: "inline-block",
+                          }}
+                        >
+                          Disabled
+                        </span>
                       )}
-                    >
-                      {r.status === "disabled" ? "✅ Enable" : "⏸ Disable"}
-                    </button>
-                    <button
-                      onClick={() => handleDelete("research", r.id)}
-                      style={btnStyle("#a01f13")}
-                    >
-                      🗑 Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ── Applications Tab ── */}
-      {tab === "applications" && <MentorApplicationsAdmin mentors={mentors} />}
-
-      {tab === "student-applications" && (
-        <div>
-          <p style={{ color: "#888", marginBottom: 16 }}>
-            {visibleStudentApplications.length} of{" "}
-            {pendingStudentApplications.length} pending application
-            {pendingStudentApplications.length === 1 ? "" : "s"}
-          </p>
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              marginBottom: 16,
-              flexWrap: "wrap",
-            }}
-          >
-            <input
-              type='text'
-              placeholder='Search student, email, or title...'
-              value={studentAppSearch}
-              onChange={(e) => setStudentAppSearch(e.target.value)}
-              style={{ ...filterInputStyle, flex: "1 1 220px" }}
-            />
-            <select
-              value={studentAppKindFilter}
-              onChange={(e) => setStudentAppKindFilter(e.target.value)}
-              style={filterInputStyle}
-            >
-              <option value='all'>All types</option>
-              <option value='research'>Research</option>
-              <option value='project'>Project</option>
-            </select>
-            <select
-              value={studentAppSort}
-              onChange={(e) => setStudentAppSort(e.target.value)}
-              style={filterInputStyle}
-            >
-              <option value='oldest'>Oldest first</option>
-              <option value='newest'>Newest first</option>
-              <option value='name'>Name (A-Z)</option>
-            </select>
-          </div>
-          {visibleStudentApplications.length === 0 ? (
-            <p style={{ color: "#aaa" }}>
-              {pendingStudentApplications.length === 0
-                ? "No student applications waiting on review."
-                : "No applications match these filters."}
-            </p>
-          ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
-                gap: 16,
-              }}
-            >
-              {visibleStudentApplications.map((reg) => {
-                const mentor = mentors.find((m) => m.id === reg.teacherId);
-                return (
-                  <div
-                    key={reg.id}
-                    style={{
-                      background: "white",
-                      borderRadius: 12,
-                      padding: 20,
-                      border: "1px solid #eee",
-                    }}
-                  >
-                    <div style={{ fontWeight: 700, fontSize: 16 }}>
-                      {reg.studentName || "(no name)"}
-                    </div>
-                    <div style={{ color: "#888", fontSize: 13, marginBottom: 8 }}>
-                      {reg.studentEmail}
-                    </div>
-                    <span
-                      style={{
-                        fontSize: 11,
-                        background: "#e3eff3",
-                        color: "#111111",
-                        padding: "2px 8px",
-                        borderRadius: 20,
-                        display: "inline-block",
-                        marginBottom: 12,
-                      }}
-                    >
-                      {reg.kind === "research" ? "🔬 Research" : "💡 Project"}
-                    </span>
-
-                    <div style={{ fontSize: 13, color: "#333", marginBottom: 14 }}>
-                      <div>Applying to: {reg.itemTitle}</div>
-                      {mentor && <div>Mentor: {mentor.name}</div>}
-                      <div style={{ color: "#aaa" }}>
-                        Applied{" "}
-                        {formatDate(reg.createdAt)}
+                      <h3 style={{ margin: "0 0 8px", fontSize: 15 }}>
+                        {r.title}
+                      </h3>
+                      <p
+                        style={{
+                          fontSize: 13,
+                          color: "#555",
+                          marginBottom: 8,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {r.idea}
+                      </p>
+                      <p
+                        style={{
+                          fontSize: 12,
+                          color: "#888",
+                          marginBottom: 12,
+                        }}
+                      >
+                        👩‍🏫 {r.teacherName}
+                      </p>
+                      <div
+                        style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
+                      >
+                        <button
+                          onClick={() => {
+                            setEditItem({ ...r });
+                            setEditType("research");
+                          }}
+                          style={btnStyle("#111111")}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleDisable("research", r.id, r.status)
+                          }
+                          style={btnStyle(
+                            r.status === "disabled" ? "#1f6f4a" : "#f59e0b",
+                          )}
+                        >
+                          {r.status === "disabled" ? "✅ Enable" : "⏸ Disable"}
+                        </button>
+                        <button
+                          onClick={() => handleDelete("research", r.id)}
+                          style={btnStyle("#a01f13")}
+                        >
+                          🗑 Delete
+                        </button>
                       </div>
                     </div>
-
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <button
-                        style={btnStyle("#14532d")}
-                        disabled={actionBusy}
-                        onClick={() => approveStudentApp(reg.id)}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        style={btnStyle("#a01f13")}
-                        disabled={actionBusy}
-                        onClick={() => openStudentRejectModal(reg.id)}
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
+                  ))}
+                </div>
+              )}
             </div>
           )}
-        </div>
-      )}
 
+          {/* ── Applications Tab ── */}
+          {tab === "applications" && (
+            <MentorApplicationsAdmin mentors={mentors} />
+          )}
+
+          {tab === "student-applications" && (
+            <div>
+              <p style={{ color: "#888", marginBottom: 16 }}>
+                {visibleStudentApplications.length} of{" "}
+                {pendingStudentApplications.length} pending application
+                {pendingStudentApplications.length === 1 ? "" : "s"}
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 10,
+                  marginBottom: 16,
+                  flexWrap: "wrap",
+                }}
+              >
+                <input
+                  type='text'
+                  placeholder='Search student, email, or title...'
+                  value={studentAppSearch}
+                  onChange={(e) => setStudentAppSearch(e.target.value)}
+                  style={{ ...filterInputStyle, flex: "1 1 220px" }}
+                />
+                <select
+                  value={studentAppKindFilter}
+                  onChange={(e) => setStudentAppKindFilter(e.target.value)}
+                  style={filterInputStyle}
+                >
+                  <option value='all'>All types</option>
+                  <option value='research'>Research</option>
+                  <option value='project'>Project</option>
+                </select>
+                <select
+                  value={studentAppSort}
+                  onChange={(e) => setStudentAppSort(e.target.value)}
+                  style={filterInputStyle}
+                >
+                  <option value='oldest'>Oldest first</option>
+                  <option value='newest'>Newest first</option>
+                  <option value='name'>Name (A-Z)</option>
+                </select>
+              </div>
+              {visibleStudentApplications.length === 0 ? (
+                <p style={{ color: "#aaa" }}>
+                  {pendingStudentApplications.length === 0
+                    ? "No student applications waiting on review."
+                    : "No applications match these filters."}
+                </p>
+              ) : (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fill, minmax(340px, 1fr))",
+                    gap: 16,
+                  }}
+                >
+                  {visibleStudentApplications.map((reg) => {
+                    const mentor = mentors.find((m) => m.id === reg.teacherId);
+                    return (
+                      <div
+                        key={reg.id}
+                        style={{
+                          background: "white",
+                          borderRadius: 12,
+                          padding: 20,
+                          border: "1px solid #eee",
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, fontSize: 16 }}>
+                          {reg.studentName || "(no name)"}
+                        </div>
+                        <div
+                          style={{
+                            color: "#888",
+                            fontSize: 13,
+                            marginBottom: 8,
+                          }}
+                        >
+                          {reg.studentEmail}
+                        </div>
+                        <span
+                          style={{
+                            fontSize: 11,
+                            background: "#e3eff3",
+                            color: "#111111",
+                            padding: "2px 8px",
+                            borderRadius: 20,
+                            display: "inline-block",
+                            marginBottom: 12,
+                          }}
+                        >
+                          {reg.kind === "research"
+                            ? "🔬 Research"
+                            : "💡 Project"}
+                        </span>
+
+                        <div
+                          style={{
+                            fontSize: 13,
+                            color: "#333",
+                            marginBottom: 14,
+                          }}
+                        >
+                          <div>Applying to: {reg.itemTitle}</div>
+                          {mentor && <div>Mentor: {mentor.name}</div>}
+                          <div style={{ color: "#aaa" }}>
+                            Applied {formatDate(reg.createdAt)}
+                          </div>
+                        </div>
+
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <button
+                            style={btnStyle("#14532d")}
+                            disabled={actionBusy}
+                            onClick={() => approveStudentApp(reg.id)}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            style={btnStyle("#a01f13")}
+                            disabled={actionBusy}
+                            onClick={() => openStudentRejectModal(reg.id)}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </main>
       </div>
 
@@ -920,7 +976,8 @@ export default function AdminDashboard() {
               </button>
             </div>
             <p style={{ color: "#888", fontSize: 13, marginBottom: 12 }}>
-              Explain why this application was rejected. This is shown to the student.
+              Explain why this application was rejected. This is shown to the
+              student.
             </p>
             <textarea
               autoFocus
@@ -948,7 +1005,9 @@ export default function AdminDashboard() {
                 {rejectError}
               </p>
             )}
-            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+            <div
+              style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}
+            >
               <button
                 onClick={() => setRejectTarget(null)}
                 style={{
@@ -1010,8 +1069,7 @@ export default function AdminDashboard() {
               }}
             >
               <h3 style={{ margin: 0 }}>
-                ✏️ Edit{" "}
-                {editType === "research" ? "Research" : "Mentor"}
+                ✏️ Edit {editType === "research" ? "Research" : "Mentor"}
               </h3>
               <button
                 onClick={() => {

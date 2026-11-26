@@ -1,5 +1,5 @@
 """Admin dashboard API. Every route requires an admin account."""
-from flask import Blueprint, jsonify
+from flask import Blueprint, current_app, jsonify
 
 from .. import emails, storage
 from ..errors import ApiError
@@ -215,7 +215,13 @@ def approve_registration(reg_id):
     item.enrolledCount = (item.enrolledCount or 0) + 1
     reg.status = "approved"
     db.session.commit()
-    return jsonify(reg.to_dict())
+    mentor = db.session.get(Teacher, reg.teacherId) if reg.teacherId else None
+    sent = _notify_student(
+        emails.send_application_approved,
+        reg.studentEmail, reg.studentName, reg.kind, reg.itemTitle,
+        mentor.name if mentor else None,
+    )
+    return jsonify({**reg.to_dict(), "emailSent": sent})
 
 
 @bp.post("/registrations/<path:reg_id>/reject")
@@ -224,8 +230,28 @@ def reject_registration(reg_id):
     reg = db.session.get(Registration, reg_id)
     if not reg:
         raise ApiError(404, "NOT_FOUND", "Application not found.")
+    already_rejected = reg.status == "rejected"
     reg.status = "rejected"
     reg.rejectionReason = text(body(), "reason", required=True, max_len=5000)
     db.session.commit()
-    return jsonify(reg.to_dict())
+    # Editing the reason on an already-rejected application doesn't re-email.
+    sent = already_rejected or _notify_student(
+        emails.send_application_declined,
+        reg.studentEmail, reg.studentName, reg.kind, reg.itemTitle, reg.rejectionReason,
+    )
+    return jsonify({**reg.to_dict(), "emailSent": sent})
+
+
+def _notify_student(send_fn, to_email, *args):
+    """Tell the student about a decision that is already saved. A failed
+    email doesn't undo the decision; the admin is told instead (emailSent),
+    and the failure shows in the email log."""
+    if not to_email:
+        return False
+    try:
+        send_fn(to_email, *args)
+        return True
+    except Exception:
+        current_app.logger.exception("application decision email failed")
+        return False
 

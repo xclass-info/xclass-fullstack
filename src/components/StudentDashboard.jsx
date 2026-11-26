@@ -63,8 +63,8 @@ function ApplicationCard({ row }) {
 
       {status === "pending" && (
         <p className={styles.note}>
-          We typically review applications within 48 hours. Check back here for
-          the decision.
+          We typically review applications within 48 hours, and we'll email you
+          as soon as it's decided.
         </p>
       )}
       {status === "rejected" && reg.rejectionReason && (

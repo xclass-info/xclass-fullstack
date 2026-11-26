@@ -28,12 +28,14 @@ export async function registerForItem(kind, itemId) {
 }
 
 // Admin approves a pending application: the backend re-checks seats are
-// still available, then takes the seat and approves, atomically.
+// still available, then takes the seat and approves, atomically. The
+// student is emailed; the result's emailSent is false if that failed.
 export async function approveStudentApplication(regId) {
-  await api.post(`/admin/registrations/${seg(regId)}/approve`);
+  return api.post(`/admin/registrations/${seg(regId)}/approve`);
 }
 
-// Admin rejects a pending application. No seat was ever taken.
+// Admin rejects a pending application. No seat was ever taken. The student
+// is emailed the reason; emailSent is false if that failed.
 export async function rejectStudentApplication(regId, reason) {
-  await api.post(`/admin/registrations/${seg(regId)}/reject`, { reason: reason.trim() });
+  return api.post(`/admin/registrations/${seg(regId)}/reject`, { reason: reason.trim() });
 }
