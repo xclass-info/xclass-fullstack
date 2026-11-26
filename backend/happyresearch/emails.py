@@ -8,12 +8,14 @@ from flask_mail import Message
 from .extensions import db, mail
 from .models import EmailLog, new_id, utcnow
 
-# Site palette (see src/index.css): warm off-white page, ink text, lime accent.
-_BG = "#f5f4f0"
-_INK = "#111111"
-_MUTED = "#4f4f4f"
-_LIME = "#c6f35c"
-_RULE = "#e8e6df"
+# Site palette (see src/index.css): sage page, deep green text, terracotta
+# buttons and accents.
+_BG = "#eef2ea"
+_INK = "#22372c"
+_MUTED = "#4f6357"
+_ACCENT = "#b4502f"
+_RULE = "#dce6d6"
+_SERIF = "Georgia, 'Times New Roman', serif"
 _FONT = "'Helvetica Neue', Helvetica, Arial, sans-serif"
 
 _SIGNOFF = f"""
@@ -30,8 +32,8 @@ def _wrap(body):
     <td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
         <tr>
-          <td style="padding:0 8px 18px; font-family:{_FONT}; font-size:22px; font-weight:bold; letter-spacing:-0.5px; color:{_INK};">
-            <a href="https://happyresearch.org" style="color:{_INK}; text-decoration:none;">happyresearch<span style="color:#8fbf2a;">.</span></a>
+          <td style="padding:0 8px 18px; font-family:{_SERIF}; font-size:24px; font-weight:bold; color:{_INK};">
+            <a href="https://happyresearch.org" style="color:{_INK}; text-decoration:none;">HappyResearch</a>
           </td>
         </tr>
         <tr>
@@ -56,14 +58,14 @@ def _button(href, label):
     return f"""
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0;">
     <tr>
-      <td style="background:{_INK}; border-radius:999px;">
+      <td style="background:{_ACCENT}; border-radius:999px;">
         <a href="{escape(href)}" style="display:inline-block; padding:14px 28px; font-family:{_FONT}; font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:999px;">{escape(label)} &rarr;</a>
       </td>
     </tr>
   </table>"""
 
 
-def _note(html, accent=_LIME):
+def _note(html, accent=_ACCENT):
     """A quoted block: a team note, a decline reason, an interview message."""
     return f'<div style="background:{_BG}; border-left:4px solid {accent}; border-radius:8px; padding:14px 18px; margin:18px 0;">{html}</div>'
 
@@ -256,7 +258,7 @@ def send_mentor_declined(to_email, mentor_name, reason):
         _wrap(f"""
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>Thank you for your interest in mentoring with HappyResearch. After reviewing your application, we're not able to move forward at this time.</p>
-  {_note(body, "#cfccc2")}
+  {_note(body, "#c9d4c3")}
   <p>We truly appreciate the time you took to apply.</p>
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
@@ -388,7 +390,7 @@ def send_application_declined(to_email, student_name, kind, title, reason):
         _wrap(f"""
   <p>Hi {escape(student_name or "there")},</p>
   <p>Thank you for applying for the {noun} <strong>{escape(title or "")}</strong>. We're not able to accept this application, and here's why:</p>
-  {_note(body, "#cfccc2")}
+  {_note(body, "#c9d4c3")}
   <p>You're welcome to apply for other research topics and projects.</p>
   {_button(_frontend(path), "See Open Programs")}
   {_small("Questions? Just reply to this email.")}
