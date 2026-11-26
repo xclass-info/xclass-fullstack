@@ -89,50 +89,42 @@ export default function AboutUs() {
           </div>
           <div className={styles.letterBody}>
             <p>
-              When I was a student, my mind was filled with research ideas and
-              curiosity. I was eager to explore, create, and contribute — but I
-              struggled to find mentors who could guide me. Much of my time was
-              spent searching for opportunities, navigating challenges alone,
-              and trying to figure things out without support.
+              As a student, I had more research ideas than people to ask about
+              them. I wanted to explore, build and contribute, but I couldn't
+              find a mentor to guide me. So I spent a lot of time searching for
+              opportunities and working things out on my own.
             </p>
             <p>
-              Years later, after becoming a professor myself, I began meeting
-              many young students who shared the same passion for knowledge and
-              discovery. They reached out hoping to join my lab as interns or
-              volunteers, excited to experience real research for the first
-              time. Whenever possible, I welcomed them. At one point, my
-              research group grew to become the largest lab in our department.
+              Years later, as a professor, I started hearing from students who
+              reminded me of myself. They wrote asking to join my lab as interns
+              or volunteers, eager to try real research for the first time. I
+              said yes as often as I could, and at one point my group became the
+              largest lab in our department.
             </p>
             <p>
-              Over time, however, I realized that my own time, energy, and
-              expertise were limited. No single professor can mentor every
-              student or cover every research direction. Yet there were still so
-              many students searching for guidance, meaningful projects, and
-              opportunities to grow.
+              But one professor has only so many hours, and knows only so many
+              fields. For every student I could take on, there were many more
+              still looking for a mentor, a real project and a chance to grow.
             </p>
             <blockquote className={styles.quote}>
-              How can we help more students access mentorship for the research
-              they truly love? How can we create more opportunities for high
-              school students to participate in real research experiences?
+              What if every curious high school student could do real research,
+              with a mentor who knows the field?
             </blockquote>
-            <p className={styles.strong}>
-              That is why we created HappyResearch.
+            <p className={styles.strong}>That question became HappyResearch.</p>
+            <p>
+              HappyResearch brings together professors, researchers and PhD
+              students who want to guide the next generation. Students choose a
+              project that matches what they're curious about, and work through
+              it with a mentor, from the first question to a finished result.
             </p>
             <p>
-              HappyResearch brings together passionate mentors — professors,
-              researchers, and PhD students — who genuinely care about guiding
-              the next generation. Here, students can freely explore and apply
-              to research projects that match their interests and dreams.
+              Talent is everywhere. Opportunity isn't. We're here to close that
+              gap, one student and one mentor at a time.
             </p>
             <p>
-              We believe that talent exists everywhere, but opportunities do not
-              always reach everyone. Our mission is to bridge that gap by making
-              research mentorship more accessible, supportive, and inspiring.
-            </p>
-            <p>
-              We also warmly welcome more professors, researchers, and Ph.D.
-              students to join us in empowering young minds, nurturing
-              curiosity, and helping students turn their dreams into reality.
+              And if you're a professor, researcher or PhD student who remembers
+              what it was like to have no one to ask,{" "}
+              <Link to='/become-a-mentor'>we'd love for you to join us</Link>.
             </p>
           </div>
         </div>

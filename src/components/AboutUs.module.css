@@ -92,6 +92,16 @@
   border-left: 6px solid var(--lime);
 }
 
+.letterBody a {
+  color: var(--accent);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+.letterBody a:hover {
+  color: var(--accent-hover);
+}
+
 .letterBody .strong {
   font-weight: 600;
   color: var(--ink);
