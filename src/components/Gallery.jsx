@@ -1,466 +1,249 @@
-import { useState, useEffect, useRef } from "react";
+// src/components/Gallery.jsx
+// Photos and video from our programs: a featured intro video, then a
+// masonry grid of photos (lazy-loaded, shown in batches) that open in a
+// full-screen viewer with previous/next and keyboard support.
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import list from "./ProgramListing.module.css";
+import styles from "./Gallery.module.css";
 
-const photos = [
-  { url: "/gallery/3.jpg", caption: "Lab session" },
-  { url: "/gallery/4.jpg", caption: "Lab session" },
-  { url: "/gallery/5.jpg", caption: "Lab session" },
-  { url: "/gallery/6.jpg", caption: "Lab session" },
-  { url: "/gallery/7.jpg", caption: "Lab session" },
-  { url: "/gallery/8.jpg", caption: "Lab session" },
-  { url: "/gallery/9.jpg", caption: "Lab session" },
-  { url: "/gallery/10.jpg", caption: "Lab session" },
-  { url: "/gallery/11.jpg", caption: "Lab session" },
-  { url: "/gallery/12.jpg", caption: "Lab session" },
-  { url: "/gallery/13.jpg", caption: "Lab session" },
-  { url: "/gallery/14.jpg", caption: "Lab session" },
-  { url: "/gallery/15.jpg", caption: "Lab session" },
-  { url: "/gallery/16.jpg", caption: "Lab session" },
-  { url: "/gallery/17.jpg", caption: "Lab session" },
-  { url: "/gallery/18.jpg", caption: "Lab session" },
-  { url: "/gallery/20.jpg", caption: "Lab session" },
-  { url: "/gallery/21.jpg", caption: "Lab session" },
-  { url: "/gallery/24.jpg", caption: "Lab session" },
-  { url: "/gallery/25.jpg", caption: "Lab session" },
-  { url: "/gallery/28.jpg", caption: "Lab session" },
-  { url: "/gallery/29.jpg", caption: "Lab session" },
-  { url: "/gallery/31.jpg", caption: "Lab session" },
-  { url: "/gallery/33.jpg", caption: "Lab session" },
-  { url: "/gallery/35.jpg", caption: "Lab session" },
-  { url: "/gallery/36.jpg", caption: "Lab session" },
-  { url: "/gallery/37.jpg", caption: "Lab session" },
-  { url: "/gallery/38.jpg", caption: "Lab session" },
-  { url: "/gallery/39.jpg", caption: "Lab session" },
-  { url: "/gallery/40.jpg", caption: "Lab session" },
-  { url: "/gallery/41.jpg", caption: "Lab session" },
-  { url: "/gallery/42.jpg", caption: "Lab session" },
-  { url: "/gallery/43.jpg", caption: "Lab session" },
-  { url: "/gallery/44.jpg", caption: "Lab session" },
-  { url: "/gallery/46.jpg", caption: "Lab session" },
-  { url: "/gallery/47.jpg", caption: "Lab session" },
-  { url: "/gallery/48.jpg", caption: "Lab session" },
-  { url: "/gallery/49.jpg", caption: "Lab session" },
-  { url: "/gallery/50.jpg", caption: "Lab session" },
-  { url: "/gallery/51.jpg", caption: "Lab session" },
-  { url: "/gallery/52.jpg", caption: "Lab session" },
-  { url: "/gallery/54.jpg", caption: "Lab session" },
-  { url: "/gallery/55.jpg", caption: "Lab session" },
-  { url: "/gallery/56.jpg", caption: "Lab session" },
-  { url: "/gallery/57.jpg", caption: "Lab session" },
-  { url: "/gallery/58.jpg", caption: "Lab session" },
-  { url: "/gallery/60.jpg", caption: "Lab session" },
-  { url: "/gallery/61.jpg", caption: "Lab session" },
-  { url: "/gallery/62.jpg", caption: "Lab session" },
-  { url: "/gallery/64.jpg", caption: "Lab session" },
-  { url: "/gallery/65.jpg", caption: "Lab session" },
-  { url: "/gallery/66.jpg", caption: "Lab session" },
-  { url: "/gallery/67.jpg", caption: "Lab session" },
-  { url: "/gallery/68.jpg", caption: "Lab session" },
-  { url: "/gallery/69.jpg", caption: "Lab session" },
-  { url: "/gallery/70.jpg", caption: "Lab session" },
-  { url: "/gallery/71.jpg", caption: "Lab session" },
-  { url: "/gallery/75.jpg", caption: "Lab session" },
-  { url: "/gallery/76.jpg", caption: "Lab session" },
-  { url: "/gallery/78.jpg", caption: "Lab session" },
-  { url: "/gallery/79.jpg", caption: "Lab session" },
-  { url: "/gallery/80.jpg", caption: "Lab session" },
-  { url: "/gallery/85.jpg", caption: "Lab session" },
-  { url: "/gallery/86.png", caption: "Lab session" },
-  { url: "/gallery/88.png", caption: "Lab session" },
-  { url: "/gallery/89.png", caption: "Lab session" },
-  { url: "/gallery/90.jpg", caption: "Lab session" },
-  { url: "/gallery/91.png", caption: "Lab session" },
+const PHOTOS = [
+  "/gallery/3.jpg",
+  "/gallery/4.jpg",
+  "/gallery/5.jpg",
+  "/gallery/6.jpg",
+  "/gallery/7.jpg",
+  "/gallery/8.jpg",
+  "/gallery/9.jpg",
+  "/gallery/10.jpg",
+  "/gallery/11.jpg",
+  "/gallery/12.jpg",
+  "/gallery/13.jpg",
+  "/gallery/14.jpg",
+  "/gallery/15.jpg",
+  "/gallery/16.jpg",
+  "/gallery/17.jpg",
+  "/gallery/18.jpg",
+  "/gallery/20.jpg",
+  "/gallery/21.jpg",
+  "/gallery/24.jpg",
+  "/gallery/25.jpg",
+  "/gallery/28.jpg",
+  "/gallery/29.jpg",
+  "/gallery/31.jpg",
+  "/gallery/33.jpg",
+  "/gallery/35.jpg",
+  "/gallery/36.jpg",
+  "/gallery/37.jpg",
+  "/gallery/38.jpg",
+  "/gallery/39.jpg",
+  "/gallery/40.jpg",
+  "/gallery/41.jpg",
+  "/gallery/42.jpg",
+  "/gallery/43.jpg",
+  "/gallery/44.jpg",
+  "/gallery/46.jpg",
+  "/gallery/47.jpg",
+  "/gallery/48.jpg",
+  "/gallery/49.jpg",
+  "/gallery/50.jpg",
+  "/gallery/51.jpg",
+  "/gallery/52.jpg",
+  "/gallery/54.jpg",
+  "/gallery/55.jpg",
+  "/gallery/56.jpg",
+  "/gallery/57.jpg",
+  "/gallery/58.jpg",
+  "/gallery/60.jpg",
+  "/gallery/61.jpg",
+  "/gallery/62.jpg",
+  "/gallery/64.jpg",
+  "/gallery/65.jpg",
+  "/gallery/66.jpg",
+  "/gallery/67.jpg",
+  "/gallery/68.jpg",
+  "/gallery/69.jpg",
+  "/gallery/70.jpg",
+  "/gallery/71.jpg",
+  "/gallery/75.jpg",
+  "/gallery/76.jpg",
+  "/gallery/78.jpg",
+  "/gallery/79.jpg",
+  "/gallery/80.jpg",
+  "/gallery/85.jpg",
+  "/gallery/86.png",
+  "/gallery/88.png",
+  "/gallery/89.png",
+  "/gallery/90.jpg",
+  "/gallery/91.png",
 ];
 
-const videos = [
-  {
-    url: "https://www.youtube.com/embed/G1IM1_tz-qQ",
-    caption: "Introduction to HappyResearch",
-  },
-];
+const VIDEO = {
+  url: "https://www.youtube.com/embed/G1IM1_tz-qQ",
+  title: "Introduction to HappyResearch",
+};
 
-function PhotoCarousel({ photos, onPhotoClick }) {
-  const [current, setCurrent] = useState(0);
-  const intervalRef = useRef(null);
-  const perPage = 6; // ← 2 rows × 3 columns
-  const totalPages = Math.ceil(photos.length / perPage);
+const BATCH = 18;
 
+function Viewer({ index, onClose, onMove }) {
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % totalPages);
-    }, 5000);
-    return () => clearInterval(intervalRef.current);
-  }, [totalPages]);
-
-  function goTo(index) {
-    setCurrent(index);
-    clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % totalPages);
-    }, 5000);
-  }
-
-  function prev() {
-    goTo((current - 1 + totalPages) % totalPages);
-  }
-
-  function next() {
-    goTo((current + 1) % totalPages);
-  }
-
-  if (photos.length === 0) return null;
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") onMove(-1);
+      else if (e.key === "ArrowRight") onMove(1);
+    };
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onClose, onMove]);
 
   return (
-    <div>
-      {/* Sliding container */}
-      <div style={{ overflow: "hidden", borderRadius: 16 }}>
-        <div
-          style={{
-            display: "flex",
-            transition: "transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-            transform: `translateX(-${current * 100}%)`,
-          }}
-        >
-          {Array.from({ length: totalPages }).map((_, pageIndex) => (
-            <div
-              key={pageIndex}
-              style={{
-                minWidth: "100%",
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gridTemplateRows: "repeat(2, 1fr)", // ← 2 rows
-                gap: 16,
-                padding: "4px",
-              }}
-            >
-              {photos
-                .slice(pageIndex * perPage, pageIndex * perPage + perPage)
-                .map((photo, index) => (
-                  <div
-                    key={index}
-                    onClick={() => onPhotoClick(photo)}
-                    style={{
-                      position: "relative",
-                      cursor: "pointer",
-                      borderRadius: 12,
-                      overflow: "hidden",
-                      boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
-                      transition: "transform 0.3s",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "translateY(-4px)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "translateY(0)")
-                    }
-                  >
-                    <img
-                      src={photo.url}
-                      alt={photo.caption}
-                      style={{
-                        width: "100%",
-                        height: 240,
-                        objectFit: "cover",
-                        display: "block",
-                      }}
-                    />
-                    {photo.caption && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          background:
-                            "linear-gradient(transparent, rgba(0,0,0,0.6))",
-                          padding: "24px 12px 10px",
-                          color: "white",
-                          fontSize: 13,
-                        }}
-                      >
-                        {photo.caption}
-                      </div>
-                    )}
-                  </div>
-                ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 16,
-          marginTop: 16,
-        }}
-      >
-        <button
-          onClick={prev}
-          style={{
-            background: "#f0f4ff",
-            border: "none",
-            borderRadius: "50%",
-            width: 40,
-            height: 40,
-            fontSize: 20,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#111111",
-            fontWeight: 700,
-          }}
-        >
-          ‹
-        </button>
-
-        <div style={{ display: "flex", gap: 6 }}>
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goTo(index)}
-              style={{
-                width: index === current ? 20 : 8,
-                height: 8,
-                borderRadius: 4,
-                border: "none",
-                background: index === current ? "#111111" : "#ddd",
-                cursor: "pointer",
-                transition: "all 0.3s",
-                padding: 0,
-              }}
-            />
-          ))}
-        </div>
-
-        <button
-          onClick={next}
-          style={{
-            background: "#f0f4ff",
-            border: "none",
-            borderRadius: "50%",
-            width: 40,
-            height: 40,
-            fontSize: 20,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#111111",
-            fontWeight: 700,
-          }}
-        >
-          ›
-        </button>
-
-        <span style={{ fontSize: 13, color: "#aaa" }}>
-          {current * perPage + 1}–
-          {Math.min(current * perPage + perPage, photos.length)} of{" "}
-          {photos.length}
+    <div
+      className={styles.viewer}
+      role='dialog'
+      aria-modal='true'
+      aria-label='Photo viewer'
+      onClick={onClose}
+    >
+      <div className={styles.viewerTop} onClick={(e) => e.stopPropagation()}>
+        <span className={styles.viewerCount}>
+          {index + 1} / {PHOTOS.length}
         </span>
+        <button
+          type='button'
+          className={styles.viewerBtn}
+          onClick={onClose}
+          aria-label='Close'
+        >
+          ✕
+        </button>
       </div>
+      <img
+        src={PHOTOS[index]}
+        alt={`Program photo ${index + 1} of ${PHOTOS.length}`}
+        className={styles.viewerImg}
+        onClick={(e) => e.stopPropagation()}
+      />
+      <button
+        type='button'
+        className={`${styles.viewerBtn} ${styles.viewerPrev}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          onMove(-1);
+        }}
+        aria-label='Previous photo'
+      >
+        ←
+      </button>
+      <button
+        type='button'
+        className={`${styles.viewerBtn} ${styles.viewerNext}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          onMove(1);
+        }}
+        aria-label='Next photo'
+      >
+        →
+      </button>
     </div>
   );
 }
 
 export default function Gallery() {
-  const [tab, setTab] = useState("photos");
-  const [selected, setSelected] = useState(null);
+  const [shown, setShown] = useState(BATCH);
+  const [open, setOpen] = useState(null); // index of the photo in the viewer
+
+  const close = useCallback(() => setOpen(null), []);
+  const move = useCallback(
+    (step) =>
+      setOpen((i) =>
+        i === null ? i : (i + step + PHOTOS.length) % PHOTOS.length,
+      ),
+    [],
+  );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+    <div className={list.page}>
       <Navbar />
-      <div
-        style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 24px 48px" }}
-      >
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h1 className="page-title">Gallery</h1>
-          <p className="page-sub">
-            Moments from our research programs, projects and student
-            journeys.
-          </p>
-        </div>
 
-        {/* Tabs */}
-        <div
-          style={{
-            display: "flex",
-            gap: 8,
-            justifyContent: "center",
-            marginBottom: 32,
-          }}
-        >
-          {[
-            { id: "photos", label: "📷 Photos" },
-            { id: "videos", label: "🎥 Videos" },
-          ].map((t) => (
+      <header className={list.head}>
+        <div className={list.wrap}>
+          <h1 className={list.title}>Gallery.</h1>
+          <div className={list.headBottom}>
+            <p className={list.sub}>
+              Lab sessions, projects and presentations: moments from our
+              programs and the students in them.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <section className={`${list.wrap} ${styles.video}`}>
+        <div className={styles.videoFrame}>
+          <iframe
+            src={VIDEO.url}
+            title={VIDEO.title}
+            loading='lazy'
+            allow='accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+            allowFullScreen
+          />
+        </div>
+        <div className={styles.videoText}>
+          <p className='section-label' style={{ margin: 0 }}>
+            Video
+          </p>
+          <h2 className={styles.videoTitle}>{VIDEO.title}</h2>
+        </div>
+      </section>
+
+      <section className={`${list.wrap} ${styles.photos}`}>
+        <div className={styles.photosHead}>
+          <h2 className={styles.sectionTitle}>Photos.</h2>
+          <p className={list.count}>{PHOTOS.length} photos</p>
+        </div>
+        <div className={styles.masonry}>
+          {PHOTOS.slice(0, shown).map((src, i) => (
             <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              style={{
-                padding: "8px 24px",
-                borderRadius: 20,
-                border: "none",
-                background: tab === t.id ? "#111111" : "#e0e0e0",
-                color: tab === t.id ? "white" : "#555",
-                cursor: "pointer",
-                fontWeight: 600,
-                fontSize: 14,
-              }}
+              key={src}
+              type='button'
+              className={styles.tile}
+              onClick={() => setOpen(i)}
+              aria-label={`Open photo ${i + 1}`}
             >
-              {t.label}
+              <img src={src} alt='' loading='lazy' decoding='async' />
             </button>
           ))}
         </div>
-
-        {/* Photos Tab */}
-
-        {tab === "photos" && (
-          <div>
-            {photos.length === 0 ? (
-              <div style={{ textAlign: "center", padding: 80, color: "#aaa" }}>
-                <p style={{ fontSize: 48, marginBottom: 12 }}>📷</p>
-                <p style={{ fontSize: 16 }}>No photos yet. Check back soon!</p>
-              </div>
-            ) : (
-              <PhotoCarousel
-                photos={photos}
-                onPhotoClick={(photo) =>
-                  setSelected({ type: "photo", ...photo })
-                }
-              />
-            )}
-          </div>
-        )}
-
-        {/* Videos Tab */}
-        {tab === "videos" && (
-          <div>
-            {videos.length === 0 ? (
-              <div style={{ textAlign: "center", padding: 80, color: "#aaa" }}>
-                <p style={{ fontSize: 48, marginBottom: 12 }}>🎥</p>
-                <p style={{ fontSize: 16 }}>No videos yet. Check back soon!</p>
-              </div>
-            ) : (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-                  gap: 16,
-                }}
-              >
-                {videos.map((video, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      borderRadius: 12,
-                      overflow: "hidden",
-                      border: "1px solid var(--border)",
-                      background: "white",
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: "relative",
-                        paddingBottom: "56.25%",
-                        height: 0,
-                      }}
-                    >
-                      <iframe
-                        src={video.url}
-                        title={video.caption}
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          border: "none",
-                        }}
-                        allowFullScreen
-                      />
-                    </div>
-                    {video.caption && (
-                      <div style={{ padding: "12px 16px" }}>
-                        <p style={{ margin: 0, fontSize: 13, color: "#555" }}>
-                          {video.caption}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Photo lightbox modal */}
-      {selected && selected.type === "photo" && (
-        <div
-          onClick={() => setSelected(null)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.85)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 200,
-            padding: 24,
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{ maxWidth: 800, width: "100%" }}
-          >
-            <img
-              src={selected.url}
-              alt={selected.caption}
-              style={{
-                width: "100%",
-                borderRadius: 12,
-                objectFit: "contain",
-                maxHeight: "80vh",
-              }}
-            />
-            {selected.caption && (
-              <p
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  marginTop: 12,
-                  fontSize: 14,
-                }}
-              >
-                {selected.caption}
-              </p>
-            )}
+        {shown < PHOTOS.length && (
+          <div className={styles.moreRow}>
             <button
-              onClick={() => setSelected(null)}
-              style={{
-                display: "block",
-                margin: "16px auto 0",
-                padding: "8px 24px",
-                borderRadius: 8,
-                border: "none",
-                background: "white",
-                color: "#333",
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
+              type='button'
+              className='btn-ghost'
+              onClick={() => setShown((n) => n + BATCH)}
             >
-              Close
+              Show more photos ({PHOTOS.length - shown} left)
             </button>
           </div>
+        )}
+      </section>
+
+      <section className={styles.band}>
+        <div className={`${list.wrap} ${styles.bandInner}`}>
+          <h2 className={styles.bandTitle}>Want to be in the next one?</h2>
+          <Link to='/student/register' className='btn-lime'>
+            Start your application →
+          </Link>
         </div>
-      )}
+      </section>
+
+      {open !== null && <Viewer index={open} onClose={close} onMove={move} />}
 
       <Footer />
     </div>
