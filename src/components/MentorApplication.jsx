@@ -7,27 +7,13 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api, live } from "../api";
 import { onAuthStateChanged, refreshUser } from "../auth";
-import {
-  APPLICATION_STAGES,
-  MENTOR_TYPES,
-  mentorTypeLabel,
-  stageIndex,
-} from "../utils/mentorVerification";
+import { APPLICATION_STAGES, MENTOR_TYPES, mentorTypeLabel, stageIndex, DEGREE_OPTIONS } from "../utils/mentorVerification";
 import { formatMentorName } from "../utils/mentorName";
 import InitialsAvatar from "./InitialsAvatar";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 const MIN_BIO_CHARS = 100;
-
-const DEGREES = [
-  "PhD (in progress)",
-  "Doctor of Philosophy (PhD)",
-  "Doctor of Medicine (MD)",
-  "MD-PhD",
-  "Doctor of Education (EdD)",
-  "Other doctorate",
-];
 
 const STEPS = [
   { title: "Your profile", fields: ["name", "mentorType", "degree", "university", "researchArea", "bio", "photo"] },
@@ -463,7 +449,7 @@ export default function MentorApplication() {
                       }}
                     >
                       <option value=''>Select</option>
-                      {DEGREES.map((d) => (
+                      {DEGREE_OPTIONS.map((d) => (
                         <option key={d} value={d}>{d}</option>
                       ))}
                     </select>

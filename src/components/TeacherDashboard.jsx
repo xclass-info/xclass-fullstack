@@ -16,6 +16,7 @@ import ShowcaseForm from "./ShowcaseForm";
 import ContentCard from "./ContentCard";
 import Footer from "./Footer";
 import { safeUrl } from "../utils/format";
+import { DEGREE_OPTIONS } from "../utils/mentorVerification";
 
 const PATH_BY_KIND = {
   research: "research",
@@ -36,43 +37,6 @@ const NEW_LABEL = {
   project: "Project",
   showcase: "Student work",
 };
-
-const DEGREE_GROUPS = [
-  ["Secondary Education", ["High School Diploma", "GED"]],
-  [
-    "Undergraduate",
-    [
-      "Associate's Degree",
-      "Bachelor of Arts (BA)",
-      "Bachelor of Science (BS)",
-      "Bachelor of Education (BEd)",
-      "Bachelor of Engineering (BEng)",
-    ],
-  ],
-  [
-    "Graduate",
-    [
-      "Master of Arts (MA)",
-      "Master of Science (MS)",
-      "Master of Education (MEd)",
-      "Master of Business Administration (MBA)",
-      "Master of Engineering (MEng)",
-      "Master of Fine Arts (MFA)",
-    ],
-  ],
-  [
-    "Doctorate",
-    [
-      "Doctor of Philosophy (PhD)",
-      "Doctor of Education (EdD)",
-      "Doctor of Medicine (MD)",
-      "Doctor of Law (JD)",
-      "Doctor of Business Administration (DBA)",
-      "Doctor of Engineering (DEng)",
-    ],
-  ],
-  ["Other", ["Professional Certification", "Vocational Training", "Other"]],
-];
 
 const PROFILE_FIELDS = [
   "gender",
@@ -172,19 +136,13 @@ function ProfileTab({ teacher, onSaved }) {
                 >
                   <option value=''>Select your highest degree</option>
                   {profile.degree &&
-                    !DEGREE_GROUPS.some(([, o]) =>
-                      o.includes(profile.degree),
-                    ) && (
+                    !DEGREE_OPTIONS.includes(profile.degree) && (
                       <option value={profile.degree}>{profile.degree}</option>
                     )}
-                  {DEGREE_GROUPS.map(([group, options]) => (
-                    <optgroup key={group} label={group}>
-                      {options.map((o) => (
-                        <option key={o} value={o}>
-                          {o}
-                        </option>
-                      ))}
-                    </optgroup>
+                  {DEGREE_OPTIONS.map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
                   ))}
                 </select>
               </div>
