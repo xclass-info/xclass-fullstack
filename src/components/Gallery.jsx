@@ -87,6 +87,11 @@ const VIDEO = {
 
 const BATCH = 18;
 
+// The grid shows small copies from /gallery/thumbs (720px JPEGs); the
+// viewer loads the full-size photo.
+const thumb = (src) =>
+  src.replace("/gallery/", "/gallery/thumbs/").replace(/\.png$/, ".jpg");
+
 function Viewer({ index, onClose, onMove }) {
   useEffect(() => {
     const onKey = (e) => {
@@ -102,6 +107,14 @@ function Viewer({ index, onClose, onMove }) {
       document.body.style.overflow = prevOverflow;
     };
   }, [onClose, onMove]);
+
+  // Warm up the neighbours so the arrows feel instant.
+  useEffect(() => {
+    [index - 1, index + 1].forEach((i) => {
+      const img = new Image();
+      img.src = PHOTOS[(i + PHOTOS.length) % PHOTOS.length];
+    });
+  }, [index]);
 
   return (
     <div
@@ -217,7 +230,7 @@ export default function Gallery() {
               onClick={() => setOpen(i)}
               aria-label={`Open photo ${i + 1}`}
             >
-              <img src={src} alt='' loading='lazy' decoding='async' />
+              <img src={thumb(src)} alt='' loading='lazy' decoding='async' />
             </button>
           ))}
         </div>
