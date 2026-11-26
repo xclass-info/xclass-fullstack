@@ -128,7 +128,9 @@ def test_admin_edit_cannot_touch_secrets(client):
     assert teacher.workEmailToken is None and teacher.photoURL is None
 
 
-def test_booking_flow(client, outbox):
+def test_booking_flow(client, outbox, monkeypatch):
+    from happyresearch import daily
+    monkeypatch.setattr(daily, "create_room", lambda: "https://x.daily.co/room")
     t = make_user("t@example.com", teacher=True)
     ht = login(client, "t@example.com")
     slot = client.post("/api/teachers/me/availability", json={"date": "2026-11-02", "time": "09:00", "duration": 30, "price": 0}, headers=ht).json
@@ -138,8 +140,11 @@ def test_booking_flow(client, outbox):
     pending = client.get("/api/teachers/me/bookings?status=pending", headers=ht).json
     assert pending[0]["date"] == "2026-11-02" and pending[0]["duration"] == 30
 
-    res = client.post(f"/api/bookings/{booking_id}/approve", json={"meeting_link": "https://x.daily.co/room"}, headers=ht)
-    assert res.json["status"] == "approved"
+    # The meeting link comes from the server; one sent by the browser is ignored.
+    res = client.post(f"/api/bookings/{booking_id}/approve", json={"meeting_link": "https://evil.example"}, headers=ht)
+    assert res.json["status"] == "approved" and res.json["meeting_link"] == "https://x.daily.co/room"
+    # Approving twice doesn't make a second room.
+    assert client.post(f"/api/bookings/{booking_id}/approve", headers=ht).json["code"] == "ALREADY_REVIEWED"
     assert db.session.get(Availability, slot["id"]).booked is True
     assert {m.recipients[0] for m in outbox} == {"kid@example.com", "t@example.com"}
     assert "https://x.daily.co/room" in outbox[0].html
@@ -204,3 +209,57 @@ def test_decision_saved_even_if_email_fails(client, monkeypatch):
     res = client.post(f"/api/admin/registrations/{reg_id}/approve", headers=hadmin)
     assert res.status_code == 200 and res.json["status"] == "approved" and res.json["emailSent"] is False
     assert db.session.get(Research, item["id"]).enrolledCount == 1
+
+
+def _pending_booking(client):
+    t = make_user("t@example.com", teacher=True)
+    ht = login(client, "t@example.com")
+    slot = client.post("/api/teachers/me/availability", json={"date": "2026-11-02", "time": "09:00", "duration": 30, "price": 0}, headers=ht).json
+    booking_id = client.post("/api/bookings", json={"teacherId": t.id, "slotId": slot["id"], "studentName": "Kid", "studentEmail": "kid@example.com"}).json["id"]
+    return ht, slot, booking_id
+
+
+def test_booking_stays_pending_if_room_fails(client, outbox, monkeypatch):
+    import requests
+    from happyresearch import daily
+
+    def down(*a, **k):
+        raise requests.ConnectionError("daily down")
+
+    monkeypatch.setattr(daily.requests, "post", down)
+    client.application.config["DAILY_API_KEY"] = "test-key"
+    ht, slot, booking_id = _pending_booking(client)
+    res = client.post(f"/api/bookings/{booking_id}/approve", headers=ht)
+    assert res.status_code == 502 and res.json["code"] == "MEETING_ROOM_FAILED"
+    assert client.get("/api/teachers/me/bookings?status=pending", headers=ht).json[0]["id"] == booking_id
+    assert db.session.get(Availability, slot["id"]).booked is False
+    assert outbox == []
+
+
+def test_booking_approve_needs_daily_key(client, monkeypatch):
+    client.application.config["DAILY_API_KEY"] = None
+    ht, _, booking_id = _pending_booking(client)
+    res = client.post(f"/api/bookings/{booking_id}/approve", headers=ht)
+    assert res.status_code == 503 and res.json["code"] == "VIDEO_NOT_CONFIGURED"
+
+
+def test_daily_room_request(client, monkeypatch):
+    from happyresearch import daily
+
+    seen = {}
+
+    class Res:
+        ok = True
+
+        def json(self):
+            return {"url": "https://hr.daily.co/abc123"}
+
+    def fake_post(url, headers, json, timeout):
+        seen.update(url=url, auth=headers["Authorization"], props=json["properties"])
+        return Res()
+
+    monkeypatch.setattr(daily.requests, "post", fake_post)
+    client.application.config["DAILY_API_KEY"] = "secret-key"
+    with client.application.app_context():
+        assert daily.create_room() == "https://hr.daily.co/abc123"
+    assert seen["auth"] == "Bearer secret-key" and seen["props"]["max_participants"] == 2

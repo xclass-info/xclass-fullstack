@@ -1,12 +1,11 @@
 // src/components/BookingRequests.jsx
-// Mentor's pending 1-on-1 booking requests. Approving creates a Daily.co
-// meeting room, and the backend emails the link to the student and mentor.
+// Mentor's pending 1-on-1 booking requests. Approving asks the backend to
+// create the Daily.co meeting room and email the link to both sides; the
+// Daily.co API key stays on the server.
 import { useState, useEffect } from "react";
 import { api, live, seg } from "../api";
 import { getCurrentUser } from "../auth";
 import styles from "./TeacherDashboard.module.css";
-
-const DAILY_API_KEY = import.meta.env.VITE_DAILY_API_KEY;
 
 function whenLabel(req) {
   const d = new Date(`${req.date}T${req.time}`);
@@ -32,41 +31,21 @@ export default function BookingRequests() {
     return () => unsub();
   }, [teacherId]);
 
-  async function generateMeetingLink(bookingId) {
-    const res = await fetch("https://api.daily.co/v1/rooms", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${DAILY_API_KEY}`,
-      },
-      body: JSON.stringify({
-        name: `happyresearch-session-${bookingId.slice(-8)}`,
-        properties: {
-          enable_chat: true,
-          enable_screenshare: true,
-          max_participants: 2,
-          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
-        },
-      }),
-    });
-    const data = await res.json();
-    if (!data.url) throw new Error("Failed to generate meeting link");
-    return data.url;
-  }
-
   async function handleApprove(req) {
     setProcessing(req.id);
     try {
-      const meetingLink = await generateMeetingLink(req.id);
-      // The backend saves the link, marks the slot booked and emails the
-      // confirmation to the student and to you.
-      await api.post(`/bookings/${seg(req.id)}/approve`, {
-        meeting_link: meetingLink,
-      });
+      // The backend creates the meeting room, saves the link, marks the slot
+      // booked and emails the confirmation to the student and to you.
+      await api.post(`/bookings/${seg(req.id)}/approve`);
       alert(`Approved. The meeting link was emailed to ${req.studentEmail}.`);
     } catch (err) {
       console.error(err);
-      alert("Something went wrong: " + err.message);
+      alert(
+        err.message === "ALREADY_REVIEWED"
+          ? "This booking was already handled."
+          : err.detail ||
+              "Something went wrong creating the meeting. Please try again.",
+      );
     } finally {
       setProcessing(null);
     }

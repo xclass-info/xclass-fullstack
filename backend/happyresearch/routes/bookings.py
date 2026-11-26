@@ -1,8 +1,8 @@
 """1-on-1 session bookings: a visitor requests a mentor's slot, the mentor
-approves (with a meeting link) or rejects it."""
+approves (we create the video meeting room) or rejects it."""
 from flask import Blueprint, current_app, jsonify, request
 
-from .. import emails
+from .. import daily, emails
 from ..errors import ApiError
 from ..extensions import db, limiter
 from ..models import Availability, Booking, Teacher
@@ -63,12 +63,14 @@ def _my_booking(booking_id):
 
 @bp.post("/bookings/<booking_id>/approve")
 def approve_booking(booking_id):
-    """The mentor's browser creates the meeting room (Daily.co) and sends its
-    link here; we record it, mark the slot booked and email both sides."""
+    """Create the video meeting room (Daily.co), record its link, mark the
+    slot booked and email both sides. The room is made first, so a failure
+    leaves the booking pending rather than approved without a link."""
     teacher, booking = _my_booking(booking_id)
-    meeting_link = text(body(), "meeting_link", required=True, max_len=2000)
+    if booking.status != "pending":
+        raise ApiError(409, "ALREADY_REVIEWED", "This booking was already handled.")
+    booking.meeting_link = daily.create_room()
     booking.status = "approved"
-    booking.meeting_link = meeting_link
     slot = db.session.get(Availability, booking.slotId) if booking.slotId else None
     if slot:
         slot.booked = True

@@ -45,6 +45,8 @@ class Config:
     MAIL_SUPPRESS_SEND = os.environ.get("MAIL_SUPPRESS_SEND") == "1"
     # Legacy shared key for /api/send-verification-email (pre-migration frontend).
     MAIL_API_KEY = os.environ.get("MAIL_API_KEY")
+    # Daily.co video rooms for approved 1-on-1 sessions (server-side only).
+    DAILY_API_KEY = os.environ.get("DAILY_API_KEY")
 
     # S3-compatible object storage (Cloudflare R2 / AWS S3).
     S3_BUCKET = os.environ.get("S3_BUCKET")
