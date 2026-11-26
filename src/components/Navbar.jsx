@@ -74,20 +74,29 @@ export default function Navbar() {
       {/* Desktop right side buttons */}
       <div className={styles.navRight}>
         {student ? (
-          <button
-            className={styles.teacherBtn}
-            onClick={handleStudentLogout}
-            style={{ cursor: "pointer" }}
-          >
-            Logout
-          </button>
+          <>
+            <button
+              className={styles.teacherBtn}
+              onClick={handleStudentLogout}
+              style={{ cursor: "pointer" }}
+            >
+              Log out
+            </button>
+            <Link to='/student/dashboard' className={styles.cta}>
+              My dashboard
+            </Link>
+          </>
         ) : (
           <>
             <div className={styles.dropdown}>
-              <span className={`${styles.teacherBtn} ${styles.dropdownTrigger}`}>
+              <span
+                className={`${styles.teacherBtn} ${styles.dropdownTrigger}`}
+              >
                 Log in <span className={styles.dropdownCaret}>▾</span>
               </span>
-              <div className={`${styles.dropdownMenu} ${styles.dropdownMenuRight}`}>
+              <div
+                className={`${styles.dropdownMenu} ${styles.dropdownMenuRight}`}
+              >
                 <div className={styles.dropdownMenuInner}>
                   <Link to='/student/login'>Student login</Link>
                   <Link to='/teacher/login'>Mentor login</Link>
