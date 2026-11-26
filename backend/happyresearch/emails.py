@@ -10,13 +10,13 @@ from .models import EmailLog, new_id, utcnow
 
 # Site palette (see src/index.css): sage page, deep green text, terracotta
 # buttons and accents.
-_BG = "#eef2ea"
-_INK = "#22372c"
-_MUTED = "#4f6357"
-_ACCENT = "#b4502f"
-_RULE = "#dce6d6"
-_SERIF = "Georgia, 'Times New Roman', serif"
-_FONT = "'Helvetica Neue', Helvetica, Arial, sans-serif"
+_BG = "#f9f6f0"
+_INK = "#2a352c"
+_MUTED = "#5f675b"
+_ACCENT = "#52654e"
+_RULE = "#dcd7ca"
+_SERIF = "Lora, Georgia, 'Times New Roman', serif"
+_FONT = "Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif"
 
 _SIGNOFF = f"""
   <p style="margin:28px 0 0;">Best,<br/>The HappyResearch team</p>
@@ -32,12 +32,12 @@ def _wrap(body):
     <td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
         <tr>
-          <td style="padding:0 8px 18px; font-family:{_SERIF}; font-size:24px; font-weight:bold; color:{_INK};">
+          <td style="padding:0 8px 18px; font-family:{_SERIF}; font-size:24px; font-weight:normal; color:{_INK};">
             <a href="https://happyresearch.org" style="color:{_INK}; text-decoration:none;">HappyResearch</a>
           </td>
         </tr>
         <tr>
-          <td style="background:#ffffff; border-radius:20px; padding:20px 36px 32px; font-family:{_FONT}; font-size:16px; line-height:1.6; color:{_INK};">
+          <td style="background:#ffffff; border:1px solid #e4e0d5; border-radius:16px; padding:20px 36px 32px; font-family:{_FONT}; font-size:16px; line-height:1.6; color:{_INK};">
 {body}
           </td>
         </tr>
@@ -59,7 +59,7 @@ def _button(href, label):
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0;">
     <tr>
       <td style="background:{_ACCENT}; border-radius:999px;">
-        <a href="{escape(href)}" style="display:inline-block; padding:14px 28px; font-family:{_FONT}; font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:999px;">{escape(label)} &rarr;</a>
+        <a href="{escape(href)}" style="display:inline-block; padding:14px 28px; font-family:{_FONT}; font-size:16px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:999px;">{escape(label)} &rarr;</a>
       </td>
     </tr>
   </table>"""
@@ -258,7 +258,7 @@ def send_mentor_declined(to_email, mentor_name, reason):
         _wrap(f"""
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>Thank you for your interest in mentoring with HappyResearch. After reviewing your application, we're not able to move forward at this time.</p>
-  {_note(body, "#c9d4c3")}
+  {_note(body, "#dcd7ca")}
   <p>We truly appreciate the time you took to apply.</p>
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
@@ -390,7 +390,7 @@ def send_application_declined(to_email, student_name, kind, title, reason):
         _wrap(f"""
   <p>Hi {escape(student_name or "there")},</p>
   <p>Thank you for applying for the {noun} <strong>{escape(title or "")}</strong>. We're not able to accept this application, and here's why:</p>
-  {_note(body, "#c9d4c3")}
+  {_note(body, "#dcd7ca")}
   <p>You're welcome to apply for other research topics and projects.</p>
   {_button(_frontend(path), "See Open Programs")}
   {_small("Questions? Just reply to this email.")}
