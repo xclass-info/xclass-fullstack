@@ -262,7 +262,7 @@ export default function BecomeMentor() {
                     height='26'
                     viewBox='0 0 24 24'
                     fill='none'
-                    stroke='#111111'
+                    stroke='#22372c'
                     strokeWidth='2.4'
                     strokeLinecap='round'
                     strokeLinejoin='round'

@@ -34,7 +34,7 @@ const ACTIONS = {
     help: "Tell the applicant exactly what to fix. They get this by email and on their application, then resubmit.",
     placeholder: 'e.g. "Your CV upload is blank - please upload it again."',
     button: "Send request",
-    color: "#111111",
+    color: "#22372c",
   },
   "request-interview": {
     title: "Request an interview",
@@ -42,7 +42,7 @@ const ACTIONS = {
     help: "Only when you'd like to meet them first. Say how to schedule it - a booking link or a few time options.",
     placeholder: 'e.g. "Please book a 20-minute Zoom call here: https://calendly.com/..."',
     button: "Send request",
-    color: "#111111",
+    color: "#22372c",
   },
   decline: {
     title: "Decline application",
@@ -88,7 +88,7 @@ function Row({ label, children }) {
 
 function FileLink({ url, text = "View file" }) {
   return url ? (
-    <a href={url} target='_blank' rel='noopener noreferrer' style={{ color: "#111111", fontWeight: 600 }}>{text}</a>
+    <a href={url} target='_blank' rel='noopener noreferrer' style={{ color: "#22372c", fontWeight: 600 }}>{text}</a>
   ) : (
     <span style={{ color: "#a01f13" }}>Not provided</span>
   );
@@ -185,7 +185,7 @@ function ApplicantDetail({ m, onClose }) {
         <Row label='Expertise'>{m.expertise}</Row>
         <Row label='Languages'>{m.languages}</Row>
         <Row label='Profile link'>
-          {m.website ? <a href={m.website} target='_blank' rel='noopener noreferrer' style={{ color: "#111111" }}>{m.website}</a> : null}
+          {m.website ? <a href={m.website} target='_blank' rel='noopener noreferrer' style={{ color: "#22372c" }}>{m.website}</a> : null}
         </Row>
         <Row label='Bio'>{m.bio}</Row>
 
@@ -219,7 +219,7 @@ function ApplicantDetail({ m, onClose }) {
               <div style={{ background: "#f8fafc", borderRadius: 10, padding: 14, marginTop: 10 }}>
                 <p style={{ fontSize: 13, color: "#475569", margin: "0 0 8px" }}>
                   Search <strong>{m.name}</strong> on the{" "}
-                  <a href='https://www.nsopw.gov/' target='_blank' rel='noopener noreferrer' style={{ color: "#111111" }}>
+                  <a href='https://www.nsopw.gov/' target='_blank' rel='noopener noreferrer' style={{ color: "#22372c" }}>
                     National Sex Offender Public Website (nsopw.gov)
                   </a>
                   , then record the result.
@@ -270,8 +270,8 @@ function ApplicantDetail({ m, onClose }) {
                 <button style={btn("#14532d")} disabled={busy} onClick={() => run("approve")}>
                   ✓ Pass review
                 </button>
-                <button style={btn("#111111", true)} onClick={() => setAction("request-changes")}>Request changes</button>
-                <button style={btn("#111111", true)} onClick={() => setAction("request-interview")}>
+                <button style={btn("#22372c", true)} onClick={() => setAction("request-changes")}>Request changes</button>
+                <button style={btn("#22372c", true)} onClick={() => setAction("request-interview")}>
                   🗓 {s === "interview_requested" ? "Update interview request" : "Request interview"}
                 </button>
               </>
@@ -280,7 +280,7 @@ function ApplicantDetail({ m, onClose }) {
               <button style={btn("#a01f13", true)} onClick={() => setAction("decline")}>Decline</button>
             )}
             {s === "started" && (
-              <a href={`mailto:${m.email}`} style={{ ...btn("#111111", true), textDecoration: "none" }}>
+              <a href={`mailto:${m.email}`} style={{ ...btn("#22372c", true), textDecoration: "none" }}>
                 ✉️ Email this lead
               </a>
             )}
@@ -318,7 +318,7 @@ export default function MentorApplicationsAdmin({ mentors }) {
               style={{
                 padding: "8px 14px",
                 borderRadius: 20,
-                border: active ? "2px solid #111111" : "1px solid #e2e8f0",
+                border: active ? "2px solid #22372c" : "1px solid #e2e8f0",
                 background: active ? "#e3eff3" : "white",
                 fontWeight: active ? 700 : 500,
                 fontSize: 13,
@@ -359,7 +359,7 @@ export default function MentorApplicationsAdmin({ mentors }) {
                     ` · Guidelines ${m.guidelinesAcceptedAt ? "✓" : "○"} · Background check ${m.backgroundCheckStatus === "passed" ? "✓" : "○"}`}
                 </div>
               </div>
-              <button style={btn("#111111")} onClick={() => setOpenId(m.id)}>Open</button>
+              <button style={btn("#22372c")} onClick={() => setOpenId(m.id)}>Open</button>
             </div>
           ))}
         </div>

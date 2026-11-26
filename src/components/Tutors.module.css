@@ -43,8 +43,8 @@
   font-family: var(--font-display);
   font-size: 4rem;
   font-weight: 600;
-  letter-spacing: -0.04em;
-  color: #6b6b6b;
+  letter-spacing: -0.015em;
+  color: #5f7366;
 }
 
 .open {
@@ -71,7 +71,7 @@
   font-family: var(--font-display);
   font-size: 1.45rem;
   font-weight: 600;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.008em;
   line-height: 1.15;
 }
 
@@ -100,7 +100,7 @@
 
 .bio {
   font-size: 0.95rem;
-  color: #2b2b2b;
+  color: #34493d;
   line-height: 1.55;
   margin-top: 6px;
   display: -webkit-box;

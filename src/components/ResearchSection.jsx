@@ -8,7 +8,7 @@ import { formatMentorName } from "../utils/mentorName";
 
 const DIFFICULTY_COLOR = {
   Beginner: { color: "#1f6f4a", bg: "rgba(31,111,74,0.08)" },
-  Intermediate: { color: "#111111", bg: "rgba(154,119,43,0.1)" },
+  Intermediate: { color: "#22372c", bg: "rgba(154,119,43,0.1)" },
   Advanced: { color: "#a01f13", bg: "rgba(160,31,19,0.08)" },
 };
 
@@ -81,7 +81,7 @@ export default function ResearchSection() {
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-4px)";
                   e.currentTarget.style.boxShadow = "0 12px 28px rgba(0,0,0,0.1)";
-                  e.currentTarget.style.borderColor = "#111111";
+                  e.currentTarget.style.borderColor = "#22372c";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateY(0)";
@@ -202,7 +202,7 @@ export default function ResearchSection() {
                     padding: "10px 0",
                     borderRadius: 10,
                     border: "none",
-                    background: "#111111",
+                    background: "#22372c",
                     color: "white",
                     fontWeight: 700,
                     fontSize: 13,
@@ -223,7 +223,7 @@ export default function ResearchSection() {
               display: "inline-block",
               padding: "12px 32px",
               borderRadius: 32,
-              background: "#111111",
+              background: "#22372c",
               color: "white",
               textDecoration: "none",
               fontWeight: 600,

@@ -12,7 +12,7 @@
 
 .title {
   font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-  letter-spacing: -0.045em;
+  letter-spacing: -0.018em;
   line-height: 1;
   margin: 0;
 }
@@ -131,7 +131,7 @@
 }
 
 .featured .info {
-  color: #cfcfcf;
+  color: #c3d1c6;
 }
 
 @media (max-width: 760px) {

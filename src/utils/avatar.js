@@ -3,12 +3,12 @@
 // the testimonial author avatars. Replaces the earlier illustrated
 // DiceBear placeholders, which looked too much like fake stock photos.
 const GRADIENTS = [
-  "linear-gradient(135deg, #2f6175, #427e94)",
-  "linear-gradient(135deg, #8a6a25, #9a772b)",
-  "linear-gradient(135deg, #9a4a2f, #a85a44)",
-  "linear-gradient(135deg, #4a4f8c, #6d3f6b)",
-  "linear-gradient(135deg, #1f6f4a, #2f6175)",
-  "linear-gradient(135deg, #4b5a63, #555f66)",
+  "linear-gradient(135deg, #2e5a43, #3f7258)",
+  "linear-gradient(135deg, #b4502f, #c76a45)",
+  "linear-gradient(135deg, #6b7f3a, #84984d)",
+  "linear-gradient(135deg, #8a5a3c, #a3714f)",
+  "linear-gradient(135deg, #3f6d6b, #528582)",
+  "linear-gradient(135deg, #5e4a6b, #765f84)",
 ];
 
 export function getInitials(name) {

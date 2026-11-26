@@ -37,7 +37,7 @@ export default function Navbar() {
     <nav className={styles.nav}>
       {/* Logo */}
       <Link to='/' className={styles.logo} aria-label='HappyResearch home'>
-        happyresearch<span className={styles.logoDot}>.</span>
+        HappyResearch
       </Link>
 
       <ul className={styles.links}>

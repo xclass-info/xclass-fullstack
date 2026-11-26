@@ -49,8 +49,8 @@
   font-family: var(--font-display);
   font-size: 4.5rem;
   font-weight: 600;
-  letter-spacing: -0.04em;
-  color: #6b6b6b;
+  letter-spacing: -0.015em;
+  color: #5f7366;
 }
 
 .mentorInfo {
@@ -58,7 +58,7 @@
   margin: 12px;
   padding: 12px 14px;
   border-radius: 14px;
-  background: rgba(245, 244, 240, 0.94);
+  background: rgba(238, 242, 234, 0.94);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -99,7 +99,7 @@
   font-size: 1.75rem;
   font-weight: 600;
   line-height: 1.1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   max-width: 520px;
 }
 
@@ -111,7 +111,7 @@
 .vettingText {
   font-size: 0.9rem;
   line-height: 1.6;
-  color: #cfcfcf;
+  color: #c3d1c6;
   max-width: 360px;
 }
 
@@ -142,7 +142,7 @@
 
 .pathsTitle {
   font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-  letter-spacing: -0.045em;
+  letter-spacing: -0.018em;
   line-height: 1;
   margin-bottom: 56px;
   color: var(--bg);
@@ -155,26 +155,26 @@
   align-items: baseline;
   justify-content: space-between;
   padding: 32px 0;
-  border-top: 1px solid #333333;
+  border-top: 1px solid #3a5245;
   color: var(--bg);
   text-decoration: none;
 }
 
 .pathRow:last-child {
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid #3a5245;
 }
 
 .pathTitle {
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 3.5vw, 2.75rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   flex: 1 1 300px;
 }
 
 .pathText {
   font-size: 1.05rem;
-  color: #bdbdbd;
+  color: #c3d1c6;
   flex: 1 1 360px;
   line-height: 1.55;
 }
@@ -211,7 +211,7 @@
 
 .bigTitle {
   font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-  letter-spacing: -0.045em;
+  letter-spacing: -0.018em;
   line-height: 1;
   margin: 0;
 }
@@ -266,7 +266,7 @@
 }
 
 .workCard:has(.workImage) .workInfo {
-  background: rgba(245, 244, 240, 0.94);
+  background: rgba(238, 242, 234, 0.94);
   border-radius: 14px;
   padding: 14px 16px;
   margin: -8px;
@@ -287,7 +287,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 2.6vw, 1.9rem);
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.005em;
   line-height: 1.15;
 }
 
@@ -308,9 +308,9 @@
 }
 
 .applyTitle {
-  font-size: clamp(2.8rem, 8vw, 7rem);
-  letter-spacing: -0.05em;
-  line-height: 0.95;
+  font-size: clamp(2.6rem, 5.76vw, 5.04rem);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
   margin: 0;
   flex: 1 1 560px;
 }

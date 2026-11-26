@@ -10,10 +10,10 @@
 
 .h1 {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 9.5vw, 8.5rem);
+  font-size: clamp(2.6rem, 6.84vw, 6.12rem);
   font-weight: 600;
   line-height: 1.02;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.02em;
   color: var(--ink);
   margin-bottom: 48px;
 }
@@ -33,7 +33,7 @@
   max-width: 520px;
   font-size: 1.25rem;
   line-height: 1.55;
-  color: #2b2b2b;
+  color: #34493d;
 }
 
 .actions {

@@ -24,7 +24,7 @@
 
 .stateTitle {
   font-size: clamp(2.6rem, 6vw, 4.5rem);
-  letter-spacing: -0.045em;
+  letter-spacing: -0.018em;
   line-height: 1;
 }
 
@@ -80,8 +80,8 @@
   font-family: var(--font-display);
   font-size: 6rem;
   font-weight: 600;
-  letter-spacing: -0.04em;
-  color: #6b6b6b;
+  letter-spacing: -0.015em;
+  color: #5f7366;
 }
 
 .intro {
@@ -110,10 +110,10 @@
 
 .name {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 7vw, 6rem);
+  font-size: clamp(2.6rem, 5.04vw, 4.32rem);
   font-weight: 600;
   line-height: 1;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.02em;
   color: var(--ink);
   margin-bottom: 20px;
   overflow-wrap: anywhere;
@@ -122,7 +122,7 @@
 .cred {
   font-size: 1.3rem;
   line-height: 1.45;
-  color: #2b2b2b;
+  color: #34493d;
   margin-bottom: 40px;
 }
 
@@ -159,7 +159,7 @@
 /* ---- About ---- */
 .sectionTitle {
   font-size: clamp(2.4rem, 5.5vw, 4.5rem);
-  letter-spacing: -0.045em;
+  letter-spacing: -0.018em;
   line-height: 1;
   margin-bottom: 0;
 }
@@ -186,7 +186,7 @@
 .bio {
   font-size: 1.2rem;
   line-height: 1.7;
-  color: #2b2b2b;
+  color: #34493d;
   white-space: pre-wrap;
   margin-bottom: 40px;
 }
@@ -198,7 +198,7 @@
 }
 
 .facts > div {
-  border-top: 1px solid #cfccc2;
+  border-top: 1px solid #c9d4c3;
   padding-top: 14px;
   min-width: 0;
 }
@@ -228,7 +228,7 @@
   font-family: var(--font-display);
   font-size: 3rem;
   font-weight: 600;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.02em;
   line-height: 1;
 }
 
@@ -306,7 +306,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 1.15;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.008em;
   margin-bottom: 12px;
 }
 
@@ -324,7 +324,7 @@
 .cardText {
   font-size: 0.98rem;
   line-height: 1.55;
-  color: #2b2b2b;
+  color: #34493d;
   white-space: pre-wrap;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -424,7 +424,7 @@
 
 .bandTitle {
   font-size: clamp(2.2rem, 5vw, 4rem);
-  letter-spacing: -0.045em;
+  letter-spacing: -0.018em;
   line-height: 1;
   color: var(--bg);
   max-width: 760px;
@@ -479,7 +479,7 @@
 }
 
 .slot:hover {
-  border-color: #cfccc2;
+  border-color: #c9d4c3;
 }
 
 .slotOn,
@@ -494,7 +494,7 @@
 
 .slotMeta {
   font-size: 0.9rem;
-  color: #2b2b2b;
+  color: #34493d;
 }
 
 .fields {

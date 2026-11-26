@@ -14,7 +14,7 @@ export default function AuthLayout({ title, text, points, children }) {
           className={styles.asideLogo}
           aria-label='HappyResearch home'
         >
-          happyresearch<span>.</span>
+          HappyResearch
         </Link>
         <div className={styles.asideBody}>
           <p className={styles.asideTitle}>{title}</p>

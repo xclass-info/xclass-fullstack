@@ -7,33 +7,37 @@
 }
 
 :root {
-  /* Concept C, "Bold": a warm off-white page, near-black ink, Space Grotesk
-     for big tight headlines, Inter for text, and one lime highlight. */
+  /* Concept A, "Calm Sage": a soft sage page, deep green ink, Fraunces for
+     headlines, Inter for text, terracotta for the main buttons and a soft
+     peach for highlights. */
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
   /* Old name kept so every page that asks for the "statement" font gets
-     the new display face. */
+     the display face. */
   --font-serif: var(--font-display);
-  --ink: #111111;
-  --lime: #c6f35c;
-  --border-strong: #111111;
-  --primary: #111111;
-  --primary-hover: #111111;
-  --primary-soft: #e8e6df;
-  --accent: #111111;
-  --bg: #f5f4f0;
-  --surface: #e8e6df;
+  --ink: #22372c;
+  /* Soft highlight (chips, bands, highlights on dark sections). The old
+     name is kept so existing styles pick it up. */
+  --lime: #f6ded3;
+  --border-strong: #22372c;
+  --primary: #22372c;
+  --primary-hover: #22372c;
+  --primary-soft: #dce6d6;
+  --accent: #b4502f;
+  --accent-hover: #9c4427;
+  --bg: #eef2ea;
+  --surface: #dce6d6;
   --card: #ffffff;
-  --border: #dedbd2;
-  --coral: #111111;
-  --yellow: #111111;
-  --blue: #111111;
-  --mint: #1f6f4a;
+  --border: #d3dccd;
+  --coral: #b4502f;
+  --yellow: #22372c;
+  --blue: #22372c;
+  --mint: #2e6b4a;
   --purple: #6d3f6b;
   --pink: #a01f13;
-  --orange: #111111;
-  --text: #111111;
-  --muted: #4f4f4f;
+  --orange: #b4502f;
+  --text: #22372c;
+  --muted: #4f6357;
   --radius: 12px;
   --radius-card: 20px;
   --radius-lg: 20px;
@@ -100,7 +104,7 @@ h2 {
   font-weight: 600;
   line-height: 1.02;
   margin-bottom: 16px;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   color: var(--ink);
 }
 
@@ -112,15 +116,10 @@ h2 {
   font-weight: 400;
 }
 
-/* A highlighted word, like a marker stroke: <span class="mark">PhD mentor</span> */
+/* A highlighted word in a headline: <span class="mark">PhD mentor</span> */
 .mark {
-  background: var(--lime);
-  padding: 0 0.12em;
-  border-radius: 0.12em;
-  position: relative;
-  z-index: -1;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
+  color: var(--accent);
+  font-style: italic;
 }
 
 /* Keeps the highlight (drawn under the text so it doesn't cover the line
@@ -141,8 +140,8 @@ h2 {
 
 .btn-primary {
   display: inline-block;
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--accent);
+  color: #ffffff;
   padding: 15px 26px;
   border-radius: 999px;
   font-weight: 600;
@@ -153,12 +152,13 @@ h2 {
     background 0.15s,
     transform 0.15s;
   cursor: pointer;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--accent);
   font-family: var(--font-sans);
 }
 
 .btn-primary:hover {
-  background: #2b2b2b;
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
   transform: translateY(-1px);
 }
 
@@ -193,7 +193,7 @@ h2 {
   background: var(--surface);
 }
 
-/* Lime call-to-action, for dark backgrounds and the nav. */
+/* Soft call-to-action for dark (deep green) backgrounds. */
 .btn-lime {
   display: inline-block;
   background: var(--lime);
@@ -232,8 +232,8 @@ h2 {
   font-family: var(--font-display);
   font-size: clamp(2.6rem, 6vw, 4.6rem);
   font-weight: 600;
-  line-height: 0.98;
-  letter-spacing: -0.045em;
+  line-height: 1.04;
+  letter-spacing: -0.018em;
   color: var(--ink);
   margin-bottom: 16px;
 }

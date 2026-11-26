@@ -25,10 +25,10 @@
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(3.2rem, 10vw, 8.5rem);
+  font-size: clamp(2.6rem, 7.2vw, 6.12rem);
   font-weight: 600;
-  line-height: 0.95;
-  letter-spacing: -0.055em;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
   color: var(--ink);
   margin-bottom: 36px;
 }
@@ -48,7 +48,7 @@
   max-width: 520px;
   font-size: 1.2rem;
   line-height: 1.55;
-  color: #2b2b2b;
+  color: #34493d;
 }
 
 .searchRow {
@@ -65,7 +65,7 @@
   font-size: 1rem;
   color: var(--ink);
   background: #ffffff;
-  border: 1.5px solid #cfccc2;
+  border: 1.5px solid #c9d4c3;
   border-radius: 999px;
   padding: 13px 20px;
   min-width: 0;
@@ -84,7 +84,7 @@
 .sort:focus {
   outline: none;
   border-color: var(--ink);
-  box-shadow: 0 0 0 3px rgba(198, 243, 92, 0.9);
+  box-shadow: 0 0 0 3px rgba(180, 80, 47, 0.3);
 }
 
 /* ---- Body ---- */
@@ -104,7 +104,7 @@
   background: none;
   border: none;
   border-top: 2px solid var(--ink);
-  border-bottom: 1px solid #cfccc2;
+  border-bottom: 1px solid #c9d4c3;
   padding: 16px 0;
   font-family: var(--font-display);
   font-size: 1.2rem;
@@ -155,7 +155,7 @@
 
 .group {
   border: none;
-  border-bottom: 1px solid #cfccc2;
+  border-bottom: 1px solid #c9d4c3;
   padding: 16px 0 12px;
   margin: 0;
 }
@@ -253,7 +253,7 @@
   font-size: 1.4rem;
   font-weight: 600;
   line-height: 1.15;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.008em;
   margin-bottom: 14px;
 }
 
@@ -300,7 +300,7 @@
 .fieldText {
   font-size: 0.95rem;
   line-height: 1.55;
-  color: #2b2b2b;
+  color: #34493d;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -374,7 +374,7 @@
   font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 

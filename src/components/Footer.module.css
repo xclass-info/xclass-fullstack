@@ -28,14 +28,14 @@
   font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 700;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   color: var(--ink);
   text-decoration: none;
   margin-bottom: 8px;
 }
 
 .dot {
-  color: #8dbf1f;
+  color: #e9a487;
 }
 
 .tagline {

@@ -465,7 +465,7 @@ export default function TeacherDashboard() {
       <header className={styles.bar}>
         <div className={`${styles.wrap} ${styles.barInner}`}>
           <Link to='/' className={styles.wordmark}>
-            happyresearch<span>.</span>
+            HappyResearch
           </Link>
           <div className={styles.barRight}>
             {teacher && (

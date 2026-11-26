@@ -43,7 +43,7 @@ export default function MentorContinue() {
                 confirmed yet, the login page lets you resend the link.
               </p>
               <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
-                <Link to='/teacher/login' style={{ padding: "12px 20px", borderRadius: 8, background: "#111111", color: "white", fontWeight: 700, textDecoration: "none" }}>
+                <Link to='/teacher/login' style={{ padding: "12px 20px", borderRadius: 8, background: "#22372c", color: "white", fontWeight: 700, textDecoration: "none" }}>
                   Mentor Login
                 </Link>
               </div>

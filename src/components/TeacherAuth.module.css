@@ -24,7 +24,7 @@
   font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   color: var(--bg);
   text-decoration: none;
   align-self: flex-start;
@@ -45,28 +45,27 @@
   font-size: clamp(2.6rem, 5vw, 4.5rem);
   font-weight: 600;
   line-height: 1.06;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.02em;
   margin-bottom: 24px;
   color: var(--bg);
 }
 
 .asideTitle mark {
-  background: var(--lime);
-  color: var(--ink);
-  padding: 0 0.1em;
-  border-radius: 0.1em;
+  background: none;
+  color: var(--lime);
+  font-style: italic;
 }
 
 .asideText {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #cfcfcf;
+  color: #c3d1c6;
 }
 
 .points {
   list-style: none;
   margin-top: 36px;
-  border-top: 1px solid #333333;
+  border-top: 1px solid #3a5245;
 }
 
 .points li {
@@ -74,7 +73,7 @@
   gap: 16px;
   align-items: baseline;
   padding: 16px 0;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid #3a5245;
   font-size: 1rem;
 }
 
@@ -141,7 +140,7 @@
   font-size: clamp(2.2rem, 4vw, 2.8rem);
   font-weight: 600;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   color: var(--ink);
   margin-bottom: 10px;
 }
@@ -174,7 +173,7 @@
 .input {
   width: 100%;
   min-width: 0;
-  border: 1.5px solid #cfccc2;
+  border: 1.5px solid #c9d4c3;
   border-radius: 12px;
   padding: 13px 16px;
   font-family: var(--font-sans);
@@ -190,7 +189,7 @@
 .input:focus {
   outline: none;
   border-color: var(--ink);
-  box-shadow: 0 0 0 3px rgba(198, 243, 92, 0.9);
+  box-shadow: 0 0 0 3px rgba(180, 80, 47, 0.3);
 }
 
 .btn {
@@ -198,8 +197,8 @@
   width: 100%;
   text-align: center;
   text-decoration: none;
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--accent);
+  color: #ffffff;
   border: none;
   border-radius: 999px;
   padding: 16px 24px;
@@ -212,7 +211,7 @@
 }
 
 .btn:hover {
-  background: #2b2b2b;
+  background: var(--accent-hover);
 }
 
 .btn:disabled {
@@ -234,10 +233,10 @@
 
 /* Good news, e.g. "Reset email sent". */
 .notice {
-  background: #eef9d6;
+  background: #e3ecdd;
   border-radius: 12px;
   padding: 12px 16px;
-  color: #2f4a06;
+  color: #22372c;
   font-size: 0.95rem;
   font-weight: 500;
   margin-bottom: 16px;
@@ -334,7 +333,7 @@
 }
 
 .back:hover {
-  color: #111111;
+  color: #22372c;
 }
 
 .row {
@@ -381,8 +380,8 @@
 }
 
 .closeBtn:hover {
-  border-color: #111111;
-  color: #111111;
+  border-color: #22372c;
+  color: #22372c;
   background: var(--surface);
 }
 

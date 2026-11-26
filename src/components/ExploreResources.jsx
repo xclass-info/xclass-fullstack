@@ -16,7 +16,7 @@ const OPTIONS = [
   {
     to: "/projects",
     icon: "💡",
-    color: "#111111",
+    color: "#22372c",
     label: "Projects",
     desc: "Hands-on projects you build alongside a mentor, ending in something real you made.",
   },
@@ -41,12 +41,12 @@ export default function ExploreResources() {
             style={{
               display: "inline-block",
               background: "#fff8dc",
-              color: "#111111",
+              color: "#22372c",
               fontSize: 12,
               fontWeight: 700,
               padding: "4px 16px",
               borderRadius: 20,
-              border: "1px solid #111111",
+              border: "1px solid #22372c",
               marginBottom: 12,
               textTransform: "uppercase",
               letterSpacing: "0.05em",
@@ -130,7 +130,7 @@ export default function ExploreResources() {
               >
                 {o.desc}
               </p>
-              <span style={{ color: "#111111", fontWeight: 700, fontSize: 14 }}>
+              <span style={{ color: "#22372c", fontWeight: 700, fontSize: 14 }}>
                 Browse {o.label} →
               </span>
             </Link>

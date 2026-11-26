@@ -26,7 +26,7 @@
 
 .title {
   font-size: clamp(1.9rem, 3.4vw, 2.6rem);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   line-height: 1.05;
   margin-bottom: 10px;
 }
@@ -108,7 +108,7 @@
   flex-shrink: 0;
   width: 48px;
   border-radius: 12px;
-  border: 1.5px solid #cfccc2;
+  border: 1.5px solid #c9d4c3;
   background: #ffffff;
   color: #a01f13;
   font-size: 1.2rem;
