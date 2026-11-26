@@ -1,16 +1,37 @@
+// src/components/ContactUs.jsx
+// Contact page: email, phone and chat QR codes on the left, a message form
+// on the right. The message is emailed to the team inbox.
 import { useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { api } from "../api";
+import styles from "./Enquiry.module.css";
+import auth from "./TeacherAuth.module.css";
+
+const EMPTY = { name: "", email: "", subject: "", message: "" };
+
+export function DoneIcon() {
+  return (
+    <div className={auth.doneIcon} aria-hidden='true'>
+      <svg
+        width='26'
+        height='26'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='#111111'
+        strokeWidth='2.5'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      >
+        <path d='M5 12.5l4.5 4.5L19 7.5' />
+      </svg>
+    </div>
+  );
+}
 
 export default function ContactUs() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState(EMPTY);
+  const [sentTo, setSentTo] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -25,18 +46,13 @@ export default function ContactUs() {
     setError("");
     try {
       // Emailed to the team inbox; replying goes straight to the sender.
-      await api.post("/contact", {
-        name: form.name,
-        email: form.email,
-        subject: form.subject,
-        message: form.message,
-      });
-      setSubmitted(true);
-      setForm({ name: "", email: "", subject: "", message: "" });
+      await api.post("/contact", form);
+      setSentTo(form.email);
+      setForm(EMPTY);
     } catch (err) {
       console.error(err);
       setError(
-        "Failed to send message. Please try again or email us directly.",
+        "Your message didn't send. Please try again, or email us at happyprogramming.us@gmail.com.",
       );
     } finally {
       setLoading(false);
@@ -44,392 +60,151 @@ export default function ContactUs() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+    <div className={styles.page}>
       <Navbar />
-      <div
-        style={{ maxWidth: 600, margin: "0 auto", padding: "100px 24px 48px" }}
-      >
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h1 className="page-title">Contact us</h1>
-          <p className="page-sub">
-            Have questions? We'd love to hear from you!
-          </p>
-        </div>
 
-        {/* Contact info */}
-        <div
-          style={{
-            background: "white",
-            borderRadius: 12,
-            padding: 32,
-            border: "1px solid var(--border)",
-            marginBottom: 24,
-          }}
-        >
-          <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, margin: "0 0 20px", fontSize: 16 }}>Get in Touch</h3>
-          <div
-            style={{
-              display: "flex",
-              gap: 16,
-              alignItems: "center",
-              marginBottom: 16,
-            }}
-          >
-            <span style={{ fontSize: 24 }}>📧</span>
-            <div>
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "#aaa",
-                  margin: "0 0 2px",
-                  fontWeight: 600,
-                }}
-              >
-                Email
-              </p>
+      <header className={`${styles.wrap} ${styles.hero}`}>
+        <p className='section-label'>Contact</p>
+        <h1 className={styles.h1}>Talk to a real person.</h1>
+        <p className={styles.sub}>
+          Questions about programs, mentors or whether this is right for your
+          student? Write to us, call, or message us on WeChat or WhatsApp.
+        </p>
+      </header>
+
+      <div className={`${styles.wrap} ${styles.body}`}>
+        <div className={styles.info}>
+          <ul className={styles.rows}>
+            <li>
               <a
                 href='mailto:happyprogramming.us@gmail.com'
-                style={{ fontSize: 15, color: "#111111", fontWeight: 600 }}
+                className={styles.rowLink}
               >
-                happyprogramming.us@gmail.com
+                <span className={styles.rowLabel}>Email</span>
+                <span className={styles.rowValue}>
+                  happyprogramming.us@gmail.com
+                </span>
               </a>
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 16,
-              alignItems: "center",
-              marginBottom: 16,
-            }}
-          >
-            <span style={{ fontSize: 24 }}>📞</span>
-            <div>
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "#aaa",
-                  margin: "0 0 2px",
-                  fontWeight: 600,
-                }}
-              >
-                Phone
-              </p>
-              <a
-                href='tel:+17033000061'
-                style={{ fontSize: 15, color: "#111111", fontWeight: 600 }}
-              >
-                (703)-300-0061
+            </li>
+            <li>
+              <a href='tel:+17033000061' className={styles.rowLink}>
+                <span className={styles.rowLabel}>Phone</span>
+                <span className={styles.rowValue}>(703) 300-0061</span>
               </a>
-            </div>
-          </div>
-          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-            <span style={{ fontSize: 24 }}>🌐</span>
-            <div>
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "#aaa",
-                  margin: "0 0 2px",
-                  fontWeight: 600,
-                }}
-              >
-                Website
-              </p>
-              <a
-                href='https://happyresearch.org'
-                style={{ fontSize: 15, color: "#111111", fontWeight: 600 }}
-              >
-                happyresearch.org
-              </a>
-            </div>
-          </div>
+            </li>
+          </ul>
 
-          {/* WeChat QR Code */}
-          <div
-            style={{
-              marginTop: 16,
-              paddingTop: 16,
-              borderTop: "1px solid #f0f0f0",
-            }}
-          >
-            <p
-              style={{
-                fontSize: 13,
-                color: "#555",
-                fontWeight: 600,
-                marginBottom: 12,
-              }}
-            >
-              💚 Scan to chat on WeChat
-            </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <img
-                src='/wechat-qr.jpg'
-                alt='WeChat QR Code'
-                style={{
-                  width: 120,
-                  height: 120,
-                  borderRadius: 8,
-                  border: "1px solid #eee",
-                }}
-              />
+          <p className={styles.infoTitle}>Chat with us</p>
+          <div className={styles.qrs}>
+            <div className={styles.qr}>
+              <img src='/wechat-qr.jpg' alt='WeChat QR code' />
               <div>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "#888",
-                    margin: 0,
-                    lineHeight: 1.6,
-                  }}
-                >
-                  Scan this QR code with WeChat to add us and start a
-                  conversation directly.
-                </p>
+                <p className={styles.qrName}>WeChat</p>
+                <p className={styles.qrText}>Scan with WeChat to add us.</p>
               </div>
             </div>
-          </div>
-
-          {/* WhatsApp QR Code */}
-          <div
-            style={{
-              marginTop: 24,
-              paddingTop: 24,
-              borderTop: "1px solid #f0f0f0",
-            }}
-          >
-            <p
-              style={{
-                fontSize: 13,
-                color: "#555",
-                fontWeight: 600,
-                marginBottom: 12,
-              }}
-            >
-              💬 Scan to chat on WhatsApp
-            </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <img
-                src='/whatsapp-qr.jpg'
-                alt='WhatsApp QR Code'
-                style={{
-                  width: 160,
-                  height: 160,
-                  borderRadius: 8,
-                  border: "1px solid #eee",
-                }}
-              />
+            <div className={styles.qr}>
+              <img src='/whatsapp-qr.jpg' alt='WhatsApp QR code' />
               <div>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "#888",
-                    margin: 0,
-                    lineHeight: 1.6,
-                  }}
-                >
-                  Scan this QR code with your phone camera to start a WhatsApp
-                  conversation with us directly.
+                <p className={styles.qrName}>WhatsApp</p>
+                <p className={styles.qrText}>
+                  Scan with your phone camera to start a chat.
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Contact form */}
-        <div
-          style={{
-            background: "white",
-            borderRadius: 12,
-            padding: 32,
-            border: "1px solid var(--border)",
-          }}
-        >
-          <h3 style={{ fontFamily: "var(--font-serif)", fontWeight: 600, margin: "0 0 20px", fontSize: 16 }}>
-            Send us a Message
-          </h3>
-
-          {submitted ? (
-            <div style={{ textAlign: "center", padding: 32 }}>
-              <p style={{ fontSize: 48, marginBottom: 12 }}>✅</p>
-              <h3>Message Sent!</h3>
-              <p style={{ color: "#888" }}>
-                Thank you for reaching out. We'll get back to you soon!
+        <div className={styles.formCard}>
+          {sentTo ? (
+            <div role='status'>
+              <DoneIcon />
+              <h2 className={styles.cardTitle}>Message sent.</h2>
+              <p className={auth.bodyText}>
+                Thanks for reaching out. We'll reply to{" "}
+                <strong>{sentTo}</strong>.
               </p>
               <button
-                onClick={() => setSubmitted(false)}
-                style={{
-                  marginTop: 16,
-                  padding: "10px 24px",
-                  borderRadius: 8,
-                  border: "none",
-                  background: "#111111",
-                  color: "white",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                }}
+                type='button'
+                className='btn-ghost'
+                onClick={() => setSentTo("")}
               >
-                Send Another Message
+                Send another message
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit}>
-              {error && (
-                <p
-                  style={{
-                    color: "#a01f13",
-                    fontSize: 13,
-                    marginBottom: 16,
-                    background: "#fee2e2",
-                    padding: "10px 14px",
-                    borderRadius: 8,
-                  }}
-                >
-                  {error}
-                </p>
-              )}
-
-              <div style={{ marginBottom: 16 }}>
-                <label
-                  style={{
-                    fontSize: 13,
-                    color: "#555",
-                    fontWeight: 600,
-                    display: "block",
-                    marginBottom: 6,
-                  }}
-                >
-                  Your Name *
-                </label>
-                <input
-                  name='name'
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder='Your full name'
-                  required
-                  style={{
-                    width: "100%",
-                    padding: 10,
-                    borderRadius: 8,
-                    border: "1px solid #ddd",
-                    fontSize: 14,
-                    boxSizing: "border-box",
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: 16 }}>
-                <label
-                  style={{
-                    fontSize: 13,
-                    color: "#555",
-                    fontWeight: 600,
-                    display: "block",
-                    marginBottom: 6,
-                  }}
-                >
-                  Email *
-                </label>
-                <input
-                  name='email'
-                  type='email'
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder='your@email.com'
-                  required
-                  style={{
-                    width: "100%",
-                    padding: 10,
-                    borderRadius: 8,
-                    border: "1px solid #ddd",
-                    fontSize: 14,
-                    boxSizing: "border-box",
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: 16 }}>
-                <label
-                  style={{
-                    fontSize: 13,
-                    color: "#555",
-                    fontWeight: 600,
-                    display: "block",
-                    marginBottom: 6,
-                  }}
-                >
-                  Subject *
-                </label>
-                <input
-                  name='subject'
-                  value={form.subject}
-                  onChange={handleChange}
-                  placeholder='How can we help?'
-                  required
-                  style={{
-                    width: "100%",
-                    padding: 10,
-                    borderRadius: 8,
-                    border: "1px solid #ddd",
-                    fontSize: 14,
-                    boxSizing: "border-box",
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: 24 }}>
-                <label
-                  style={{
-                    fontSize: 13,
-                    color: "#555",
-                    fontWeight: 600,
-                    display: "block",
-                    marginBottom: 6,
-                  }}
-                >
-                  Message *
-                </label>
-                <textarea
-                  name='message'
-                  value={form.message}
-                  onChange={handleChange}
-                  placeholder='Tell us more about your question or inquiry...'
-                  rows={6}
-                  required
-                  style={{
-                    width: "100%",
-                    padding: 10,
-                    borderRadius: 8,
-                    border: "1px solid #ddd",
-                    fontSize: 14,
-                    boxSizing: "border-box",
-                    resize: "vertical",
-                  }}
-                />
-              </div>
-
-              <button
-                type='submit'
-                disabled={loading}
-                style={{
-                  width: "100%",
-                  padding: 14,
-                  borderRadius: 10,
-                  border: "none",
-                  background: "#111111",
-                  color: "white",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  opacity: loading ? 0.7 : 1,
-                }}
-              >
-                {loading ? "Sending..." : "Send Message 📬"}
-              </button>
-            </form>
+            <>
+              <h2 className={styles.cardTitle}>Send us a message.</h2>
+              <form onSubmit={handleSubmit} className={auth.form}>
+                {error && <p className={auth.error}>{error}</p>}
+                <div className={auth.row}>
+                  <div className={auth.field}>
+                    <label className={auth.label} htmlFor='c-name'>
+                      Your name
+                    </label>
+                    <input
+                      id='c-name'
+                      name='name'
+                      className={auth.input}
+                      value={form.name}
+                      onChange={handleChange}
+                      autoComplete='name'
+                      required
+                    />
+                  </div>
+                  <div className={auth.field}>
+                    <label className={auth.label} htmlFor='c-email'>
+                      Email
+                    </label>
+                    <input
+                      id='c-email'
+                      name='email'
+                      type='email'
+                      className={auth.input}
+                      value={form.email}
+                      onChange={handleChange}
+                      autoComplete='email'
+                      required
+                    />
+                  </div>
+                </div>
+                <div className={auth.field}>
+                  <label className={auth.label} htmlFor='c-subject'>
+                    Subject
+                  </label>
+                  <input
+                    id='c-subject'
+                    name='subject'
+                    className={auth.input}
+                    value={form.subject}
+                    onChange={handleChange}
+                    placeholder='How can we help?'
+                    required
+                  />
+                </div>
+                <div className={auth.field}>
+                  <label className={auth.label} htmlFor='c-message'>
+                    Message
+                  </label>
+                  <textarea
+                    id='c-message'
+                    name='message'
+                    className={`${auth.input} ${auth.textarea}`}
+                    value={form.message}
+                    onChange={handleChange}
+                    rows={6}
+                    required
+                  />
+                </div>
+                <button type='submit' className={auth.btn} disabled={loading}>
+                  {loading ? "Sending..." : "Send message →"}
+                </button>
+              </form>
+            </>
           )}
         </div>
       </div>
+
       <Footer />
     </div>
   );

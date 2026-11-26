@@ -1,0 +1,298 @@
+/* Shared layout for the Contact and "Tell us what you need" pages:
+   big heading, info column on the left, white form card on the right.
+   Form controls come from TeacherAuth.module.css. */
+
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.hero {
+  padding-top: 152px;
+  padding-bottom: 64px;
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 8vw, 7rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+  max-width: 1100px;
+  margin-bottom: 32px;
+}
+
+.sub {
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: #2b2b2b;
+  max-width: 620px;
+  border-top: 2px solid var(--ink);
+  padding-top: 28px;
+}
+
+.body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px 64px;
+  align-items: flex-start;
+  padding-bottom: 120px;
+}
+
+.info {
+  flex: 1 1 380px;
+  min-width: 0;
+}
+
+.formCard {
+  flex: 1 1 460px;
+  min-width: 0;
+  max-width: 600px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 36px;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin-bottom: 24px;
+}
+
+.infoTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+/* ---- Ruled contact rows ---- */
+.rows {
+  list-style: none;
+  border-top: 2px solid var(--ink);
+  margin-bottom: 48px;
+}
+
+.rows li {
+  border-bottom: 1px solid #cfccc2;
+}
+
+.rowLink {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 24px;
+  padding: 22px 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.rowLabel {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.rowValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.rowLink:hover .rowValue {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 2px;
+}
+
+/* ---- QR codes ---- */
+.qrs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.qr {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.qr img {
+  width: 100%;
+  max-width: 180px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.qrName {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.qrText {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---- Numbered steps ---- */
+.steps {
+  list-style: none;
+  border-top: 2px solid var(--ink);
+  margin-bottom: 40px;
+}
+
+.step {
+  display: flex;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid #cfccc2;
+}
+
+.stepNum {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 28px;
+}
+
+.stepTitle {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+
+.stepText {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.browse {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.browse a {
+  color: var(--ink);
+  font-weight: 600;
+  text-underline-offset: 3px;
+  margin-right: 14px;
+  white-space: nowrap;
+}
+
+/* ---- Form bits ---- */
+.optional {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.fileRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fileBtn {
+  display: inline-block;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ink);
+  cursor: pointer;
+  background: none;
+}
+
+.fileBtn:hover {
+  background: var(--bg);
+}
+
+.fileInput:focus-visible + .fileBtn {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.fileHint {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.preview {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #a01f13;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.doneActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    padding-top: 120px;
+    padding-bottom: 48px;
+  }
+  .sub {
+    font-size: 1.1rem;
+  }
+  .body {
+    padding-bottom: 88px;
+  }
+  .formCard {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 420px) {
+  .qrs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

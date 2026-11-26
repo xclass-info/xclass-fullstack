@@ -1,18 +1,34 @@
 // src/components/TellUsWhatYouNeed.jsx
-// Full page version of "On-demand Learning" (formerly "Tell us what you
-// need") - a free-text (+ optional photo) request that gets emailed
-// straight to the team, for visitors who don't want to browse
+// "On-demand" requests: a free-text (+ optional photo) request that gets
+// emailed straight to the team, for visitors who don't want to browse
 // Projects/Research/1-1 themselves.
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { api } from "../api";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { DoneIcon } from "./ContactUs";
+import styles from "./Enquiry.module.css";
+import auth from "./TeacherAuth.module.css";
 
 const MAX_IMAGE_MB = 5;
 
+const STEPS = [
+  {
+    title: "Tell us what you need.",
+    text: "A research idea, a project, help with a subject, exam prep. A sentence or two is enough.",
+  },
+  {
+    title: "We find the right mentor.",
+    text: "Someone on our team reads every request and looks for a mentor who fits.",
+  },
+  {
+    title: "We email you with options.",
+    text: "You decide whether to go ahead. Nothing is booked until you say so.",
+  },
+];
+
 export default function TellUsWhatYouNeed() {
-  const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", details: "" });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -21,6 +37,12 @@ export default function TellUsWhatYouNeed() {
   const [submitError, setSubmitError] = useState("");
   const [done, setDone] = useState(false);
 
+  // Free the preview's object URL when it changes or the page closes.
+  useEffect(
+    () => () => imagePreview && URL.revokeObjectURL(imagePreview),
+    [imagePreview],
+  );
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" });
@@ -28,6 +50,7 @@ export default function TellUsWhatYouNeed() {
 
   function handleImageChange(e) {
     const file = e.target.files[0];
+    e.target.value = "";
     if (!file) return;
     if (!file.type.startsWith("image/")) {
       setErrors({ ...errors, image: "Please attach an image file." });
@@ -49,10 +72,12 @@ export default function TellUsWhatYouNeed() {
 
   function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = "Required";
-    if (!form.email.trim()) e.email = "Required";
-    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Invalid email";
-    if (!form.details.trim()) e.details = "Please describe what you need";
+    if (!form.name.trim()) e.name = "Please enter your name.";
+    if (!form.email.trim()) e.email = "Please enter your email.";
+    else if (!/\S+@\S+\.\S+/.test(form.email))
+      e.email = "That email doesn't look right.";
+    if (!form.details.trim())
+      e.details = "Tell us a little about what you need.";
     return e;
   }
 
@@ -84,233 +109,170 @@ export default function TellUsWhatYouNeed() {
     }
   }
 
-  const inputStyle = (hasError) => ({
-    width: "100%",
-    padding: 12,
-    borderRadius: 8,
-    border: `1px solid ${hasError ? "#a01f13" : "#ddd"}`,
-    marginBottom: 4,
-    boxSizing: "border-box",
-    fontSize: 15,
-    fontFamily: "inherit",
-  });
+  const fieldError = (name) =>
+    errors[name] && <p className={auth.errorMsg}>{errors[name]}</p>;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+    <div className={styles.page}>
       <Navbar />
-      <div
-        style={{ maxWidth: 600, margin: "0 auto", padding: "120px 24px 80px" }}
-      >
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div className='section-label'>
-            On-demand Learning
-          </div>
-          <h1 className="page-title">Not sure where to start?</h1>
-          <p className="page-sub">
-            Describe what you need help with - even attach a photo of your
-            homework or project - and we'll point you in the right
-            direction.
+
+      <header className={`${styles.wrap} ${styles.hero}`}>
+        <p className='section-label'>On-demand</p>
+        <h1 className={styles.h1}>Not sure where to start?</h1>
+        <p className={styles.sub}>
+          Describe what you need, attach a photo of the homework or project if
+          it helps, and we'll match you with the right mentor.
+        </p>
+      </header>
+
+      <div className={`${styles.wrap} ${styles.body}`}>
+        <div className={styles.info}>
+          <p className={styles.infoTitle}>How it works</p>
+          <ol className={styles.steps}>
+            {STEPS.map((s, i) => (
+              <li key={s.title} className={styles.step}>
+                <span className={styles.stepNum}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <p className={styles.stepTitle}>{s.title}</p>
+                  <p className={styles.stepText}>{s.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <p className={styles.browse}>
+            Rather look around yourself? <Link to='/research'>Research</Link>
+            <Link to='/projects'>Projects</Link>
+            <Link to='/tutors'>Mentors</Link>
           </p>
         </div>
 
-        <div
-          style={{
-            background: "white",
-            borderRadius: 12,
-            padding: 40,
-            border: "1px solid var(--border)",
-          }}
-        >
+        <div className={styles.formCard}>
           {done ? (
-            <div style={{ textAlign: "center", padding: 20 }}>
-              <p style={{ fontSize: 48 }}>✅</p>
-              <h3>Got it!</h3>
-              <p style={{ color: "#888", marginBottom: 20 }}>
-                We'll follow up at {form.email} to help find the right fit.
+            <div role='status'>
+              <DoneIcon />
+              <h2 className={styles.cardTitle}>Got it.</h2>
+              <p className={auth.bodyText}>
+                We'll follow up at <strong>{form.email}</strong> to help find
+                the right fit.
               </p>
-              <button
-                onClick={() => navigate("/")}
-                style={{
-                  padding: "12px 28px",
-                  borderRadius: 8,
-                  border: "none",
-                  background: "#111111",
-                  color: "white",
-                  fontSize: 15,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Back to Home
-              </button>
+              <div className={styles.doneActions}>
+                <Link to='/research' className='btn-primary'>
+                  Browse research →
+                </Link>
+                <Link to='/' className='btn-ghost'>
+                  Back to home
+                </Link>
+              </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: 13,
-                  color: "#555",
-                  fontWeight: 600,
-                  marginBottom: 6,
-                }}
-              >
-                Your Name
-              </label>
-              <input
-                placeholder="Your name"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                style={inputStyle(errors.name)}
-              />
-              {errors.name && (
-                <p style={{ color: "#a01f13", fontSize: 12, margin: "0 0 12px" }}>
-                  {errors.name}
-                </p>
-              )}
-
-              <label
-                style={{
-                  display: "block",
-                  fontSize: 13,
-                  color: "#555",
-                  fontWeight: 600,
-                  margin: "12px 0 6px",
-                }}
-              >
-                Your Email
-              </label>
-              <input
-                placeholder="Your email"
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                style={inputStyle(errors.email)}
-              />
-              {errors.email && (
-                <p style={{ color: "#a01f13", fontSize: 12, margin: "0 0 12px" }}>
-                  {errors.email}
-                </p>
-              )}
-
-              <label
-                style={{
-                  display: "block",
-                  fontSize: 13,
-                  color: "#555",
-                  fontWeight: 600,
-                  margin: "12px 0 6px",
-                }}
-              >
-                What do you need help with?
-              </label>
-              <textarea
-                placeholder="A project idea, homework help, exam prep, anything"
-                name="details"
-                value={form.details}
-                onChange={handleChange}
-                rows={7}
-                style={{ ...inputStyle(errors.details), resize: "vertical" }}
-              />
-              {errors.details && (
-                <p style={{ color: "#a01f13", fontSize: 12, margin: "0 0 12px" }}>
-                  {errors.details}
-                </p>
-              )}
-
-              <label
-                style={{
-                  display: "block",
-                  fontSize: 13,
-                  color: "#555",
-                  fontWeight: 600,
-                  margin: "12px 0 6px",
-                }}
-              >
-                Attach an image (optional) - a photo of homework, a project,
-                etc.
-              </label>
-              {imagePreview ? (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    marginBottom: 12,
-                  }}
-                >
-                  <img
-                    src={imagePreview}
-                    alt="Attachment preview"
-                    style={{
-                      width: 80,
-                      height: 80,
-                      objectFit: "cover",
-                      borderRadius: 8,
-                      border: "1px solid #ddd",
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    style={{
-                      background: "none",
-                      border: "1px solid #ddd",
-                      borderRadius: 6,
-                      padding: "8px 14px",
-                      fontSize: 13,
-                      cursor: "pointer",
-                      color: "#a01f13",
-                    }}
-                  >
-                    Remove
-                  </button>
+            <>
+              <h2 className={styles.cardTitle}>Send a request.</h2>
+              <form onSubmit={handleSubmit} className={auth.form} noValidate>
+                <div className={auth.row}>
+                  <div className={auth.field}>
+                    <label className={auth.label} htmlFor='t-name'>
+                      Your name
+                    </label>
+                    <input
+                      id='t-name'
+                      name='name'
+                      className={`${auth.input} ${errors.name ? auth.inputError : ""}`}
+                      value={form.name}
+                      onChange={handleChange}
+                      autoComplete='name'
+                    />
+                    {fieldError("name")}
+                  </div>
+                  <div className={auth.field}>
+                    <label className={auth.label} htmlFor='t-email'>
+                      Email
+                    </label>
+                    <input
+                      id='t-email'
+                      name='email'
+                      type='email'
+                      className={`${auth.input} ${errors.email ? auth.inputError : ""}`}
+                      value={form.email}
+                      onChange={handleChange}
+                      autoComplete='email'
+                    />
+                    {fieldError("email")}
+                  </div>
                 </div>
-              ) : (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ marginBottom: 12, fontSize: 14 }}
-                />
-              )}
-              {errors.image && (
-                <p style={{ color: "#a01f13", fontSize: 12, margin: "0 0 12px" }}>
-                  {errors.image}
-                </p>
-              )}
 
-              {submitError && (
-                <p style={{ color: "#a01f13", fontSize: 13, margin: "12px 0" }}>
-                  {submitError}
-                </p>
-              )}
+                <div className={auth.field}>
+                  <label className={auth.label} htmlFor='t-details'>
+                    What do you need help with?
+                  </label>
+                  <textarea
+                    id='t-details'
+                    name='details'
+                    className={`${auth.input} ${auth.textarea} ${errors.details ? auth.inputError : ""}`}
+                    placeholder='A project idea, homework help, exam prep, anything'
+                    value={form.details}
+                    onChange={handleChange}
+                    rows={7}
+                  />
+                  {fieldError("details")}
+                </div>
 
-              <button
-                type="submit"
-                disabled={submitting}
-                style={{
-                  width: "100%",
-                  padding: 14,
-                  marginTop: 12,
-                  borderRadius: 8,
-                  border: "none",
-                  background: "#111111",
-                  color: "white",
-                  fontSize: 16,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  opacity: submitting ? 0.6 : 1,
-                }}
-              >
-                {submitting ? "Sending..." : "Send Request"}
-              </button>
-            </form>
+                <div className={auth.field}>
+                  <span className={auth.label}>
+                    Attach an image{" "}
+                    <span className={styles.optional}>(optional)</span>
+                  </span>
+                  {imagePreview ? (
+                    <div className={styles.fileRow}>
+                      <img
+                        src={imagePreview}
+                        alt='Attachment preview'
+                        className={styles.preview}
+                      />
+                      <button
+                        type='button'
+                        className={styles.removeBtn}
+                        onClick={removeImage}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div className={styles.fileRow}>
+                      <input
+                        id='t-image'
+                        type='file'
+                        accept='image/*'
+                        className={styles.fileInput}
+                        onChange={handleImageChange}
+                      />
+                      <label htmlFor='t-image' className={styles.fileBtn}>
+                        Choose a photo
+                      </label>
+                      <span className={styles.fileHint}>
+                        Homework, a sketch, a project. Up to {MAX_IMAGE_MB}MB.
+                      </span>
+                    </div>
+                  )}
+                  {fieldError("image")}
+                </div>
+
+                {submitError && <p className={auth.error}>{submitError}</p>}
+
+                <button
+                  type='submit'
+                  className={auth.btn}
+                  disabled={submitting}
+                >
+                  {submitting ? "Sending..." : "Send request →"}
+                </button>
+              </form>
+            </>
           )}
         </div>
       </div>
+
       <Footer />
     </div>
   );
