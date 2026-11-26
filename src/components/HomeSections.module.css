@@ -130,67 +130,108 @@
 
 /* ---- Paths ---- */
 .paths {
-  background: var(--deep);
-  color: var(--bg);
+  background: var(--bg);
 }
 
 .pathsInner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 120px 24px;
+  padding: 24px 24px 120px;
 }
 
 .pathsTitle {
-  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
-  letter-spacing: -0.01em;
-  line-height: 1;
-  margin-bottom: 56px;
-  color: var(--bg);
+  margin: 12px 0 48px;
 }
 
-.pathRow {
+.pathGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Soft tinted cards: sage, sand, stone, mist, in order. */
+.pathCard {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px 40px;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 32px 0;
-  border-top: 1px solid #566a59;
-  color: var(--bg);
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 26px 26px;
+  border-radius: 16px;
+  background: #eceee4;
+  color: var(--ink);
   text-decoration: none;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
-.pathRow:last-child {
-  border-bottom: 1px solid #566a59;
+.pathCard:nth-child(2) {
+  background: #ece5d9;
+}
+
+.pathCard:nth-child(3) {
+  background: #efece5;
+}
+
+.pathCard:nth-child(4) {
+  background: #e3e9e1;
+}
+
+.pathCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(42, 53, 44, 0.08);
+}
+
+.pathNum {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 28px;
 }
 
 .pathTitle {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+  font-size: 1.6rem;
   font-weight: 400;
-  letter-spacing: -0.01em;
-  flex: 1 1 300px;
+  line-height: 1.2;
 }
 
 .pathText {
-  font-size: 1.05rem;
-  color: #d5ddd2;
-  flex: 1 1 360px;
+  font-size: 0.95rem;
   line-height: 1.55;
+  color: #4d564a;
+  flex: 1;
 }
 
-.pathArrow {
-  font-size: 1.75rem;
-  color: var(--lime);
+.pathMore {
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.pathMore span {
+  display: inline-block;
   transition: transform 0.2s;
 }
 
-.pathRow:hover .pathArrow {
-  transform: translateX(6px);
+.pathCard:hover .pathMore span {
+  transform: translateX(4px);
 }
 
-.pathRow:hover .pathTitle {
-  color: var(--lime);
+@media (max-width: 1000px) {
+  .pathGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .pathGrid {
+    grid-template-columns: 1fr;
+  }
+  .pathNum {
+    margin-bottom: 12px;
+  }
 }
 
 /* ---- Student work ---- */
@@ -349,7 +390,9 @@
     grid-column: 1 / -1;
     aspect-ratio: auto;
   }
-  .pathsInner,
+  .pathsInner {
+    padding-bottom: 88px;
+  }
   .work,
   .applyInner {
     padding-top: 88px;

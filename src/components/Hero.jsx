@@ -1,17 +1,18 @@
 import { Link } from "react-router-dom";
 import styles from "./Hero.module.css";
 
-// Concept C opening: one very large headline with the key words marked in
-// lime, a heavy rule, then a single plain sentence and the two actions.
+// Two columns: the headline and actions on the left, an arch-topped photo
+// of a real session on the right (stacks under the text on phones).
 export default function Hero() {
   return (
     <section className={styles.hero}>
       <div className={styles.inner}>
-        <h1 className={styles.h1}>
-          Your research journey, guided by a{" "}
-          <span className='mark'>PhD mentor</span>.
-        </h1>
-        <div className={styles.bottom}>
+        <div className={styles.text}>
+          <p className='section-label'>Online research mentorship</p>
+          <h1 className={styles.h1}>
+            Your research journey, guided by a{" "}
+            <span className='mark'>PhD mentor</span>.
+          </h1>
           <p className={styles.sub}>
             One student. One PhD mentor. One real question, worked through to a
             finished paper or project.
@@ -21,9 +22,17 @@ export default function Hero() {
               Start your application →
             </Link>
             <a href='#paths' className='btn-ghost'>
-              See programs
+              See programs ↓
             </a>
           </div>
+        </div>
+        <div className={styles.photo}>
+          <img
+            src='/gallery/70.jpg'
+            alt='A student at a laptop while a research chart is shown on the screen behind her'
+            width='1050'
+            height='1400'
+          />
         </div>
       </div>
     </section>

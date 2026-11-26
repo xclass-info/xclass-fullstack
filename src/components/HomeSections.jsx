@@ -101,21 +101,29 @@ const PATHS = [
   {
     to: "/research",
     title: "Research",
+    label: "Write",
+    cta: "See research programs",
     text: "A guided program with a mentor that ends in a paper or presentation you made.",
   },
   {
     to: "/projects",
     title: "Projects",
+    label: "Build",
+    cta: "See projects",
     text: "Build an app, a model or an experiment, with a mentor reviewing every step.",
   },
   {
     to: "/tutors",
     title: "1-on-1 sessions",
+    label: "Book",
+    cta: "Find a mentor",
     text: "Book the mentor you want for a single session or a series.",
   },
   {
     to: "/tell-us-what-you-need",
     title: "On-demand",
+    label: "Ask",
+    cta: "Tell us what you need",
     text: "Not sure what fits? Tell us what you need and we'll match you with the right mentor.",
   },
 ];
@@ -124,16 +132,22 @@ export function Paths() {
   return (
     <section id='paths' className={styles.paths}>
       <div className={styles.pathsInner}>
+        <p className='section-label'>How we can help</p>
         <h2 className={styles.pathsTitle}>Pick your path.</h2>
-        {PATHS.map((p) => (
-          <Link key={p.to} to={p.to} className={styles.pathRow}>
-            <span className={styles.pathTitle}>{p.title}</span>
-            <span className={styles.pathText}>{p.text}</span>
-            <span className={styles.pathArrow} aria-hidden='true'>
-              →
-            </span>
-          </Link>
-        ))}
+        <div className={styles.pathGrid}>
+          {PATHS.map((p, i) => (
+            <Link key={p.to} to={p.to} className={styles.pathCard}>
+              <span className={styles.pathNum}>
+                {String(i + 1).padStart(2, "0")} / {p.label}
+              </span>
+              <span className={styles.pathTitle}>{p.title}</span>
+              <span className={styles.pathText}>{p.text}</span>
+              <span className={styles.pathMore}>
+                {p.cta} <span aria-hidden='true'>→</span>
+              </span>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );
