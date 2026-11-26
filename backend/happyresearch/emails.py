@@ -1,4 +1,5 @@
 """Every email the site sends, via Gmail SMTP (Flask-Mail)."""
+from datetime import datetime
 from html import escape
 
 from flask import current_app
@@ -7,8 +8,16 @@ from flask_mail import Message
 from .extensions import db, mail
 from .models import EmailLog, new_id, utcnow
 
-_SIGNOFF = """
-  <p>Best regards,<br/>The HappyResearch Team<br/><a href="https://happyresearch.org">www.happyresearch.org</a></p>
+# Site palette (see src/index.css): warm off-white page, ink text, lime accent.
+_BG = "#f5f4f0"
+_INK = "#111111"
+_MUTED = "#4f4f4f"
+_LIME = "#c6f35c"
+_RULE = "#e8e6df"
+_FONT = "'Helvetica Neue', Helvetica, Arial, sans-serif"
+
+_SIGNOFF = f"""
+  <p style="margin:28px 0 0;">Best,<br/>The HappyResearch team</p>
 """
 
 
@@ -16,18 +25,24 @@ def _wrap(body):
     # Table layout + inline styles: the only thing every email client
     # (Gmail, Outlook, phones) reliably centres and sizes the same way.
     return f"""
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f6f8; padding:24px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:{_BG}; padding:32px 12px;">
   <tr>
     <td align="center">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px; background:#ffffff; border-radius:12px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
         <tr>
-          <td style="padding:22px 32px 0; font-family: Georgia, 'Times New Roman', serif; font-size:22px; color:#2f6175;">
-            happy<strong>Research</strong>
+          <td style="padding:0 8px 18px; font-family:{_FONT}; font-size:22px; font-weight:bold; letter-spacing:-0.5px; color:{_INK};">
+            <a href="https://happyresearch.org" style="color:{_INK}; text-decoration:none;">happyresearch<span style="color:#8fbf2a;">.</span></a>
           </td>
         </tr>
         <tr>
-          <td style="padding:8px 32px 28px; font-family: Arial, Helvetica, sans-serif; font-size:16px; line-height:1.6; color:#1a1a1a;">
+          <td style="background:#ffffff; border-radius:20px; padding:20px 36px 32px; font-family:{_FONT}; font-size:16px; line-height:1.6; color:{_INK};">
 {body}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 8px 0; font-family:{_FONT}; font-size:13px; line-height:1.5; color:{_MUTED};">
+            HappyResearch &middot; Real research for curious students, guided by PhD mentors.<br/>
+            <a href="https://happyresearch.org" style="color:{_MUTED};">happyresearch.org</a>
           </td>
         </tr>
       </table>
@@ -39,13 +54,22 @@ def _wrap(body):
 
 def _button(href, label):
     return f"""
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:28px auto;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0;">
     <tr>
-      <td style="background:#2f6175; border-radius:8px;">
-        <a href="{escape(href)}" style="display:inline-block; padding:15px 32px; font-family: Arial, Helvetica, sans-serif; font-size:17px; font-weight:bold; color:#ffffff; text-decoration:none;">{escape(label)}</a>
+      <td style="background:{_INK}; border-radius:999px;">
+        <a href="{escape(href)}" style="display:inline-block; padding:14px 28px; font-family:{_FONT}; font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:999px;">{escape(label)} &rarr;</a>
       </td>
     </tr>
   </table>"""
+
+
+def _note(html, accent=_LIME):
+    """A quoted block: a team note, a decline reason, an interview message."""
+    return f'<div style="background:{_BG}; border-left:4px solid {accent}; border-radius:8px; padding:14px 18px; margin:18px 0;">{html}</div>'
+
+
+def _small(text):
+    return f'<p style="font-size:14px; line-height:1.55; color:{_MUTED};">{text}</p>'
 
 
 def send(subject, to, html, reply_to=None, kind=None):
@@ -94,8 +118,8 @@ def send_account_verification(to_email, to_name, verify_link):
   <p>Thank you for joining our community of curious minds, aspiring researchers, and academic mentors.</p>
   <p>To complete your registration and activate your account, please verify your email address by clicking the button below.</p>
   {_button(verify_link, "Verify My Email Address")}
-  <p style="font-size:14px; color:#555;">For your security, this verification link can only be used once.</p>
-  <p style="font-size:14px; color:#555;">If you did not create a HappyResearch account, you can safely ignore this email.</p>
+  {_small("For your security, this verification link can only be used once.")}
+  {_small("If you did not create a HappyResearch account, you can safely ignore this email.")}
   <p>We look forward to supporting your research journey!</p>
   {_SIGNOFF}"""),
         kind="account_verification",
@@ -115,8 +139,8 @@ def send_password_reset(to_email, token):
   <p>Hello,</p>
   <p>We received a request to reset the password for your HappyResearch account.</p>
   {_button(link, "Choose a New Password")}
-  <p style="font-size:14px; color:#555;">This link expires in 1 hour and can only be used once.</p>
-  <p style="font-size:14px; color:#555;">If you didn't ask to reset your password, you can safely ignore this email - your password won't change.</p>
+  {_small("This link expires in 1 hour and can only be used once.")}
+  {_small("If you didn't ask to reset your password, you can safely ignore this email - your password won't change.")}
   {_SIGNOFF}"""),
         kind="password_reset",
     )
@@ -131,7 +155,7 @@ def send_work_email_verification(to_email, mentor_name, uid, token):
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>Click the button below to confirm this is your university email. It verifies your academic status for your HappyResearch mentor application.</p>
   {_button(link, "Verify University Email")}
-  <p style="font-size:14px; color:#555;">If you didn't request this, you can ignore this email.</p>
+  {_small("If you didn't request this, you can ignore this email.")}
   {_SIGNOFF}"""),
         kind="work_email_verification",
     )
@@ -157,7 +181,7 @@ def send_mentor_continue_link(to_email, mentor_name, token, reminder=False):
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>{intro}</p>
   {_button(mentor_continue_link(token), "Confirm Email & Continue" if not reminder else "Continue My Application")}
-  <p style="font-size:14px; color:#555;">This link signs you in and works for 14 days - don't forward it. You can also log in any time at Mentor Login with your email and password.</p>
+  {_small("This link signs you in and works for 14 days - don't forward it. You can also log in any time at Mentor Login with your email and password.")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
         kind="mentor_continue_link",
@@ -198,7 +222,7 @@ def send_mentor_changes_requested(to_email, mentor_name, note):
         _wrap(f"""
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>Thanks for applying! Before we can continue, please update the following:</p>
-  <div style="background:#f5f8fa; border-left:4px solid #2f6175; padding:12px 16px; margin:16px 0;">{body}</div>
+  {_note(body)}
   {_button(_frontend("/mentor/application"), "Update My Application")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
@@ -232,7 +256,7 @@ def send_mentor_declined(to_email, mentor_name, reason):
         _wrap(f"""
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>Thank you for your interest in mentoring with HappyResearch. After reviewing your application, we're not able to move forward at this time.</p>
-  <div style="background:#f5f8fa; border-left:4px solid #94a3b8; padding:12px 16px; margin:16px 0;">{body}</div>
+  {_note(body, "#cfccc2")}
   <p>We truly appreciate the time you took to apply.</p>
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
@@ -262,37 +286,55 @@ def send_interview_request(to_email, mentor_name, message):
         _wrap(f"""
   <p>Hi {escape(mentor_name or "there")},</p>
   <p>Thank you for applying to mentor with HappyResearch! Before we finish reviewing your application, we'd like to meet you in a short interview.</p>
-  <div style="background:#f5f8fa; border-left:4px solid #2f6175; padding:12px 16px; margin:16px 0;">{body}</div>
+  {_note(body)}
   {_button(_frontend("/teacher/dashboard"), "View My Application")}
-  <p style="font-size:14px; color:#555;">You can reply to this email with any questions.</p>
+  {_small("You can reply to this email with any questions.")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
         kind="interview_request",
     )
 
 
+def _nice_date(value):
+    """'2026-11-27' -> 'Friday, November 27, 2026' (unchanged if unparseable)."""
+    try:
+        d = datetime.strptime(value or "", "%Y-%m-%d")
+    except ValueError:
+        return value
+    return f"{d:%A, %B} {d.day}, {d.year}"
+
+
+def _nice_time(value):
+    """'16:00' -> '4:00 PM' (unchanged if unparseable)."""
+    try:
+        t = datetime.strptime(value or "", "%H:%M")
+    except ValueError:
+        return value
+    return f"{t.hour % 12 or 12}:{t:%M %p}"
+
+
 def send_booking_confirmation(to_email, to_name, booking):
     rows = [
         ("Mentor", booking.teacherName),
         ("Student", booking.studentName),
-        ("Date", booking.date),
-        ("Time", booking.time),
+        ("Date", _nice_date(booking.date)),
+        ("Time", _nice_time(booking.time)),
         ("Duration", f"{booking.duration} minutes" if booking.duration else None),
     ]
     details = "".join(
-        f"<tr><td style='padding:4px 12px 4px 0; color:#666;'>{label}</td><td><strong>{escape(str(v))}</strong></td></tr>"
+        f"<tr><td style='padding:8px 16px 8px 0; color:{_MUTED}; border-bottom:1px solid {_RULE};'>{label}</td><td style='padding:8px 0; border-bottom:1px solid {_RULE};'><strong>{escape(str(v))}</strong></td></tr>"
         for label, v in rows
         if v
     )
     send(
-        "✅ Your HappyResearch Session is Confirmed!",
+        "Your HappyResearch session is confirmed",
         to_email,
         _wrap(f"""
   <p>Hi {escape(to_name or "there")},</p>
   <p>Your 1-on-1 session has been confirmed.</p>
-  <table style="font-size:16px; margin: 16px 0;">{details}</table>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:16px; margin:16px 0; border-collapse:collapse;">{details}</table>
   {_button(booking.meeting_link, "Join the Session") if booking.meeting_link else ""}
-  <p style="font-size:14px; color:#555;">Use the same link at the scheduled time. It works in any modern browser - no download needed.</p>
+  {_small("Use the same link at the scheduled time. It works in any modern browser - no download needed.")}
   {_SIGNOFF}"""),
         kind="booking_confirmation",
     )
@@ -308,7 +350,7 @@ def send_team_message(subject, from_name, from_email, message):
         _wrap(f"""
   <p><strong>From:</strong> {escape(from_name)} &lt;{escape(from_email)}&gt;</p>
   <p><strong>Subject:</strong> {escape(subject or "")}</p>
-  <hr style="border:none; border-top:1px solid #eee;"/>
+  <hr style="border:none; border-top:1px solid {_RULE}; margin:18px 0;"/>
   <p>{body}</p>"""),
         reply_to=from_email,
         kind="team_message",
@@ -330,7 +372,7 @@ def send_application_approved(to_email, student_name, kind, title, mentor_name=N
   <p>Good news! Your application for the {noun} <strong>{escape(title or "")}</strong>{with_mentor} has been accepted.</p>
   <p>You can see it, along with the program details, on your dashboard.</p>
   {_button(_frontend("/student/dashboard"), "Go to My Dashboard")}
-  <p style="font-size:14px; color:#555;">Questions? Just reply to this email.</p>
+  {_small("Questions? Just reply to this email.")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
         kind="application_approved",
@@ -346,10 +388,10 @@ def send_application_declined(to_email, student_name, kind, title, reason):
         _wrap(f"""
   <p>Hi {escape(student_name or "there")},</p>
   <p>Thank you for applying for the {noun} <strong>{escape(title or "")}</strong>. We're not able to accept this application, and here's why:</p>
-  <div style="background:#f5f8fa; border-left:4px solid #94a3b8; padding:12px 16px; margin:16px 0;">{body}</div>
+  {_note(body, "#cfccc2")}
   <p>You're welcome to apply for other research topics and projects.</p>
   {_button(_frontend(path), "See Open Programs")}
-  <p style="font-size:14px; color:#555;">Questions? Just reply to this email.</p>
+  {_small("Questions? Just reply to this email.")}
   {_SIGNOFF}"""),
         reply_to=current_app.config["TEAM_INBOX"],
         kind="application_declined",
