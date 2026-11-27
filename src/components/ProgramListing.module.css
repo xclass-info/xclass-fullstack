@@ -65,7 +65,7 @@
   font-size: 1rem;
   color: var(--ink);
   background: #ffffff;
-  border: 1.5px solid #dcd7ca;
+  border: 1px solid #dcd7ca;
   border-radius: 999px;
   padding: 13px 20px;
   min-width: 0;
@@ -161,9 +161,9 @@
 }
 
 .groupTitle {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 10px;
@@ -186,7 +186,7 @@
 .check input {
   width: 18px;
   height: 18px;
-  accent-color: var(--ink);
+  accent-color: var(--accent);
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -207,13 +207,13 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 
-/* ---- Card ---- */
+/* ---- Card: soft tints (sage, sand, stone, mist), like the Figma ---- */
 .card {
-  background: #ffffff;
-  border-radius: 20px;
+  background: #eceee4;
+  border-radius: 16px;
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -223,8 +223,21 @@
     transform 0.25s ease;
 }
 
+.card:nth-child(4n + 2) {
+  background: #ece5d9;
+}
+
+.card:nth-child(4n + 3) {
+  background: #efece5;
+}
+
+.card:nth-child(4n + 4) {
+  background: #e3e9e1;
+}
+
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(42, 53, 44, 0.08);
 }
 
 .cardTop {
@@ -237,14 +250,14 @@
 .stage {
   font-size: 0.8rem;
   font-weight: 600;
-  background: var(--lime);
-  color: var(--ink);
+  background: var(--accent);
+  color: #ffffff;
   border-radius: 999px;
   padding: 4px 12px;
 }
 
 .stageDone {
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.7);
   color: var(--muted);
 }
 
@@ -252,8 +265,7 @@
   font-family: var(--font-display);
   font-size: 1.4rem;
   font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: -0.008em;
+  line-height: 1.2;
   margin-bottom: 14px;
 }
 
@@ -265,7 +277,7 @@
 .card:hover .cardLink {
   text-decoration: underline;
   text-underline-offset: 4px;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
 }
 
 .tags {
@@ -278,7 +290,7 @@
 .tag {
   font-size: 0.8rem;
   font-weight: 500;
-  background: var(--bg);
+  background: #ffffff;
   color: var(--ink);
   border-radius: 999px;
   padding: 4px 10px;
@@ -289,9 +301,9 @@
 }
 
 .fieldLabel {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 4px;
@@ -336,7 +348,7 @@
 .cardFoot {
   margin-top: auto;
   padding-top: 16px;
-  border-top: 1px solid var(--surface);
+  border-top: 1px solid rgba(42, 53, 44, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -353,14 +365,14 @@
 
 .more {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
 }
 
 /* ---- Empty ---- */
 .empty {
-  background: var(--surface);
-  border-radius: 20px;
+  background: #eceee4;
+  border-radius: 16px;
   padding: 56px 32px;
   display: flex;
   flex-direction: column;
