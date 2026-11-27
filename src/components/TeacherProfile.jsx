@@ -412,6 +412,7 @@ export default function TeacherProfile() {
       {(teacher.bio || facts.length > 0) && (
         <section className={`${styles.wrap} ${styles.about}`}>
           <div className={styles.aboutHead}>
+            <p className='section-label'>Background</p>
             <h2 className={styles.sectionTitle}>About.</h2>
           </div>
           <div className={styles.aboutBody}>
@@ -434,6 +435,7 @@ export default function TeacherProfile() {
       {programCount > 0 && (
         <section id='programs' className={styles.programs}>
           <div className={styles.wrap}>
+            <p className='section-label'>Programs</p>
             <h2 className={styles.sectionTitle}>Work with this mentor.</h2>
             <p className={styles.programsSub}>
               Every program is {LESSON_STRUCTURE_LABEL.replace(" · ", ", ")}{" "}
@@ -477,10 +479,15 @@ export default function TeacherProfile() {
       {/* ---- Booking band ---- */}
       <section className={styles.band}>
         <div className={`${styles.wrap} ${styles.bandInner}`}>
+          <p className='section-label'>1-on-1</p>
           <h2 className={styles.bandTitle}>Have a question for this mentor?</h2>
+          <p className={styles.bandSub}>
+            Book a single session to talk through an idea, a project or what
+            research could look like for you.
+          </p>
           <button
             type='button'
-            className='btn-lime'
+            className='btn-primary'
             onClick={() => setShowBooking(true)}
           >
             Book a 1-on-1 session →

@@ -54,13 +54,14 @@
   align-items: stretch;
 }
 
+/* Arched portrait, like the homepage hero. */
 .portrait {
   position: relative;
   flex: 0 1 340px;
-  aspect-ratio: 1 / 1;
-  border-radius: 24px;
+  aspect-ratio: 4 / 5;
+  border-radius: 40% 40% 16px 16px / 32% 32% 16px 16px;
   overflow: hidden;
-  background: var(--surface);
+  background: #eceee4;
 }
 
 .photo {
@@ -77,6 +78,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-top: 24px;
   font-family: var(--font-display);
   font-size: 6rem;
   font-weight: 400;
@@ -89,6 +91,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .kicker {
@@ -102,8 +105,9 @@
 .verified {
   font-size: 0.85rem;
   font-weight: 600;
-  background: var(--lime);
-  color: var(--ink);
+  background: #ffffff;
+  color: var(--accent);
+  border: 1px solid var(--border);
   border-radius: 999px;
   padding: 5px 14px;
 }
@@ -112,8 +116,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 3.63vw, 3.11rem);
   font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.01em;
+  line-height: 1.15;
   color: var(--ink);
   margin-bottom: 20px;
   overflow-wrap: anywhere;
@@ -127,7 +130,6 @@
 }
 
 .introBottom {
-  margin-top: auto;
   border-top: 1px solid var(--rule);
   padding-top: 28px;
   display: flex;
@@ -144,7 +146,7 @@
 .expTag {
   font-size: 0.95rem;
   font-weight: 500;
-  background: var(--surface);
+  background: #eceee4;
   color: var(--ink);
   border-radius: 999px;
   padding: 7px 16px;
@@ -158,10 +160,7 @@
 
 /* ---- About ---- */
 .sectionTitle {
-  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
-  letter-spacing: -0.01em;
-  line-height: 1;
-  margin-bottom: 0;
+  margin: 12px 0 0;
 }
 
 .about {
@@ -179,8 +178,6 @@
   flex: 2 1 560px;
   min-width: 0;
   max-width: 760px;
-  border-top: 1px solid var(--rule);
-  padding-top: 28px;
 }
 
 .bio {
@@ -198,15 +195,15 @@
 }
 
 .facts > div {
-  border-top: 1px solid #dcd7ca;
+  border-top: 1px solid var(--rule);
   padding-top: 14px;
   min-width: 0;
 }
 
 .facts dt {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 6px;
@@ -228,13 +225,12 @@
   font-family: var(--font-display);
   font-size: 3rem;
   font-weight: 400;
-  letter-spacing: -0.01em;
   line-height: 1;
 }
 
 /* ---- Programs ---- */
 .programs {
-  background: var(--surface);
+  border-top: 1px solid var(--rule);
   padding: 120px 0;
   scroll-margin-top: 40px;
 }
@@ -250,12 +246,13 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 
+/* Tinted cards (sage, sand, stone, mist), like the Figma. */
 .card {
-  background: #ffffff;
-  border-radius: 20px;
+  background: #eceee4;
+  border-radius: 16px;
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -267,8 +264,21 @@
   cursor: pointer;
 }
 
+.card:nth-child(4n + 2) {
+  background: #ece5d9;
+}
+
+.card:nth-child(4n + 3) {
+  background: #efece5;
+}
+
+.card:nth-child(4n + 4) {
+  background: #e3e9e1;
+}
+
 .cardClickable:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(42, 53, 44, 0.08);
 }
 
 .cardTop {
@@ -280,9 +290,9 @@
 }
 
 .kind {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -290,14 +300,14 @@
 .stage {
   font-size: 0.8rem;
   font-weight: 600;
-  background: var(--lime);
-  color: var(--ink);
+  background: var(--accent);
+  color: #ffffff;
   border-radius: 999px;
   padding: 4px 12px;
 }
 
 .stageDone {
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.7);
   color: var(--muted);
 }
 
@@ -305,8 +315,7 @@
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: -0.008em;
+  line-height: 1.2;
   margin-bottom: 12px;
 }
 
@@ -318,7 +327,7 @@
 .card:hover .cardLink {
   text-decoration: underline;
   text-underline-offset: 4px;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
 }
 
 .cardText {
@@ -343,7 +352,7 @@
 .tag {
   font-size: 0.8rem;
   font-weight: 500;
-  background: var(--bg);
+  background: #ffffff;
   color: var(--ink);
   border-radius: 999px;
   padding: 4px 10px;
@@ -378,7 +387,7 @@
 
 .cardFoot {
   margin-top: auto;
-  border-top: 1px solid var(--surface);
+  border-top: 1px solid rgba(42, 53, 44, 0.1);
   padding-top: 16px;
   display: flex;
   align-items: center;
@@ -392,7 +401,7 @@
 
 .more {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.95rem;
   text-decoration: none;
   white-space: nowrap;
@@ -407,34 +416,36 @@
   margin-left: auto;
 }
 
-/* ---- Booking band ---- */
+/* ---- Booking band: centred sand, like the Figma's closing section ---- */
 .band {
-  background: var(--deep);
-  color: var(--bg);
-  padding: 104px 0;
+  background: var(--lime);
+  padding: 96px 0;
 }
 
 .bandInner {
   display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  justify-content: space-between;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .bandTitle {
-  font-size: clamp(2.2rem, 3.6vw, 2.88rem);
-  letter-spacing: -0.01em;
-  line-height: 1;
-  color: var(--bg);
-  max-width: 760px;
+  margin: 12px 0 14px;
+}
+
+.bandSub {
+  color: #4d564a;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  max-width: 520px;
+  margin-bottom: 28px;
 }
 
 /* ---- Booking dialog ---- */
 .formLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 10px;
@@ -468,8 +479,8 @@
   gap: 4px 12px;
   text-align: left;
   background: #ffffff;
-  border: 2px solid transparent;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
   padding: 14px 16px;
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -484,8 +495,8 @@
 
 .slotOn,
 .slotOn:hover {
-  border-color: var(--ink);
-  background: var(--lime);
+  border-color: var(--accent);
+  background: #eceee4;
 }
 
 .slotWhen {
@@ -519,7 +530,7 @@
   }
   .portrait {
     flex-basis: 100%;
-    aspect-ratio: 4 / 3;
+    max-width: 320px;
   }
   .cred {
     font-size: 1.1rem;
