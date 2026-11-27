@@ -26,7 +26,6 @@ import ResearchDetail from "./components/ResearchDetail";
 import ProjectListing from "./components/ProjectListing";
 import ProjectDetail from "./components/ProjectDetail";
 import ShowcaseListing from "./components/ShowcaseListing";
-import ExploreResources from "./components/ExploreResources";
 import TellUsWhatYouNeed from "./components/TellUsWhatYouNeed";
 import VerifyMentorEmail from "./components/VerifyMentorEmail";
 import VerifyAccountEmail from "./components/VerifyAccountEmail";
@@ -127,7 +126,8 @@ export default function App() {
         <Route path='/projects' element={<ProjectListing />} />
         <Route path='/projects/:projectId' element={<ProjectDetail />} />
         <Route path='/showcase' element={<ShowcaseListing />} />
-        <Route path='/explore' element={<ExploreResources />} />
+        {/* The old Explore chooser was removed; send old links home. */}
+        <Route path='/explore' element={<Navigate to='/' replace />} />
         <Route path='/tell-us-what-you-need' element={<TellUsWhatYouNeed />} />
         <Route path='/verify-mentor-email' element={<VerifyMentorEmail />} />
         <Route path='/verify-account-email' element={<VerifyAccountEmail />} />
