@@ -1,0 +1,149 @@
+/* /explore: two-column header and four tinted path cards (Figma style). */
+
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.hero {
+  padding-top: 140px;
+  padding-bottom: 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px 64px;
+  align-items: end;
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-top: 16px;
+}
+
+.sub {
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: #4d564a;
+  max-width: 520px;
+}
+
+.body {
+  padding-bottom: 120px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Sage, sand, stone, mist - same order as the homepage. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 320px;
+  padding: 28px 26px 26px;
+  border-radius: 16px;
+  background: #eceee4;
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.card:nth-child(2) {
+  background: #ece5d9;
+}
+
+.card:nth-child(3) {
+  background: #efece5;
+}
+
+.card:nth-child(4) {
+  background: #e3e9e1;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(42, 53, 44, 0.08);
+}
+
+.num {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.desc {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #4d564a;
+  flex: 1;
+}
+
+.more {
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.more span {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.card:hover .more span {
+  transform: translateX(4px);
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 112px;
+    padding-bottom: 40px;
+  }
+  .sub {
+    font-size: 1.05rem;
+  }
+  .body {
+    padding-bottom: 88px;
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .card {
+    min-height: 0;
+  }
+  .num {
+    margin-bottom: 12px;
+  }
+}
