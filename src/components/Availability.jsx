@@ -89,8 +89,8 @@ export default function Availability() {
   function eventStyleGetter(event) {
     return {
       style: {
-        backgroundColor: event.booked ? "#ece5d9" : "#2a352c",
-        color: event.booked ? "#2a352c" : "#f9f6f0",
+        backgroundColor: event.booked ? "#ece5d9" : "#52654e",
+        color: event.booked ? "#2a352c" : "#ffffff",
         borderRadius: 8,
         border: "none",
         fontSize: 12,
