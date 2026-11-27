@@ -30,8 +30,8 @@ export default function Hero() {
           <img
             src='/photos/hero-mentor.jpg'
             alt='A mentor pointing to a chart in a notebook while a student listens'
-            width='529'
-            height='613'
+            width='1024'
+            height='1280'
           />
         </div>
       </div>
