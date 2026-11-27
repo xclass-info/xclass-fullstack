@@ -28,8 +28,8 @@ export default function Hero() {
         </div>
         <div className={styles.photo}>
           <img
-            src='/gallery/70.jpg'
-            alt='A student at a laptop while a research chart is shown on the screen behind her'
+            src='/gallery/21.jpg'
+            alt='Students working together on laptops around a table'
             width='1050'
             height='1400'
           />
