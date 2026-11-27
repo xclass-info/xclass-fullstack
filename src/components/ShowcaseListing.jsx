@@ -15,8 +15,8 @@ import list from "./ProgramListing.module.css";
 import reg from "./RegisterControls.module.css";
 import styles from "./ShowcaseListing.module.css";
 
-// Poster image when there is one, otherwise a bold block with a topic icon
-// (lime or ink, picked from the entry id so it stays the same).
+// Poster image when there is one, otherwise a soft block with a topic icon
+// (one of two tints, picked from the entry id so it stays the same).
 function Cover({ entry, large = false }) {
   const [failed, setFailed] = useState(false);
   if (entry.fileType === "image" && entry.fileUrl && !failed) {
@@ -193,6 +193,7 @@ export default function ShowcaseListing() {
 
       <header className={list.head}>
         <div className={list.wrap}>
+          <p className='section-label'>Finished projects</p>
           <h1 className={list.title}>Student work.</h1>
           <div className={list.headBottom}>
             <p className={list.sub}>
@@ -294,7 +295,12 @@ export default function ShowcaseListing() {
 
       <section className={styles.band}>
         <div className={`${list.wrap} ${styles.bandInner}`}>
+          <p className='section-label'>Your turn</p>
           <h2 className={styles.bandTitle}>Your project could be next.</h2>
+          <p className={styles.bandSub}>
+            Bring a question you're curious about. We'll match you with a mentor
+            who knows the field.
+          </p>
           <Link to='/student/register' className='btn-primary'>
             Start your application →
           </Link>
