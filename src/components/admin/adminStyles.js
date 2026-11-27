@@ -2,16 +2,21 @@
 
 export const card = {
   background: "white",
-  borderRadius: 12,
-  border: "1px solid #eee",
+  borderRadius: 16,
+  border: "1px solid #e4e0d5",
   padding: 20,
 };
 
-export const sectionTitle = { margin: "0 0 12px", fontSize: 16 };
+export const sectionTitle = {
+  margin: "0 0 12px",
+  fontSize: 20,
+  fontFamily: "var(--font-display)",
+  fontWeight: 400,
+};
 
 export const smallBtn = (color, outline = false) => ({
-  padding: "6px 12px",
-  borderRadius: 8,
+  padding: "6px 14px",
+  borderRadius: 999,
   border: outline ? `1px solid ${color}` : "none",
   background: outline ? "white" : color,
   color: outline ? color : "white",
@@ -24,7 +29,7 @@ export const smallBtn = (color, outline = false) => ({
 export const input = {
   padding: "8px 12px",
   borderRadius: 8,
-  border: "1px solid #ddd",
+  border: "1px solid #dcd7ca",
   fontSize: 13,
   fontFamily: "inherit",
   boxSizing: "border-box",

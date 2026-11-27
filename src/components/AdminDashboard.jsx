@@ -306,7 +306,7 @@ export default function AdminDashboard() {
 
   const btnStyle = (color) => ({
     padding: "6px 14px",
-    borderRadius: 6,
+    borderRadius: 999,
     border: "none",
     background: color,
     color: "white",
@@ -325,7 +325,7 @@ export default function AdminDashboard() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#f9fafb",
+          background: "#f9f6f0",
         }}
       >
         <div
@@ -345,7 +345,7 @@ export default function AdminDashboard() {
               position: "absolute",
               top: 16,
               right: 16,
-              color: "#888",
+              color: "#5f675b",
               fontSize: 22,
               textDecoration: "none",
               lineHeight: 1,
@@ -355,7 +355,7 @@ export default function AdminDashboard() {
           </a>
 
           <h2 style={{ marginBottom: 4 }}>🔐 Admin Login</h2>
-          <p style={{ color: "#888", fontSize: 14, marginBottom: 24 }}>
+          <p style={{ color: "#5f675b", fontSize: 14, marginBottom: 24 }}>
             HappyResearch admin only
           </p>
           {error && (
@@ -364,7 +364,7 @@ export default function AdminDashboard() {
             </p>
           )}
           {resetSent && (
-            <p style={{ color: "#1f6f4a", fontSize: 13, marginBottom: 12 }}>
+            <p style={{ color: "#52654e", fontSize: 13, marginBottom: 12 }}>
               Password reset email sent to {email.trim()}. Check your inbox (and
               spam folder).
             </p>
@@ -379,7 +379,7 @@ export default function AdminDashboard() {
                 width: "100%",
                 padding: 10,
                 borderRadius: 8,
-                border: "1px solid #ddd",
+                border: "1px solid #dcd7ca",
                 marginBottom: 10,
                 boxSizing: "border-box",
               }}
@@ -393,7 +393,7 @@ export default function AdminDashboard() {
                 width: "100%",
                 padding: 10,
                 borderRadius: 8,
-                border: "1px solid #ddd",
+                border: "1px solid #dcd7ca",
                 marginBottom: 16,
                 boxSizing: "border-box",
               }}
@@ -404,9 +404,9 @@ export default function AdminDashboard() {
               style={{
                 width: "100%",
                 padding: 12,
-                borderRadius: 8,
+                borderRadius: 999,
                 border: "none",
-                background: "#2a352c",
+                background: "#52654e",
                 color: "white",
                 fontSize: 15,
                 cursor: "pointer",
@@ -443,8 +443,9 @@ export default function AdminDashboard() {
   // ── Filters & sorting (client-side, data is already fully loaded) ──
   const filterInputStyle = {
     padding: "8px 12px",
-    borderRadius: 8,
-    border: "1px solid #ddd",
+    borderRadius: 999,
+    border: "1px solid #dcd7ca",
+    background: "white",
     fontSize: 13,
     fontFamily: "inherit",
   };
@@ -523,7 +524,7 @@ export default function AdminDashboard() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#f9fafb",
+        background: "#f9f6f0",
         padding: narrow ? 16 : 32,
       }}
     >
@@ -539,8 +540,21 @@ export default function AdminDashboard() {
         }}
       >
         <div>
-          <h2 style={{ margin: 0 }}>🛡 Admin Dashboard</h2>
-          <p style={{ color: "#888", fontSize: 14, margin: 0 }}>
+          <p className='section-label' style={{ margin: 0 }}>
+            HappyResearch admin
+          </p>
+          <h1
+            style={{
+              margin: "6px 0 2px",
+              fontFamily: "var(--font-display)",
+              fontWeight: 400,
+              fontSize: narrow ? 28 : 36,
+              lineHeight: 1.15,
+            }}
+          >
+            Admin dashboard
+          </h1>
+          <p style={{ color: "#5f675b", fontSize: 14, margin: 0 }}>
             Logged in as {user.email}
           </p>
         </div>
@@ -550,8 +564,8 @@ export default function AdminDashboard() {
           onOpenPerson={openPerson}
           onOpenContent={openContent}
         />
-        <button onClick={handleLogout} style={btnStyle("#a01f13")}>
-          Logout
+        <button onClick={handleLogout} className='btn-ghost'>
+          Log out
         </button>
       </div>
 
@@ -566,11 +580,10 @@ export default function AdminDashboard() {
         {/* Sidebar nav - a scrollable row of tabs on small screens */}
         <nav
           style={{
-            width: narrow ? "auto" : 200,
+            width: narrow ? "auto" : 220,
             flexShrink: 0,
-            background: "white",
-            borderRadius: 12,
-            border: "1px solid #eee",
+            background: "#eceee4",
+            borderRadius: 16,
             padding: narrow ? 6 : "16px 12px",
             display: "flex",
             flexDirection: narrow ? "row" : "column",
@@ -586,10 +599,10 @@ export default function AdminDashboard() {
                 <p
                   style={{
                     fontSize: 11,
-                    fontWeight: 700,
-                    color: "#aaa",
+                    fontWeight: 500,
+                    color: "#5f675b",
                     textTransform: "uppercase",
-                    letterSpacing: 0.5,
+                    letterSpacing: "0.14em",
                     padding: "12px 12px 4px",
                     margin: 0,
                   }}
@@ -604,12 +617,12 @@ export default function AdminDashboard() {
                   width: "100%",
                   textAlign: "left",
                   padding: "10px 12px",
-                  borderRadius: 8,
+                  borderRadius: 999,
                   border: "none",
-                  background: tab === item.id ? "#2a352c" : "transparent",
-                  color: tab === item.id ? "white" : "#555",
+                  background: tab === item.id ? "#52654e" : "transparent",
+                  color: tab === item.id ? "white" : "#2a352c",
                   cursor: "pointer",
-                  fontWeight: 600,
+                  fontWeight: 500,
                   fontSize: 14,
                   whiteSpace: narrow ? "nowrap" : "normal",
                 }}
@@ -652,7 +665,7 @@ export default function AdminDashboard() {
                   marginBottom: 16,
                 }}
               >
-                <p style={{ color: "#888", margin: 0 }}>
+                <p style={{ color: "#5f675b", margin: 0 }}>
                   {visibleResearch.length} of {research.length} research entries
                 </p>
               </div>
@@ -691,7 +704,7 @@ export default function AdminDashboard() {
                 </select>
               </div>
               {visibleResearch.length === 0 ? (
-                <p style={{ color: "#aaa" }}>
+                <p style={{ color: "#8a9086" }}>
                   No research matches these filters.
                 </p>
               ) : (
@@ -710,7 +723,7 @@ export default function AdminDashboard() {
                         background: "white",
                         borderRadius: 12,
                         padding: 20,
-                        border: `1px solid ${r.status === "disabled" ? "#fca5a5" : "#eee"}`,
+                        border: `1px solid ${r.status === "disabled" ? "#fca5a5" : "#e4e0d5"}`,
                         opacity: r.status === "disabled" ? 0.7 : 1,
                       }}
                     >
@@ -735,7 +748,7 @@ export default function AdminDashboard() {
                       <p
                         style={{
                           fontSize: 13,
-                          color: "#555",
+                          color: "#4d564a",
                           marginBottom: 8,
                           display: "-webkit-box",
                           WebkitLineClamp: 2,
@@ -748,7 +761,7 @@ export default function AdminDashboard() {
                       <p
                         style={{
                           fontSize: 12,
-                          color: "#888",
+                          color: "#5f675b",
                           marginBottom: 12,
                         }}
                       >
@@ -762,7 +775,7 @@ export default function AdminDashboard() {
                             setEditItem({ ...r });
                             setEditType("research");
                           }}
-                          style={btnStyle("#2a352c")}
+                          style={btnStyle("#52654e")}
                         >
                           ✏️ Edit
                         </button>
@@ -771,7 +784,7 @@ export default function AdminDashboard() {
                             handleDisable("research", r.id, r.status)
                           }
                           style={btnStyle(
-                            r.status === "disabled" ? "#1f6f4a" : "#f59e0b",
+                            r.status === "disabled" ? "#52654e" : "#a8792e",
                           )}
                         >
                           {r.status === "disabled" ? "✅ Enable" : "⏸ Disable"}
@@ -797,7 +810,7 @@ export default function AdminDashboard() {
 
           {tab === "student-applications" && (
             <div>
-              <p style={{ color: "#888", marginBottom: 16 }}>
+              <p style={{ color: "#5f675b", marginBottom: 16 }}>
                 {visibleStudentApplications.length} of{" "}
                 {pendingStudentApplications.length} pending application
                 {pendingStudentApplications.length === 1 ? "" : "s"}
@@ -837,7 +850,7 @@ export default function AdminDashboard() {
                 </select>
               </div>
               {visibleStudentApplications.length === 0 ? (
-                <p style={{ color: "#aaa" }}>
+                <p style={{ color: "#8a9086" }}>
                   {pendingStudentApplications.length === 0
                     ? "No student applications waiting on review."
                     : "No applications match these filters."}
@@ -860,7 +873,7 @@ export default function AdminDashboard() {
                           background: "white",
                           borderRadius: 12,
                           padding: 20,
-                          border: "1px solid #eee",
+                          border: "1px solid #e4e0d5",
                         }}
                       >
                         <div style={{ fontWeight: 700, fontSize: 16 }}>
@@ -868,7 +881,7 @@ export default function AdminDashboard() {
                         </div>
                         <div
                           style={{
-                            color: "#888",
+                            color: "#5f675b",
                             fontSize: 13,
                             marginBottom: 8,
                           }}
@@ -878,7 +891,7 @@ export default function AdminDashboard() {
                         <span
                           style={{
                             fontSize: 11,
-                            background: "#e3eff3",
+                            background: "#eceee4",
                             color: "#2a352c",
                             padding: "2px 8px",
                             borderRadius: 20,
@@ -894,20 +907,20 @@ export default function AdminDashboard() {
                         <div
                           style={{
                             fontSize: 13,
-                            color: "#333",
+                            color: "#2a352c",
                             marginBottom: 14,
                           }}
                         >
                           <div>Applying to: {reg.itemTitle}</div>
                           {mentor && <div>Mentor: {mentor.name}</div>}
-                          <div style={{ color: "#aaa" }}>
+                          <div style={{ color: "#8a9086" }}>
                             Applied {formatDate(reg.createdAt)}
                           </div>
                         </div>
 
                         <div style={{ display: "flex", gap: 8 }}>
                           <button
-                            style={btnStyle("#14532d")}
+                            style={btnStyle("#52654e")}
                             disabled={actionBusy}
                             onClick={() => approveStudentApp(reg.id)}
                           >
@@ -975,7 +988,7 @@ export default function AdminDashboard() {
                 ✕
               </button>
             </div>
-            <p style={{ color: "#888", fontSize: 13, marginBottom: 12 }}>
+            <p style={{ color: "#5f675b", fontSize: 13, marginBottom: 12 }}>
               Explain why this application was rejected. This is shown to the
               student.
             </p>
@@ -992,7 +1005,7 @@ export default function AdminDashboard() {
                 width: "100%",
                 padding: 10,
                 borderRadius: 8,
-                border: "1px solid #ddd",
+                border: "1px solid #dcd7ca",
                 fontSize: 14,
                 fontFamily: "inherit",
                 resize: "vertical",
@@ -1013,9 +1026,9 @@ export default function AdminDashboard() {
                 style={{
                   padding: "10px 20px",
                   borderRadius: 8,
-                  border: "1px solid #ddd",
+                  border: "1px solid #dcd7ca",
                   background: "white",
-                  color: "#555",
+                  color: "#4d564a",
                   fontSize: 14,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -1110,7 +1123,7 @@ export default function AdminDashboard() {
                       width: 90,
                       height: 90,
                       borderRadius: "50%",
-                      background: "linear-gradient(135deg, #2a352c, #2a352c)",
+                      background: "linear-gradient(135deg, #52654e, #3f5144)",
                       color: "white",
                       fontSize: 32,
                       fontWeight: 700,
@@ -1166,7 +1179,7 @@ export default function AdminDashboard() {
                   <label
                     style={{
                       fontSize: 12,
-                      color: "#888",
+                      color: "#5f675b",
                       fontWeight: 600,
                       textTransform: "capitalize",
                       display: "block",
@@ -1185,7 +1198,7 @@ export default function AdminDashboard() {
                         width: "100%",
                         padding: 8,
                         borderRadius: 6,
-                        border: "1px solid #ddd",
+                        border: "1px solid #dcd7ca",
                         fontSize: 13,
                         boxSizing: "border-box",
                       }}
@@ -1203,7 +1216,7 @@ export default function AdminDashboard() {
                         width: "100%",
                         padding: 8,
                         borderRadius: 6,
-                        border: "1px solid #ddd",
+                        border: "1px solid #dcd7ca",
                         fontSize: 13,
                         boxSizing: "border-box",
                       }}
@@ -1222,7 +1235,7 @@ export default function AdminDashboard() {
                         width: "100%",
                         padding: 8,
                         borderRadius: 6,
-                        border: "1px solid #ddd",
+                        border: "1px solid #dcd7ca",
                         fontSize: 13,
                         boxSizing: "border-box",
                       }}
@@ -1241,7 +1254,7 @@ export default function AdminDashboard() {
                         width: "100%",
                         padding: 8,
                         borderRadius: 6,
-                        border: "1px solid #ddd",
+                        border: "1px solid #dcd7ca",
                         fontSize: 13,
                         boxSizing: "border-box",
                       }}
@@ -1281,7 +1294,7 @@ export default function AdminDashboard() {
                         width: "100%",
                         padding: 8,
                         borderRadius: 6,
-                        border: "1px solid #ddd",
+                        border: "1px solid #dcd7ca",
                         fontSize: 13,
                         boxSizing: "border-box",
                       }}
@@ -1304,7 +1317,7 @@ export default function AdminDashboard() {
                         width: "100%",
                         padding: 8,
                         borderRadius: 6,
-                        border: "1px solid #ddd",
+                        border: "1px solid #dcd7ca",
                         fontSize: 13,
                         boxSizing: "border-box",
                         resize: "vertical",
@@ -1320,7 +1333,7 @@ export default function AdminDashboard() {
                         width: "100%",
                         padding: 8,
                         borderRadius: 6,
-                        border: "1px solid #ddd",
+                        border: "1px solid #dcd7ca",
                         fontSize: 13,
                         boxSizing: "border-box",
                       }}
@@ -1341,13 +1354,13 @@ export default function AdminDashboard() {
                   }}
                 >
                   <label
-                    style={{ fontSize: 12, color: "#888", fontWeight: 600 }}
+                    style={{ fontSize: 12, color: "#5f675b", fontWeight: 600 }}
                   >
                     PROJECT IDEAS
                   </label>
                 </div>
                 {(editItem.projects || []).length === 0 && (
-                  <p style={{ fontSize: 13, color: "#aaa" }}>
+                  <p style={{ fontSize: 13, color: "#8a9086" }}>
                     No projects yet.
                   </p>
                 )}
@@ -1355,11 +1368,11 @@ export default function AdminDashboard() {
                   <div
                     key={project.id}
                     style={{
-                      background: "#f9fafb",
+                      background: "#f9f6f0",
                       borderRadius: 8,
                       padding: 12,
                       marginBottom: 8,
-                      border: "1px solid #eee",
+                      border: "1px solid #e4e0d5",
                     }}
                   >
                     <div
@@ -1370,7 +1383,7 @@ export default function AdminDashboard() {
                       }}
                     >
                       <label
-                        style={{ fontSize: 12, color: "#888", fontWeight: 600 }}
+                        style={{ fontSize: 12, color: "#5f675b", fontWeight: 600 }}
                       >
                         Project {index + 1}
                       </label>
@@ -1410,7 +1423,7 @@ export default function AdminDashboard() {
                         width: "100%",
                         padding: 8,
                         borderRadius: 6,
-                        border: "1px solid #ddd",
+                        border: "1px solid #dcd7ca",
                         fontSize: 13,
                         boxSizing: "border-box",
                         marginBottom: 6,
@@ -1432,7 +1445,7 @@ export default function AdminDashboard() {
                         width: "100%",
                         padding: 8,
                         borderRadius: 6,
-                        border: "1px solid #ddd",
+                        border: "1px solid #dcd7ca",
                         fontSize: 13,
                         boxSizing: "border-box",
                         resize: "vertical",
@@ -1447,7 +1460,7 @@ export default function AdminDashboard() {
               <button
                 onClick={handleSaveEdit}
                 disabled={imageUploading}
-                style={{ ...btnStyle("#1f6f4a"), flex: 1, padding: 12 }}
+                style={{ ...btnStyle("#52654e"), flex: 1, padding: 12 }}
               >
                 {imageUploading ? "Saving..." : "Save Changes ✓"}
               </button>
@@ -1458,7 +1471,7 @@ export default function AdminDashboard() {
                   setImageFile(null);
                   setImagePreview(null);
                 }}
-                style={{ ...btnStyle("#888"), flex: 1, padding: 12 }}
+                style={{ ...btnStyle("#5f675b"), flex: 1, padding: 12 }}
               >
                 Cancel
               </button>

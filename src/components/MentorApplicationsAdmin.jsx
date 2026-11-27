@@ -56,7 +56,7 @@ const ACTIONS = {
 
 const btn = (color, outline = false) => ({
   padding: "8px 14px",
-  borderRadius: 8,
+  borderRadius: 999,
   border: outline ? `1px solid ${color}` : "none",
   background: outline ? "white" : color,
   color: outline ? color : "white",
@@ -79,9 +79,9 @@ const overlay = {
 
 function Row({ label, children }) {
   return (
-    <div style={{ display: "flex", gap: 12, fontSize: 14, padding: "6px 0", borderBottom: "1px solid #f1f5f9" }}>
-      <span style={{ width: 150, flexShrink: 0, color: "#94a3b8" }}>{label}</span>
-      <span style={{ color: "#1f2937", wordBreak: "break-word", whiteSpace: "pre-wrap" }}>{children || "—"}</span>
+    <div style={{ display: "flex", gap: 12, fontSize: 14, padding: "6px 0", borderBottom: "1px solid #f2efe8" }}>
+      <span style={{ width: 150, flexShrink: 0, color: "#8a9086" }}>{label}</span>
+      <span style={{ color: "#2a352c", wordBreak: "break-word", whiteSpace: "pre-wrap" }}>{children || "—"}</span>
     </div>
   );
 }
@@ -96,7 +96,7 @@ function FileLink({ url, text = "View file" }) {
 
 function Check({ ok, children }) {
   return (
-    <div style={{ fontSize: 14, padding: "4px 0", color: ok ? "#14532d" : "#64748b" }}>
+    <div style={{ fontSize: 14, padding: "4px 0", color: ok ? "#52654e" : "#5f675b" }}>
       {ok ? "✓" : "○"} {children}
     </div>
   );
@@ -163,11 +163,11 @@ function ApplicantDetail({ m, onClose }) {
             {m.photoURL ? (
               <img src={m.photoURL} alt='' style={{ width: 64, height: 64, borderRadius: "50%", objectFit: "cover" }} />
             ) : (
-              <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#e2e8f0" }} />
+              <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#e4e0d5" }} />
             )}
             <div>
               <h3 style={{ margin: 0 }}>{m.name}</h3>
-              <p style={{ margin: "2px 0 0", fontSize: 13, color: "#64748b" }}>
+              <p style={{ margin: "2px 0 0", fontSize: 13, color: "#5f675b" }}>
                 {m.email} · {mentorTypeLabel(m.mentorType)}
               </p>
               <span style={{ display: "inline-block", marginTop: 6, fontSize: 12, fontWeight: 700, padding: "2px 10px", borderRadius: 20, color: statusInfo(s).color, background: statusInfo(s).bg }}>
@@ -216,8 +216,8 @@ function ApplicantDetail({ m, onClose }) {
               {m.backgroundCheckStatus ? `${m.backgroundCheckStatus} (${formatDate(m.backgroundCheckAt)})` : "- not recorded yet"}
             </Check>
             {m.backgroundCheckStatus !== "passed" && (
-              <div style={{ background: "#f8fafc", borderRadius: 10, padding: 14, marginTop: 10 }}>
-                <p style={{ fontSize: 13, color: "#475569", margin: "0 0 8px" }}>
+              <div style={{ background: "#f9f6f0", borderRadius: 10, padding: 14, marginTop: 10 }}>
+                <p style={{ fontSize: 13, color: "#4d564a", margin: "0 0 8px" }}>
                   Search <strong>{m.name}</strong> on the{" "}
                   <a href='https://www.nsopw.gov/' target='_blank' rel='noopener noreferrer' style={{ color: "#2a352c" }}>
                     National Sex Offender Public Website (nsopw.gov)
@@ -228,10 +228,10 @@ function ApplicantDetail({ m, onClose }) {
                   value={bgNote}
                   onChange={(e) => setBgNote(e.target.value)}
                   placeholder='Note (optional), e.g. "NSOPW search, no matches"'
-                  style={{ width: "100%", padding: 8, borderRadius: 8, border: "1px solid #ddd", boxSizing: "border-box", marginBottom: 8, fontFamily: "inherit" }}
+                  style={{ width: "100%", padding: 8, borderRadius: 8, border: "1px solid #dcd7ca", boxSizing: "border-box", marginBottom: 8, fontFamily: "inherit" }}
                 />
                 <div style={{ display: "flex", gap: 8 }}>
-                  <button style={btn("#14532d")} disabled={busy} onClick={() => recordBackgroundCheck("passed")}>Mark passed</button>
+                  <button style={btn("#52654e")} disabled={busy} onClick={() => recordBackgroundCheck("passed")}>Mark passed</button>
                   <button style={btn("#a01f13", true)} disabled={busy} onClick={() => recordBackgroundCheck("failed")}>Mark failed</button>
                 </div>
               </div>
@@ -242,9 +242,9 @@ function ApplicantDetail({ m, onClose }) {
         {error && <p style={{ color: "#a01f13", fontSize: 13, margin: "14px 0 0" }}>{error}</p>}
 
         {action ? (
-          <div style={{ marginTop: 20, borderTop: "1px solid #eee", paddingTop: 16 }}>
+          <div style={{ marginTop: 20, borderTop: "1px solid #e4e0d5", paddingTop: 16 }}>
             <h4 style={{ margin: "0 0 4px" }}>{ACTIONS[action].title}</h4>
-            <p style={{ fontSize: 13, color: "#888", margin: "0 0 8px" }}>{ACTIONS[action].help}</p>
+            <p style={{ fontSize: 13, color: "#5f675b", margin: "0 0 8px" }}>{ACTIONS[action].help}</p>
             <textarea
               autoFocus
               rows={4}
@@ -254,20 +254,20 @@ function ApplicantDetail({ m, onClose }) {
                 setError("");
               }}
               placeholder={ACTIONS[action].placeholder}
-              style={{ width: "100%", padding: 10, borderRadius: 8, border: "1px solid #ddd", boxSizing: "border-box", fontFamily: "inherit", fontSize: 14 }}
+              style={{ width: "100%", padding: 10, borderRadius: 8, border: "1px solid #dcd7ca", boxSizing: "border-box", fontFamily: "inherit", fontSize: 14 }}
             />
             <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 8 }}>
-              <button style={btn("#555", true)} onClick={() => setAction(null)}>Cancel</button>
+              <button style={btn("#4d564a", true)} onClick={() => setAction(null)}>Cancel</button>
               <button style={btn(ACTIONS[action].color)} disabled={busy} onClick={submitAction}>
                 {busy ? "Sending..." : ACTIONS[action].button}
               </button>
             </div>
           </div>
         ) : (
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 22, borderTop: "1px solid #eee", paddingTop: 16 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 22, borderTop: "1px solid #e4e0d5", paddingTop: 16 }}>
             {reviewable && (
               <>
-                <button style={btn("#14532d")} disabled={busy} onClick={() => run("approve")}>
+                <button style={btn("#52654e")} disabled={busy} onClick={() => run("approve")}>
                   ✓ Pass review
                 </button>
                 <button style={btn("#2a352c", true)} onClick={() => setAction("request-changes")}>Request changes</button>
@@ -318,8 +318,8 @@ export default function MentorApplicationsAdmin({ mentors }) {
               style={{
                 padding: "8px 14px",
                 borderRadius: 20,
-                border: active ? "2px solid #2a352c" : "1px solid #e2e8f0",
-                background: active ? "#e3eff3" : "white",
+                border: active ? "2px solid #2a352c" : "1px solid #e4e0d5",
+                background: active ? "#eceee4" : "white",
                 fontWeight: active ? 700 : 500,
                 fontSize: 13,
                 cursor: "pointer",
@@ -335,31 +335,31 @@ export default function MentorApplicationsAdmin({ mentors }) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder='Search name, email, university, field...'
-        style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ddd", fontSize: 13, fontFamily: "inherit", width: "100%", maxWidth: 360, marginBottom: 16, boxSizing: "border-box" }}
+        style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #dcd7ca", fontSize: 13, fontFamily: "inherit", width: "100%", maxWidth: 360, marginBottom: 16, boxSizing: "border-box" }}
       />
 
       {inStage.length === 0 ? (
-        <p style={{ color: "#aaa" }}>Nobody here right now.</p>
+        <p style={{ color: "#8a9086" }}>Nobody here right now.</p>
       ) : (
         <div style={{ display: "grid", gap: 10 }}>
           {inStage.map((m) => (
             <div
               key={m.id}
-              style={{ background: "white", border: "1px solid #eee", borderRadius: 12, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}
+              style={{ background: "white", border: "1px solid #e4e0d5", borderRadius: 12, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}
             >
               <div>
                 <strong>{m.name}</strong>{" "}
-                <span style={{ color: "#94a3b8", fontSize: 13 }}>· {mentorTypeLabel(m.mentorType)}</span>
-                <div style={{ fontSize: 13, color: "#64748b", marginTop: 2 }}>
+                <span style={{ color: "#8a9086", fontSize: 13 }}>· {mentorTypeLabel(m.mentorType)}</span>
+                <div style={{ fontSize: 13, color: "#5f675b", marginTop: 2 }}>
                   {[m.university, m.researchArea].filter(Boolean).join(" · ")}
                 </div>
-                <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: "#8a9086", marginTop: 2 }}>
                   {m.submittedAt ? `Submitted ${formatDate(m.submittedAt)}` : `Started ${formatDate(m.createdAt)}`}
                   {stage === "onboarding" &&
                     ` · Guidelines ${m.guidelinesAcceptedAt ? "✓" : "○"} · Background check ${m.backgroundCheckStatus === "passed" ? "✓" : "○"}`}
                 </div>
               </div>
-              <button style={btn("#2a352c")} onClick={() => setOpenId(m.id)}>Open</button>
+              <button style={btn("#52654e")} onClick={() => setOpenId(m.id)}>Open</button>
             </div>
           ))}
         </div>

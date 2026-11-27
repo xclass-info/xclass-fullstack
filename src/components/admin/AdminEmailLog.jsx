@@ -7,9 +7,9 @@ import { api, live } from "../../api";
 import { card, chip, input, smallBtn } from "./adminStyles";
 
 const STATUS = {
-  sent: { label: "Sent", style: chip("#14532d", "rgba(22,101,52,0.08)") },
+  sent: { label: "Sent", style: chip("#52654e", "#eceee4") },
   failed: { label: "Failed", style: chip("#a01f13", "rgba(160,31,19,0.08)") },
-  suppressed: { label: "Not sent (email off)", style: chip("#64748b", "#f1f5f9") },
+  suppressed: { label: "Not sent (email off)", style: chip("#5f675b", "#f2efe8") },
 };
 
 function when(value) {
@@ -30,7 +30,7 @@ export default function AdminEmailLog({ onFindPerson }) {
 
   return (
     <div>
-      <p style={{ color: "#64748b", fontSize: 14, margin: "0 0 14px" }}>
+      <p style={{ color: "#5f675b", fontSize: 14, margin: "0 0 14px" }}>
         "Sent" means Gmail accepted the email. If someone still can't find it, ask them to check Spam - or open their profile to resend it or mark their email verified.
       </p>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
@@ -45,16 +45,16 @@ export default function AdminEmailLog({ onFindPerson }) {
 
       <div style={{ ...card, padding: 0, overflow: "hidden" }}>
         {!rows ? (
-          <p style={{ color: "#94a3b8", padding: 20, margin: 0 }}>Loading...</p>
+          <p style={{ color: "#8a9086", padding: 20, margin: 0 }}>Loading...</p>
         ) : rows.length === 0 ? (
-          <p style={{ color: "#94a3b8", padding: 20, margin: 0 }}>No emails yet.</p>
+          <p style={{ color: "#8a9086", padding: 20, margin: 0 }}>No emails yet.</p>
         ) : (
           rows.map((e, i) => (
-            <div key={e.id} style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "12px 16px", borderTop: i ? "1px solid #f1f5f9" : "none", alignItems: "center", flexWrap: "wrap", background: e.status === "failed" ? "#fffafa" : "white" }}>
+            <div key={e.id} style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "12px 16px", borderTop: i ? "1px solid #f2efe8" : "none", alignItems: "center", flexWrap: "wrap", background: e.status === "failed" ? "#fffafa" : "white" }}>
               <div style={{ minWidth: 0, flex: "1 1 300px" }}>
                 <span style={STATUS[e.status]?.style}>{STATUS[e.status]?.label || e.status}</span>{" "}
                 <strong style={{ fontSize: 14 }}>{e.subject}</strong>
-                <div style={{ fontSize: 13, color: "#64748b", wordBreak: "break-all" }}>
+                <div style={{ fontSize: 13, color: "#5f675b", wordBreak: "break-all" }}>
                   to {e.toEmail} · {when(e.createdAt)}
                 </div>
                 {e.error && <div style={{ fontSize: 12, color: "#a01f13", marginTop: 4 }}>{e.error}</div>}

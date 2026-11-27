@@ -17,9 +17,9 @@ const FILTERS = [
 ];
 
 const EMAIL_STATUS = {
-  sent: chip("#14532d", "rgba(22,101,52,0.08)"),
+  sent: chip("#52654e", "#eceee4"),
   failed: chip("#a01f13", "rgba(160,31,19,0.08)"),
-  suppressed: chip("#64748b", "#f1f5f9"),
+  suppressed: chip("#5f675b", "#f2efe8"),
 };
 
 function RoleChips({ p }) {
@@ -27,7 +27,7 @@ function RoleChips({ p }) {
     <span style={{ display: "inline-flex", gap: 4, flexWrap: "wrap" }}>
       {p.isAdmin && <span style={chip("#7c2d12", "#ffedd5")}>Admin</span>}
       {p.isStudent && (
-        <span style={chip("#2a352c", "#e3eff3")}>Student{p.studentVerified === false ? " · unverified" : ""}</span>
+        <span style={chip("#2a352c", "#eceee4")}>Student{p.studentVerified === false ? " · unverified" : ""}</span>
       )}
       {p.isMentor && (
         <span style={chip(statusInfo(p.mentorStatus).color, statusInfo(p.mentorStatus).bg)}>
@@ -43,7 +43,7 @@ function RoleChips({ p }) {
 function Section({ title, children }) {
   return (
     <div style={{ marginTop: 22 }}>
-      <h4 style={{ margin: "0 0 8px", fontSize: 14, color: "#1f2937" }}>{title}</h4>
+      <h4 style={{ margin: "0 0 8px", fontSize: 14, color: "#2a352c" }}>{title}</h4>
       {children}
     </div>
   );
@@ -51,14 +51,14 @@ function Section({ title, children }) {
 
 function Line({ children }) {
   return (
-    <div style={{ fontSize: 13, padding: "7px 0", borderBottom: "1px solid #f1f5f9", wordBreak: "break-word" }}>
+    <div style={{ fontSize: 13, padding: "7px 0", borderBottom: "1px solid #f2efe8", wordBreak: "break-word" }}>
       {children}
     </div>
   );
 }
 
 function Empty({ text }) {
-  return <p style={{ fontSize: 13, color: "#94a3b8", margin: 0 }}>{text}</p>;
+  return <p style={{ fontSize: 13, color: "#8a9086", margin: 0 }}>{text}</p>;
 }
 
 function contentRows(content) {
@@ -112,7 +112,7 @@ function PersonPanel({ id, onClose, onEditMentor, onGo }) {
             <h3 style={{ margin: 0 }}>{p?.name || p?.email || "Loading..."}</h3>
             {p && (
               <>
-                <p style={{ margin: "4px 0 8px", fontSize: 13, color: "#64748b", wordBreak: "break-all" }}>
+                <p style={{ margin: "4px 0 8px", fontSize: 13, color: "#5f675b", wordBreak: "break-all" }}>
                   {p.email} · joined {formatDate(p.createdAt)}
                 </p>
                 <RoleChips p={p} />
@@ -125,7 +125,7 @@ function PersonPanel({ id, onClose, onEditMentor, onGo }) {
         {p && (
           <>
             {notice && (
-              <p style={{ margin: "14px 0 0", padding: "8px 12px", borderRadius: 8, fontSize: 13, background: notice.ok ? "#f0fdf4" : "#fef2f2", color: notice.ok ? "#14532d" : "#a01f13" }}>
+              <p style={{ margin: "14px 0 0", padding: "8px 12px", borderRadius: 8, fontSize: 13, background: notice.ok ? "#eceee4" : "#fef2f2", color: notice.ok ? "#52654e" : "#a01f13" }}>
                 {notice.text}
               </p>
             )}
@@ -136,7 +136,7 @@ function PersonPanel({ id, onClose, onEditMentor, onGo }) {
                   Deleted on {formatDate(p.deletedAt)}. It will be permanently removed on{" "}
                   <strong>{formatDate(p.purgeAt)}</strong> unless you restore it.
                 </p>
-                <button style={smallBtn("#14532d")} disabled={busy} onClick={() => act("Account restored.", () => api.post(path("restore")))}>
+                <button style={smallBtn("#52654e")} disabled={busy} onClick={() => act("Account restored.", () => api.post(path("restore")))}>
                   Restore account
                 </button>
               </div>
@@ -206,7 +206,7 @@ function PersonPanel({ id, onClose, onEditMentor, onGo }) {
                       >
                         Delete account
                       </button>
-                      <button style={smallBtn("#555", true)} onClick={() => setConfirming(false)}>Cancel</button>
+                      <button style={smallBtn("#4d564a", true)} onClick={() => setConfirming(false)}>Cancel</button>
                     </div>
                   </div>
                 )}
@@ -249,7 +249,7 @@ function PersonPanel({ id, onClose, onEditMentor, onGo }) {
                 ) : (
                   contentRows(p.content).map(([kind, r]) => (
                     <Line key={r.id}>
-                      <span style={{ color: "#94a3b8" }}>{kind}:</span> {r.title} {r.status === "disabled" ? "(hidden)" : ""}
+                      <span style={{ color: "#8a9086" }}>{kind}:</span> {r.title} {r.status === "disabled" ? "(hidden)" : ""}
                     </Line>
                   ))
                 )}
@@ -275,7 +275,7 @@ function PersonPanel({ id, onClose, onEditMentor, onGo }) {
                 p.emails.map((e) => (
                   <Line key={e.id}>
                     <span style={EMAIL_STATUS[e.status]}>{e.status}</span> {e.subject}{" "}
-                    <span style={{ color: "#94a3b8" }}>· {formatDate(e.createdAt)}</span>
+                    <span style={{ color: "#8a9086" }}>· {formatDate(e.createdAt)}</span>
                     {e.error && <div style={{ color: "#a01f13", fontSize: 12 }}>{e.error}</div>}
                   </Line>
                 ))
@@ -295,7 +295,7 @@ export default function AdminPeople({ openId, onOpen, onEditMentor, onGo }) {
 
   useEffect(() => live(() => api.get("/admin/people"), setPeople), []);
 
-  if (!people) return <p style={{ color: "#94a3b8" }}>Loading...</p>;
+  if (!people) return <p style={{ color: "#8a9086" }}>Loading...</p>;
   const test = FILTERS.find((f) => f.id === filter).test;
   const q = search.trim().toLowerCase();
   const visible = people.filter(test).filter((p) => !q || `${p.name} ${p.email}`.toLowerCase().includes(q));
@@ -310,7 +310,7 @@ export default function AdminPeople({ openId, onOpen, onEditMentor, onGo }) {
             <button
               key={f.id}
               onClick={() => setFilter(f.id)}
-              style={{ padding: "7px 14px", borderRadius: 20, border: active ? "2px solid #2a352c" : "1px solid #e2e8f0", background: active ? "#e3eff3" : "white", fontWeight: active ? 700 : 500, fontSize: 13, cursor: "pointer" }}
+              style={{ padding: "7px 14px", borderRadius: 20, border: active ? "1px solid #52654e" : "1px solid #e4e0d5", background: active ? "#52654e" : "white", color: active ? "white" : "#2a352c", fontWeight: 500, fontSize: 13, cursor: "pointer" }}
             >
               {f.label} ({count})
             </button>
@@ -321,21 +321,21 @@ export default function AdminPeople({ openId, onOpen, onEditMentor, onGo }) {
 
       <div style={{ ...card, padding: 0, overflow: "hidden" }}>
         {visible.length === 0 ? (
-          <p style={{ color: "#94a3b8", padding: 20, margin: 0 }}>Nobody here.</p>
+          <p style={{ color: "#8a9086", padding: 20, margin: 0 }}>Nobody here.</p>
         ) : (
           visible.map((p, i) => (
             <button
               key={p.id}
               onClick={() => onOpen(p.id)}
-              style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "12px 16px", border: "none", borderTop: i ? "1px solid #f1f5f9" : "none", background: "white", cursor: "pointer", textAlign: "left", flexWrap: "wrap" }}
+              style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "12px 16px", border: "none", borderTop: i ? "1px solid #f2efe8" : "none", background: "white", cursor: "pointer", textAlign: "left", flexWrap: "wrap" }}
             >
               <span style={{ minWidth: 0 }}>
                 <strong style={{ fontSize: 14 }}>{p.name || "(no name)"}</strong>
-                <span style={{ display: "block", fontSize: 13, color: "#64748b", wordBreak: "break-all" }}>{p.email}</span>
+                <span style={{ display: "block", fontSize: 13, color: "#5f675b", wordBreak: "break-all" }}>{p.email}</span>
               </span>
               <span style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
                 <RoleChips p={p} />
-                <span style={{ fontSize: 12, color: "#94a3b8" }}>{formatDate(p.deletedAt || p.createdAt)}</span>
+                <span style={{ fontSize: 12, color: "#8a9086" }}>{formatDate(p.deletedAt || p.createdAt)}</span>
               </span>
             </button>
           ))
