@@ -1,8 +1,10 @@
 // src/components/MentorGuidelines.jsx
 // The rules every mentor agrees to (when applying, and again during
 // onboarding). Public, so parents can read them too.
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import styles from "./MentorGuidelines.module.css";
 
 const SECTIONS = [
   {
@@ -50,31 +52,62 @@ const SECTIONS = [
 
 export default function MentorGuidelines() {
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+    <div className={styles.page}>
       <Navbar />
-      <div style={{ maxWidth: 760, margin: "0 auto", padding: "120px 24px 60px" }}>
-        <h1 style={{ fontFamily: "var(--font-display)", color: "#2a352c", margin: "0 0 10px" }}>
-          Mentor Guidelines
-        </h1>
-        <p style={{ color: "#475569", lineHeight: 1.7, margin: "0 0 28px" }}>
+
+      <header className={`${styles.wrap} ${styles.hero}`}>
+        <div>
+          <p className='section-label'>For mentors and parents</p>
+          <h1 className={styles.h1}>Mentor guidelines.</h1>
+        </div>
+        <p className={styles.sub}>
           Every HappyResearch mentor agrees to these guidelines. They keep our
           students safe and make sure every project is a real learning
           experience. Breaking them can mean removal from HappyResearch.
         </p>
-        {SECTIONS.map((s) => (
-          <section key={s.title} style={{ background: "white", borderRadius: 14, padding: "22px 26px", marginBottom: 16, boxShadow: "0 1px 8px rgba(0,0,0,0.05)" }}>
-            <h2 style={{ fontSize: "1.15rem", color: "#2a352c", margin: "0 0 12px" }}>{s.title}</h2>
-            <ul style={{ margin: 0, paddingLeft: 20, color: "#334155", lineHeight: 1.75 }}>
-              {s.points.map((p) => (
-                <li key={p} style={{ marginBottom: 6 }}>{p}</li>
-              ))}
-            </ul>
-          </section>
-        ))}
-        <p style={{ color: "#64748b", fontSize: 14 }}>
-          Questions about these guidelines? Email us at happyprogramming.us@gmail.com.
-        </p>
-      </div>
+      </header>
+
+      <main className={styles.wrap}>
+        <ol className={styles.sections}>
+          {SECTIONS.map((s, i) => {
+            // "1. Student safety comes first" -> number + title
+            const title = s.title.replace(/^\d+\.\s*/, "");
+            return (
+              <li key={s.title} className={styles.section}>
+                <div className={styles.sectionHead}>
+                  <span className={styles.num}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h2 className={styles.title}>{title}</h2>
+                </div>
+                <ul className={styles.points}>
+                  {s.points.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
+        </ol>
+      </main>
+
+      <section className={styles.band}>
+        <div className={`${styles.wrap} ${styles.bandInner}`}>
+          <p className='section-label'>Questions?</p>
+          <h2 className={styles.bandTitle}>We're happy to talk it through.</h2>
+          <p className={styles.bandSub}>
+            Email us at{" "}
+            <a href='mailto:happyprogramming.us@gmail.com'>
+              happyprogramming.us@gmail.com
+            </a>
+            .
+          </p>
+          <Link to='/become-a-mentor' className='btn-primary'>
+            Apply to mentor →
+          </Link>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

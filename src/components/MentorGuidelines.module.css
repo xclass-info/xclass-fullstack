@@ -1,0 +1,182 @@
+/* Mentor Guidelines (Warm Practice / Figma style): two-column header,
+   numbered ruled sections (title left, points right), sand closing band. */
+
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.hero {
+  padding-top: 140px;
+  padding-bottom: 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px 64px;
+  align-items: end;
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-top: 16px;
+}
+
+.sub {
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: #4d564a;
+  max-width: 540px;
+}
+
+.sections {
+  list-style: none;
+  padding-bottom: 120px;
+}
+
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 20px 64px;
+  padding: 40px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.section:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+/* The first section (student safety) gets a sage card to stand out. */
+.section:first-child {
+  background: #eceee4;
+  border: none;
+  border-radius: 16px;
+  padding: 36px 32px;
+  margin-bottom: 24px;
+}
+
+.section:first-child + .section {
+  border-top: none;
+}
+
+.sectionHead {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.num {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.points {
+  list-style: none;
+}
+
+.points li {
+  position: relative;
+  padding: 12px 0 12px 22px;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #4d564a;
+  border-top: 1px solid rgba(42, 53, 44, 0.1);
+}
+
+.points li:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.points li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.95em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.points li:first-child::before {
+  top: calc(0.95em - 12px);
+}
+
+/* ---- Closing band ---- */
+.band {
+  background: var(--lime);
+  padding: 96px 0;
+}
+
+.bandInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.bandTitle {
+  margin: 12px 0 14px;
+}
+
+.bandSub {
+  color: #4d564a;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  margin-bottom: 28px;
+}
+
+.bandSub a {
+  color: var(--ink);
+  font-weight: 600;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 860px) {
+  .hero,
+  .section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    padding-top: 112px;
+    padding-bottom: 40px;
+  }
+  .sub {
+    font-size: 1.05rem;
+  }
+  .section {
+    padding: 32px 0;
+  }
+  .section:first-child {
+    padding: 26px 22px;
+  }
+  .sections {
+    padding-bottom: 88px;
+  }
+  .band {
+    padding: 80px 0;
+  }
+}
