@@ -29,21 +29,21 @@ export default function MentorContinue() {
   }, [token, navigate]);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+    <div style={{ minHeight: "100vh", background: "#f9f6f0" }}>
       <Navbar />
       <div style={{ maxWidth: 480, margin: "0 auto", padding: "140px 24px 80px", textAlign: "center" }}>
-        <div style={{ background: "white", borderRadius: 16, padding: 40, boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}>
+        <div style={{ background: "#eceee4", borderRadius: 16, padding: 40 }}>
           {failed ? (
             <>
               <p style={{ fontSize: 48, margin: "0 0 8px" }}>⚠️</p>
-              <h2 style={{ margin: "0 0 8px" }}>This link has expired</h2>
-              <p style={{ color: "#666", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
+              <h2 style={{ margin: "0 0 8px", fontFamily: "var(--font-display)", fontWeight: 400 }}>This link has expired</h2>
+              <p style={{ color: "#5f675b", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
                 No problem - log in with the email and password you signed up
                 with to continue your application. If your email isn't
                 confirmed yet, the login page lets you resend the link.
               </p>
               <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
-                <Link to='/teacher/login' style={{ padding: "12px 20px", borderRadius: 8, background: "#2a352c", color: "white", fontWeight: 700, textDecoration: "none" }}>
+                <Link to='/teacher/login' style={{ padding: "12px 20px", borderRadius: 999, background: "#52654e", color: "white", fontWeight: 600, textDecoration: "none" }}>
                   Mentor Login
                 </Link>
               </div>
@@ -51,7 +51,7 @@ export default function MentorContinue() {
           ) : (
             <>
               <p style={{ fontSize: 40, margin: "0 0 8px" }}>⏳</p>
-              <h2 style={{ margin: 0 }}>Opening your application...</h2>
+              <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontWeight: 400 }}>Opening your application...</h2>
             </>
           )}
         </div>

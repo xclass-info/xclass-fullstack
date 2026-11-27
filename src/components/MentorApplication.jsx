@@ -37,36 +37,37 @@ const MISSING_LABELS = {
   password: "A password (at least 6 characters)",
 };
 
+// Warm Practice (Figma) style: sage cards with white inputs, pill buttons.
 const card = {
-  background: "white",
+  background: "#eceee4",
   borderRadius: 16,
   padding: 28,
-  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
 };
 const input = {
   width: "100%",
-  padding: 11,
-  borderRadius: 8,
-  border: "1px solid #ddd",
+  padding: "12px 14px",
+  borderRadius: 12,
+  border: "1px solid #dcd7ca",
+  background: "white",
   boxSizing: "border-box",
   fontSize: 15,
   fontFamily: "inherit",
   marginBottom: 14,
 };
-const label = { display: "block", fontSize: 13, fontWeight: 600, color: "#475569", marginBottom: 6 };
-const hint = { fontWeight: 400, color: "#94a3b8" };
+const label = { display: "block", fontSize: 13, fontWeight: 600, color: "#2a352c", marginBottom: 6 };
+const hint = { fontWeight: 400, color: "#8a9086" };
 const primaryBtn = {
   padding: "12px 24px",
-  borderRadius: 8,
+  borderRadius: 999,
   border: "none",
-  background: "#2a352c",
+  background: "#52654e",
   color: "white",
-  fontWeight: 700,
+  fontWeight: 600,
   fontSize: 15,
   cursor: "pointer",
 };
-const secondaryBtn = { ...primaryBtn, background: "white", color: "#2a352c", border: "1px solid #2a352c" };
-const serif = { fontFamily: "var(--font-display)", color: "#2a352c" };
+const secondaryBtn = { ...primaryBtn, background: "white", color: "#2a352c", border: "1px solid #dcd7ca" };
+const serif = { fontFamily: "var(--font-display)", fontWeight: 400, color: "#2a352c" };
 
 function Timeline({ status }) {
   const current = stageIndex(status);
@@ -81,11 +82,11 @@ function Timeline({ status }) {
               style={{
                 height: 6,
                 borderRadius: 3,
-                background: done ? "#1f6f4a" : active ? "#2a352c" : "#e2e8f0",
+                background: done ? "#52654e" : active ? "#8a9a82" : "#e4e0d5",
                 marginBottom: 8,
               }}
             />
-            <span style={{ fontSize: 13, fontWeight: active ? 700 : 500, color: done || active ? "#2a352c" : "#94a3b8" }}>
+            <span style={{ fontSize: 13, fontWeight: active ? 700 : 500, color: done || active ? "#2a352c" : "#8a9086" }}>
               {done ? "✓ " : ""}
               {s.label}
             </span>
@@ -96,7 +97,7 @@ function Timeline({ status }) {
   );
 }
 
-function Notice({ color = "#2a352c", bg = "#f5f8fa", children }) {
+function Notice({ color = "#2a352c", bg = "#f2efe8", children }) {
   return (
     <div style={{ background: bg, borderLeft: `4px solid ${color}`, padding: "12px 16px", borderRadius: 6, margin: "0 0 20px", fontSize: 14, lineHeight: 1.6, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
       {children}
@@ -108,10 +109,10 @@ function FileField({ title, help, current, accept, onUpload, busy }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <span style={label}>{title}</span>
-      {help && <p style={{ fontSize: 13, color: "#64748b", margin: "-2px 0 8px" }}>{help}</p>}
+      {help && <p style={{ fontSize: 13, color: "#5f675b", margin: "-2px 0 8px" }}>{help}</p>}
       {current && (
         <p style={{ fontSize: 14, margin: "0 0 8px" }}>
-          <span style={{ color: "#1f6f4a", fontWeight: 600 }}>✓ Uploaded</span> ·{" "}
+          <span style={{ color: "#52654e", fontWeight: 600 }}>✓ Uploaded</span> ·{" "}
           <a href={current} target='_blank' rel='noopener noreferrer' style={{ color: "#2a352c" }}>View</a>
         </p>
       )}
@@ -123,8 +124,8 @@ function FileField({ title, help, current, accept, onUpload, busy }) {
 function PreviewCard({ app }) {
   const name = formatMentorName(app.name, app);
   return (
-    <div style={{ ...card, padding: 22, textAlign: "center" }}>
-      <p style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.06em", textTransform: "uppercase", margin: "0 0 14px" }}>
+    <div style={{ ...card, background: "#ece5d9", padding: 22, textAlign: "center" }}>
+      <p style={{ fontSize: 11, fontWeight: 500, color: "#5f675b", letterSpacing: "0.14em", textTransform: "uppercase", margin: "0 0 14px" }}>
         Preview of your public card
       </p>
       {app.photoURL ? (
@@ -138,15 +139,15 @@ function PreviewCard({ app }) {
       <p style={{ margin: 0, fontSize: 13, color: "#2a352c", fontWeight: 700 }}>
         {app.mentorType ? mentorTypeLabel(app.mentorType) : "Your role"}
       </p>
-      <p style={{ margin: "6px 0 0", fontSize: 13, color: "#64748b" }}>
+      <p style={{ margin: "6px 0 0", fontSize: 13, color: "#5f675b" }}>
         {[app.degree, app.university].filter(Boolean).join(" · ") || "Degree · University"}
       </p>
       {app.researchArea && (
-        <span style={{ display: "inline-block", marginTop: 10, fontSize: 12, padding: "3px 10px", borderRadius: 20, background: "#fff8dc", color: "#2a352c" }}>
+        <span style={{ display: "inline-block", marginTop: 10, fontSize: 12, padding: "3px 10px", borderRadius: 20, background: "#ece5d9", color: "#2a352c" }}>
           {app.researchArea}
         </span>
       )}
-      <p style={{ margin: "12px 0 0", fontSize: 13, color: "#475569", lineHeight: 1.6, textAlign: "left" }}>
+      <p style={{ margin: "12px 0 0", fontSize: 13, color: "#4d564a", lineHeight: 1.6, textAlign: "left" }}>
         {(app.bio || "Your bio will appear here.").slice(0, 220)}
         {(app.bio || "").length > 220 ? "…" : ""}
       </p>
@@ -318,13 +319,13 @@ export default function MentorApplication() {
 
   if (signedOut) {
     return (
-      <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+      <div style={{ minHeight: "100vh", background: "#f9f6f0" }}>
         <Navbar />
         <div style={{ maxWidth: 560, margin: "0 auto", padding: "140px 24px" }}>
           <div style={{ ...card, borderTop: "4px solid #a01f13", textAlign: "center" }}>
             <p style={{ fontSize: 40, margin: "0 0 8px" }}>🔒</p>
             <h2 style={{ ...serif, margin: "0 0 10px" }}>You're signed out</h2>
-            <p style={{ color: "#475569", lineHeight: 1.6, margin: "0 0 20px" }}>
+            <p style={{ color: "#4d564a", lineHeight: 1.6, margin: "0 0 20px" }}>
               Please log in again to keep working on your application. Everything that was saved before is still there.
             </p>
             <button style={primaryBtn} onClick={() => navigate("/teacher/login")}>Log in →</button>
@@ -336,21 +337,21 @@ export default function MentorApplication() {
 
   if (!app) {
     return (
-      <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+      <div style={{ minHeight: "100vh", background: "#f9f6f0" }}>
         <Navbar />
-        <p style={{ padding: "140px 24px", textAlign: "center", color: "#94a3b8" }}>Loading your application...</p>
+        <p style={{ padding: "140px 24px", textAlign: "center", color: "#8a9086" }}>Loading your application...</p>
       </div>
     );
   }
 
   if (app.notMentor) {
     return (
-      <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+      <div style={{ minHeight: "100vh", background: "#f9f6f0" }}>
         <Navbar />
         <div style={{ maxWidth: 520, margin: "0 auto", padding: "140px 24px" }}>
           <div style={card}>
             <h2 style={serif}>This isn't a mentor account</h2>
-            <p style={{ color: "#64748b" }}>
+            <p style={{ color: "#5f675b" }}>
               You're logged in with an account that isn't a mentor account.
               To apply as a mentor, log out and use the{" "}
               <Link to='/become-a-mentor' style={{ color: "#2a352c" }}>Become a Mentor</Link> page with a different email.
@@ -367,11 +368,12 @@ export default function MentorApplication() {
   const stepMissing = (i) => STEPS[i].fields.some((f) => missing.includes(f));
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
+    <div style={{ minHeight: "100vh", background: "#f9f6f0" }}>
       <Navbar />
       <div style={{ maxWidth: 1040, margin: "0 auto", padding: "120px 20px 60px" }}>
-        <h1 style={{ ...serif, fontSize: "1.9rem", margin: "0 0 6px" }}>Your mentor application</h1>
-        <p style={{ color: "#64748b", margin: "0 0 24px" }}>
+        <p className='section-label' style={{ margin: "0 0 12px" }}>Become a mentor</p>
+        <h1 style={{ ...serif, fontSize: "clamp(2rem, 4vw, 2.8rem)", lineHeight: 1.15, margin: "0 0 8px" }}>Your mentor application</h1>
+        <p style={{ color: "#5f675b", margin: "0 0 24px" }}>
           {editable ? "Your progress is saved as you go - you can leave and come back any time." : "Here's where your application stands."}
         </p>
         <Timeline status={status} />
@@ -395,12 +397,12 @@ export default function MentorApplication() {
                   key={s.title}
                   onClick={() => goToStep(i)}
                   style={{
-                    padding: "8px 14px",
-                    borderRadius: 20,
-                    border: i === step ? "2px solid #2a352c" : "1px solid #e2e8f0",
-                    background: i === step ? "#e3eff3" : "white",
-                    color: "#2a352c",
-                    fontWeight: i === step ? 700 : 500,
+                    padding: "8px 16px",
+                    borderRadius: 999,
+                    border: i === step ? "1px solid #52654e" : "1px solid #e4e0d5",
+                    background: i === step ? "#52654e" : "white",
+                    color: i === step ? "white" : "#2a352c",
+                    fontWeight: 500,
                     cursor: "pointer",
                     fontSize: 14,
                   }}
@@ -414,8 +416,8 @@ export default function MentorApplication() {
               <div style={{ ...card, gridColumn: step === 0 ? "auto" : "1 / -1" }}>
                 {step === 0 && (
                   <>
-                    <h2 style={{ ...serif, marginTop: 0 }}>Your profile</h2>
-                    <p style={{ color: "#64748b", fontSize: 14, marginTop: -8 }}>This is what students and parents will see once you're live.</p>
+                    <h2 style={{ ...serif, fontSize: "1.6rem", lineHeight: 1.2, margin: "0 0 14px" }}>Your profile</h2>
+                    <p style={{ color: "#5f675b", fontSize: 14, margin: "-6px 0 18px" }}>This is what students and parents will see once you're live.</p>
                     <FileField
                       title='Profile photo'
                       help='A clear, friendly headshot works best.'
@@ -478,16 +480,16 @@ export default function MentorApplication() {
 
                 {step === 1 && (
                   <>
-                    <h2 style={{ ...serif, marginTop: 0 }}>Credentials</h2>
-                    <p style={{ color: "#64748b", fontSize: 14, marginTop: -8 }}>
+                    <h2 style={{ ...serif, fontSize: "1.6rem", lineHeight: 1.2, margin: "0 0 14px" }}>Credentials</h2>
+                    <p style={{ color: "#5f675b", fontSize: 14, margin: "-6px 0 18px" }}>
                       Two things: proof that you're a PhD student or above, and your CV. Documents are private - only our review team sees them.
                     </p>
                     <h3 style={{ fontSize: 16, margin: "20px 0 8px" }}>1. Proof of PhD status <span style={hint}>(either option)</span></h3>
-                    <div style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 16, marginBottom: 12 }}>
+                    <div style={{ border: "1px solid #e4e0d5", borderRadius: 12, padding: 16, marginBottom: 12 }}>
                       <strong style={{ fontSize: 14 }}>Option A - verify your university email</strong>
-                      <span style={{ fontSize: 13, color: "#64748b" }}> (fastest)</span>
+                      <span style={{ fontSize: 13, color: "#5f675b" }}> (fastest)</span>
                       {app.workEmailVerified ? (
-                        <p style={{ color: "#1f6f4a", fontWeight: 600, fontSize: 14, margin: "10px 0 0" }}>✓ {app.workEmail} is verified</p>
+                        <p style={{ color: "#52654e", fontWeight: 600, fontSize: 14, margin: "10px 0 0" }}>✓ {app.workEmail} is verified</p>
                       ) : (
                         <>
                           <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
@@ -503,16 +505,16 @@ export default function MentorApplication() {
                             </button>
                           </div>
                           {(uniEmailSent || app.workEmail) && (
-                            <p style={{ fontSize: 13, color: "#64748b", margin: "8px 0 0" }}>
+                            <p style={{ fontSize: 13, color: "#5f675b", margin: "8px 0 0" }}>
                               We sent a link to {app.workEmail || uniEmail}. Click it, then come back here - this page updates on its own.
                             </p>
                           )}
                         </>
                       )}
                     </div>
-                    <div style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 16, marginBottom: 20 }}>
+                    <div style={{ border: "1px solid #e4e0d5", borderRadius: 12, padding: 16, marginBottom: 20 }}>
                       <strong style={{ fontSize: 14 }}>Option B - upload a document</strong>
-                      <p style={{ fontSize: 13, color: "#64748b", margin: "4px 0 10px" }}>
+                      <p style={{ fontSize: 13, color: "#5f675b", margin: "4px 0 10px" }}>
                         An enrollment letter, transcript, or PhD diploma. A phone photo is fine. PDF or image, up to 10 MB.
                       </p>
                       <FileField title='' current={app.credentialURL} accept='application/pdf,image/*' busy={busy} onUpload={(f) => upload("credential", f)} />
@@ -524,9 +526,9 @@ export default function MentorApplication() {
 
                 {step === 2 && (
                   <>
-                    <h2 style={{ ...serif, marginTop: 0 }}>Review & submit</h2>
+                    <h2 style={{ ...serif, fontSize: "1.6rem", lineHeight: 1.2, margin: "0 0 14px" }}>Review & submit</h2>
                     {missing.filter((m) => !["workAuthorized"].includes(m)).length > 0 && (
-                      <Notice color='#2a352c' bg='#fff8dc'>
+                      <Notice color='#2a352c' bg='#ece5d9'>
                         <strong>Still to do:</strong>
                         {missing
                           .filter((m) => m !== "workAuthorized")
@@ -570,7 +572,7 @@ export default function MentorApplication() {
 
                     {!app.hasPassword && (
                       <>
-                        <p style={{ fontSize: 14, color: "#64748b", margin: "0 0 10px" }}>
+                        <p style={{ fontSize: 14, color: "#5f675b", margin: "0 0 10px" }}>
                           Choose a password - you'll use it with this email to log in as a mentor.
                         </p>
                         <input type='password' style={input} placeholder='Password (at least 6 characters)' value={submit.password} onChange={(e) => setSubmit({ ...submit, password: e.target.value })} />
@@ -604,8 +606,8 @@ export default function MentorApplication() {
         {/* ── After submitting ── */}
         {status === "submitted" && (
           <div style={card}>
-            <h2 style={{ ...serif, marginTop: 0 }}>Thanks - your application is in review</h2>
-            <p style={{ color: "#475569", lineHeight: 1.7, margin: 0 }}>
+            <h2 style={{ ...serif, fontSize: "1.6rem", lineHeight: 1.2, margin: "0 0 14px" }}>Thanks - your application is in review</h2>
+            <p style={{ color: "#4d564a", lineHeight: 1.7, margin: 0 }}>
               We review applications within about 3 business days and will email you as soon as there's an update. Sometimes we'll ask for a short video interview.
             </p>
           </div>
@@ -613,24 +615,24 @@ export default function MentorApplication() {
 
         {status === "interview_requested" && (
           <div style={card}>
-            <h2 style={{ ...serif, marginTop: 0 }}>Let's schedule a short interview</h2>
-            <p style={{ color: "#475569", lineHeight: 1.7 }}>Before we finish reviewing your application, we'd like to meet you. Here's how to set it up (we also emailed this to you):</p>
+            <h2 style={{ ...serif, fontSize: "1.6rem", lineHeight: 1.2, margin: "0 0 14px" }}>Let's schedule a short interview</h2>
+            <p style={{ color: "#4d564a", lineHeight: 1.7 }}>Before we finish reviewing your application, we'd like to meet you. Here's how to set it up (we also emailed this to you):</p>
             <Notice>{app.interviewMessage}</Notice>
           </div>
         )}
 
         {status === "onboarding" && (
           <div style={card}>
-            <h2 style={{ ...serif, marginTop: 0 }}>🎉 You passed our review - two last steps</h2>
-            <p style={{ color: "#475569", lineHeight: 1.7 }}>Your profile goes live as soon as both are done.</p>
+            <h2 style={{ ...serif, fontSize: "1.6rem", lineHeight: 1.2, margin: "0 0 14px" }}>🎉 You passed our review - two last steps</h2>
+            <p style={{ color: "#4d564a", lineHeight: 1.7 }}>Your profile goes live as soon as both are done.</p>
             <div style={{ display: "grid", gap: 14 }}>
-              <div style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 18 }}>
+              <div style={{ border: "1px solid #e4e0d5", borderRadius: 12, padding: 18 }}>
                 <strong>1. Mentor Guidelines</strong>
                 {app.guidelinesAcceptedAt ? (
-                  <p style={{ color: "#1f6f4a", fontWeight: 600, margin: "8px 0 0" }}>✓ Accepted</p>
+                  <p style={{ color: "#52654e", fontWeight: 600, margin: "8px 0 0" }}>✓ Accepted</p>
                 ) : (
                   <>
-                    <p style={{ fontSize: 14, color: "#64748b", margin: "6px 0 10px" }}>
+                    <p style={{ fontSize: 14, color: "#5f675b", margin: "6px 0 10px" }}>
                       Please read the <Link to='/mentor/guidelines' target='_blank' style={{ color: "#2a352c" }}>Mentor Guidelines</Link> (about 5 minutes).
                     </p>
                     <label style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 14, marginBottom: 12 }}>
@@ -641,9 +643,9 @@ export default function MentorApplication() {
                   </>
                 )}
               </div>
-              <div style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 18 }}>
+              <div style={{ border: "1px solid #e4e0d5", borderRadius: 12, padding: 18 }}>
                 <strong>2. Background check</strong>
-                <p style={{ fontSize: 14, color: app.backgroundCheckStatus === "passed" ? "#1f6f4a" : "#64748b", fontWeight: app.backgroundCheckStatus === "passed" ? 600 : 400, margin: "8px 0 0" }}>
+                <p style={{ fontSize: 14, color: app.backgroundCheckStatus === "passed" ? "#52654e" : "#5f675b", fontWeight: app.backgroundCheckStatus === "passed" ? 600 : 400, margin: "8px 0 0" }}>
                   {app.backgroundCheckStatus === "passed"
                     ? "✓ Completed"
                     : app.backgroundCheckStatus === "failed"
@@ -657,8 +659,8 @@ export default function MentorApplication() {
 
         {status === "approved" && (
           <div style={card}>
-            <h2 style={{ ...serif, marginTop: 0 }}>🎉 You're live!</h2>
-            <p style={{ color: "#475569", lineHeight: 1.7 }}>
+            <h2 style={{ ...serif, fontSize: "1.6rem", lineHeight: 1.2, margin: "0 0 14px" }}>🎉 You're live!</h2>
+            <p style={{ color: "#4d564a", lineHeight: 1.7 }}>
               Students can now find your profile and apply for your research. A great next step: post your first research project from your dashboard.
             </p>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -670,11 +672,11 @@ export default function MentorApplication() {
 
         {status === "declined" && (
           <div style={card}>
-            <h2 style={{ ...serif, marginTop: 0 }}>Thank you for applying</h2>
-            <p style={{ color: "#475569", lineHeight: 1.7 }}>
+            <h2 style={{ ...serif, fontSize: "1.6rem", lineHeight: 1.2, margin: "0 0 14px" }}>Thank you for applying</h2>
+            <p style={{ color: "#4d564a", lineHeight: 1.7 }}>
               After reviewing your application, we're not able to move forward at this time. We truly appreciate the time you took to apply.
             </p>
-            {app.rejectionReason && <Notice color='#94a3b8'>{app.rejectionReason}</Notice>}
+            {app.rejectionReason && <Notice color='#8a9086'>{app.rejectionReason}</Notice>}
           </div>
         )}
       </div>
