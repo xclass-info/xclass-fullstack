@@ -188,6 +188,7 @@ export default function Gallery() {
 
       <header className={list.head}>
         <div className={list.wrap}>
+          <p className='section-label'>Moments</p>
           <h1 className={list.title}>Gallery.</h1>
           <div className={list.headBottom}>
             <p className={list.sub}>
@@ -199,26 +200,31 @@ export default function Gallery() {
       </header>
 
       <section className={`${list.wrap} ${styles.video}`}>
-        <div className={styles.videoFrame}>
-          <iframe
-            src={VIDEO.url}
-            title={VIDEO.title}
-            loading='lazy'
-            allow='accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen'
-            allowFullScreen
-          />
-        </div>
-        <div className={styles.videoText}>
-          <p className='section-label' style={{ margin: 0 }}>
-            Video
-          </p>
-          <h2 className={styles.videoTitle}>{VIDEO.title}</h2>
+        <div className={styles.videoPanel}>
+          <div className={styles.videoFrame}>
+            <iframe
+              src={VIDEO.url}
+              title={VIDEO.title}
+              loading='lazy'
+              allow='accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+              allowFullScreen
+            />
+          </div>
+          <div className={styles.videoText}>
+            <p className='section-label' style={{ margin: 0 }}>
+              Video
+            </p>
+            <h2 className={styles.videoTitle}>{VIDEO.title}</h2>
+          </div>
         </div>
       </section>
 
       <section className={`${list.wrap} ${styles.photos}`}>
         <div className={styles.photosHead}>
-          <h2 className={styles.sectionTitle}>Photos.</h2>
+          <div>
+            <p className='section-label'>Photos</p>
+            <h2 className={styles.sectionTitle}>Inside our sessions.</h2>
+          </div>
           <p className={list.count}>{PHOTOS.length} photos</p>
         </div>
         <div className={styles.masonry}>
@@ -249,8 +255,13 @@ export default function Gallery() {
 
       <section className={styles.band}>
         <div className={`${list.wrap} ${styles.bandInner}`}>
+          <p className='section-label'>Join us</p>
           <h2 className={styles.bandTitle}>Want to be in the next one?</h2>
-          <Link to='/student/register' className='btn-lime'>
+          <p className={styles.bandSub}>
+            Apply today and we'll match you with a mentor in the field you're
+            curious about.
+          </p>
+          <Link to='/student/register' className='btn-primary'>
             Start your application →
           </Link>
         </div>
