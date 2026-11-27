@@ -6,10 +6,11 @@
   background: var(--bg);
 }
 
+/* Soft sage panel (Figma), dark text, arched photo above the statement. */
 .aside {
   flex: 1 1 420px;
-  background: var(--deep);
-  color: var(--bg);
+  background: #eceee4;
+  color: var(--ink);
   padding: 32px 48px 48px;
   display: flex;
   flex-direction: column;
@@ -25,13 +26,9 @@
   font-size: 1.3rem;
   font-weight: 400;
   letter-spacing: -0.01em;
-  color: var(--bg);
+  color: var(--ink);
   text-decoration: none;
   align-self: flex-start;
-}
-
-.asideLogo span {
-  color: var(--lime);
 }
 
 .asideBody {
@@ -40,32 +37,50 @@
   max-width: 520px;
 }
 
+.asideArch {
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 4 / 5;
+  border-radius: 40% 40% 12px 12px / 32% 32% 12px 12px;
+  overflow: hidden;
+  margin-bottom: 36px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.asideArch img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
 .asideTitle {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 3.6vw, 3.24rem);
   font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.01em;
-  margin-bottom: 24px;
-  color: var(--bg);
+  margin-bottom: 20px;
+  color: var(--ink);
 }
 
 .asideTitle mark {
   background: none;
-  color: var(--lime);
-  font-style: italic;
+  color: var(--accent);
+  font-style: normal;
 }
 
 .asideText {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #d5ddd2;
+  color: #4d564a;
 }
 
 .points {
   list-style: none;
-  margin-top: 36px;
-  border-top: 1px solid #566a59;
+  margin-top: 32px;
+  border-top: 1px solid rgba(42, 53, 44, 0.12);
 }
 
 .points li {
@@ -73,14 +88,16 @@
   gap: 16px;
   align-items: baseline;
   padding: 16px 0;
-  border-bottom: 1px solid #566a59;
+  border-bottom: 1px solid rgba(42, 53, 44, 0.12);
   font-size: 1rem;
+  color: #4d564a;
 }
 
 .points li span {
-  font-family: var(--font-display);
-  font-weight: 400;
-  color: var(--lime);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--muted);
   min-width: 24px;
 }
 
@@ -391,6 +408,9 @@
     position: static;
     padding: 24px 24px 36px;
     gap: 32px;
+  }
+  .asideArch {
+    display: none;
   }
   .asideTitle {
     font-size: 2.4rem;

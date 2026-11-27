@@ -1,7 +1,8 @@
 // src/components/AuthLayout.jsx
 // Shared frame for the account pages (log in, sign up, reset password):
-// a dark panel with one big statement on the left, the form on the right.
-// On phones the panel shrinks to a short header above the form.
+// a soft sage panel with the arched photo and one big statement on the left,
+// the form on the right. On phones the panel shrinks to a short header above
+// the form (no photo).
 import { Link } from "react-router-dom";
 import styles from "./TeacherAuth.module.css";
 
@@ -17,6 +18,9 @@ export default function AuthLayout({ title, text, points, children }) {
           HappyResearch
         </Link>
         <div className={styles.asideBody}>
+          <div className={styles.asideArch} aria-hidden='true'>
+            <img src='/photos/hero-mentor.jpg' alt='' />
+          </div>
           <p className={styles.asideTitle}>{title}</p>
           {text && <p className={styles.asideText}>{text}</p>}
           {points && (
