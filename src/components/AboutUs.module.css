@@ -10,44 +10,73 @@
 }
 
 .title {
-  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
-  letter-spacing: -0.01em;
-  line-height: 1;
-  margin-bottom: 0;
+  margin: 12px 0 0;
 }
 
-/* ---- Hero ---- */
+/* ---- Hero: statement left, arched photo right ---- */
 .hero {
-  padding: 152px 0 120px;
+  padding: 132px 0 72px;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 64px;
+  align-items: center;
 }
 
 .h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 4.15vw, 3.63rem);
+  font-size: clamp(2.2rem, 4.4vw, 3.9rem);
   font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.01em;
   color: var(--ink);
-  max-width: 1100px;
-  margin-bottom: 32px;
+  margin: 16px 0 24px;
 }
 
 .heroSub {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   line-height: 1.55;
   color: #4d564a;
-  max-width: 620px;
-  border-top: 1px solid var(--rule);
-  padding-top: 28px;
-  margin-bottom: 56px;
+  max-width: 480px;
 }
 
-.banner {
-  display: block;
+.arch {
+  aspect-ratio: 4 / 5;
+  border-radius: 999px 999px 16px 16px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+/* Taller than the frame and anchored to the top, so the bottom of the
+   photo (desk partition and sockets) falls outside the arch. */
+.arch img {
   width: 100%;
-  aspect-ratio: 21 / 9;
+  height: 122%;
   object-fit: cover;
-  border-radius: 24px;
+  object-position: 45% top;
+  display: block;
+}
+
+/* ---- Sage strip ---- */
+.strip {
+  background: #e6ebe0;
+}
+
+.stripList {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 32px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.stripList li {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
 }
 
 /* ---- Founder letter ---- */
@@ -55,7 +84,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 32px 64px;
-  padding-bottom: 120px;
+  padding: 120px 0;
 }
 
 .letterHead {
@@ -65,8 +94,6 @@
 .letterBody {
   flex: 2 1 560px;
   max-width: 720px;
-  border-top: 1px solid var(--rule);
-  padding-top: 28px;
 }
 
 .letterBody p {
@@ -84,12 +111,12 @@
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 2.6vw, 2rem);
   font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: -0.008em;
+  line-height: 1.25;
   color: var(--ink);
-  margin: 40px 0;
-  padding-left: 24px;
-  border-left: 6px solid var(--lime);
+  margin: 36px 0;
+  padding: 28px 32px;
+  background: var(--surface);
+  border-radius: 16px;
 }
 
 .letterBody a {
@@ -107,126 +134,157 @@
   color: var(--ink);
 }
 
-/* ---- Mission (lime-free, big statement on the surface colour) ---- */
+/* ---- Mission: heading left, text right, between thin rules ---- */
 .mission {
-  background: var(--surface);
-  padding: 120px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px 64px;
+  padding: 88px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 
 .missionText {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.6vw, 3rem);
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  max-width: 1100px;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #4d564a;
+  align-self: end;
 }
 
-/* ---- What we do (dark rows) ---- */
-.dark {
-  background: var(--deep);
-  color: var(--bg);
+/* ---- What we do: tinted cards ---- */
+.what {
   padding: 120px 0;
 }
 
-.darkTitle {
-  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
-  letter-spacing: -0.01em;
-  line-height: 1;
-  margin-bottom: 56px;
-  color: var(--bg);
+.cards {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
 }
 
-.row {
+.card {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px 40px;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 32px 0;
-  border-top: 1px solid #566a59;
-  color: var(--bg);
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 26px 26px;
+  border-radius: 16px;
+  background: #eceee4;
+  color: var(--ink);
   text-decoration: none;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
-.row:last-child {
-  border-bottom: 1px solid #566a59;
+.card:nth-child(2) {
+  background: #ece5d9;
 }
 
-.rowTitle {
+.card:nth-child(3) {
+  background: #efece5;
+}
+
+.card:nth-child(4) {
+  background: #e3e9e1;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(42, 53, 44, 0.08);
+}
+
+.cardNum {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.cardTitle {
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 3.2vw, 2.5rem);
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  flex: 1 1 300px;
+  font-size: 1.5rem;
+  line-height: 1.2;
 }
 
-.rowText {
-  font-size: 1.05rem;
-  color: #d5ddd2;
-  flex: 1 1 380px;
+.cardText {
+  font-size: 0.95rem;
   line-height: 1.55;
+  color: #4d564a;
+  flex: 1;
 }
 
-.rowArrow {
-  font-size: 1.75rem;
-  color: var(--lime);
+.cardMore {
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.cardMore span {
+  display: inline-block;
   transition: transform 0.2s;
 }
 
-.row:hover .rowArrow {
-  transform: translateX(6px);
+.card:hover .cardMore span {
+  transform: translateX(4px);
 }
 
-.row:hover .rowTitle {
-  color: var(--lime);
+/* ---- Why: dark band with numbered columns ---- */
+.dark {
+  background: var(--deep);
+  color: var(--bg);
+  padding: 100px 0 110px;
 }
 
-/* ---- Why ---- */
-.why {
-  padding: 120px 0 88px;
+.dark .darkLabel {
+  color: #c4cdc0;
+}
+
+.darkTitle {
+  color: var(--bg);
+  margin: 12px 0 56px;
 }
 
 .whyGrid {
   list-style: none;
-  margin-top: 56px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 40px 32px;
 }
 
 .whyItem {
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid #5d7062;
   padding-top: 20px;
 }
 
 .whyNum {
-  font-family: var(--font-display);
-  font-weight: 400;
-  color: var(--muted);
+  font-size: 0.85rem;
+  color: #c4cdc0;
 }
 
 .whyTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.008em;
-  line-height: 1.15;
-  margin: 12px 0 10px;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--bg);
+  margin: 14px 0 10px;
 }
 
 .whyText {
-  color: var(--muted);
-  font-size: 1rem;
+  color: #d5ddd2;
+  font-size: 0.98rem;
   line-height: 1.6;
 }
 
 /* ---- Numbers ---- */
 .numbers {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 32px;
-  padding: 32px 0 120px;
+  padding: 100px 0 120px;
 }
 
 .stat {
@@ -239,9 +297,8 @@
 
 .statNum {
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 4.32vw, 3.6rem);
+  font-size: clamp(2.2rem, 4vw, 3.3rem);
   font-weight: 400;
-  letter-spacing: -0.01em;
   line-height: 1;
 }
 
@@ -250,31 +307,62 @@
   font-size: 1rem;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1000px) {
+  .cards,
+  .whyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
   .hero {
-    padding: 120px 0 88px;
+    padding: 112px 0 48px;
+  }
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .arch {
+    max-width: 420px;
+    width: 100%;
+    justify-self: center;
   }
   .heroSub {
     font-size: 1.1rem;
-    margin-bottom: 40px;
   }
-  .banner {
-    aspect-ratio: 4 / 3;
-    border-radius: 18px;
+  .stripList {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding-top: 24px;
+    padding-bottom: 24px;
   }
-  .letter {
-    padding-bottom: 88px;
-  }
-  .mission,
-  .dark {
+  .letter,
+  .what {
     padding: 88px 0;
   }
-  .why {
-    padding: 88px 0 56px;
+  .mission {
+    grid-template-columns: 1fr;
+    padding: 64px 0;
+  }
+  .dark {
+    padding: 80px 0;
   }
   .numbers {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px 16px;
-    padding-bottom: 88px;
+    padding: 72px 0 88px;
+  }
+}
+
+@media (max-width: 560px) {
+  .cards,
+  .whyGrid {
+    grid-template-columns: 1fr;
+  }
+  .cardNum {
+    margin-bottom: 12px;
+  }
+  .quote {
+    padding: 22px 22px;
   }
 }

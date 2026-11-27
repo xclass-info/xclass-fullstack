@@ -1,6 +1,7 @@
 // src/components/AboutUs.jsx
-// About page in the Concept C style: big statement, the founder's letter,
-// the mission, what we do (dark rows), why HappyResearch, numbers, apply band.
+// About page in the Warm Practice (Figma) style: statement + arched photo,
+// a sage strip, the founder's letter, the mission, tinted "what we do" cards,
+// a dark numbered "why" band, numbers, apply band.
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -10,21 +11,25 @@ import styles from "./AboutUs.module.css";
 const WHAT_WE_DO = [
   {
     to: "/projects",
+    label: "Build",
     title: "Hands-on projects",
     desc: "Students build real projects alongside PhD mentors, ending in something they made in fields ranging from AI to environmental science.",
   },
   {
     to: "/research",
+    label: "Write",
     title: "Academic research",
     desc: "Advanced students collaborate with mentors to produce academic-quality research papers, and are encouraged (though not guaranteed) to pursue publication.",
   },
   {
     to: "/tutors",
+    label: "Book",
     title: "1-on-1 mentorship",
     desc: "Personalized guidance from researchers who are passionate about teaching and mentoring.",
   },
   {
     to: "/tell-us-what-you-need",
+    label: "Ask",
     title: "On-demand learning",
     desc: "Not sure what fits? Tell us what you need and we'll help you find the right mentor.",
   },
@@ -49,6 +54,12 @@ const WHY = [
   },
 ];
 
+const STRIP = [
+  "Real research, not exercises",
+  "Mentors with PhD training",
+  "Fully online, from anywhere",
+];
+
 const NUMBERS = [
   { num: "50+", label: "Research mentors" },
   { num: "200+", label: "Students served" },
@@ -63,28 +74,41 @@ export default function AboutUs() {
 
       {/* Hero */}
       <section className={styles.hero}>
-        <div className={styles.wrap}>
-          <p className='section-label'>About HappyResearch</p>
-          <h1 className={styles.h1}>
-            Every student deserves to do real{" "}
-            <span className='mark'>research</span>.
-          </h1>
-          <p className={styles.heroSub}>
-            We connect curious young minds with research mentors to spark a
-            lifelong love of discovery, innovation, and learning.
-          </p>
-          <img
-            src='/photos/aboutus-banner.jpg'
-            alt='A mentor and student working together'
-            className={styles.banner}
-          />
+        <div className={`${styles.wrap} ${styles.heroGrid}`}>
+          <div>
+            <p className='section-label'>About HappyResearch</p>
+            <h1 className={styles.h1}>
+              Every student deserves to do real{" "}
+              <span className='mark'>research</span>.
+            </h1>
+            <p className={styles.heroSub}>
+              We connect curious young minds with research mentors to spark a
+              lifelong love of discovery, innovation, and learning.
+            </p>
+          </div>
+          <div className={styles.arch}>
+            <img
+              src='/photos/aboutus-banner.jpg'
+              alt='A mentor and student working together'
+            />
+          </div>
         </div>
+      </section>
+
+      {/* Sage strip */}
+      <section className={styles.strip}>
+        <ul className={`${styles.wrap} ${styles.stripList}`}>
+          {STRIP.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
       </section>
 
       {/* From the founder */}
       <section className={styles.wrap}>
         <div className={styles.letter}>
           <div className={styles.letterHead}>
+            <p className='section-label'>A personal note</p>
             <h2 className={styles.title}>From the founder.</h2>
           </div>
           <div className={styles.letterBody}>
@@ -131,9 +155,12 @@ export default function AboutUs() {
       </section>
 
       {/* Mission */}
-      <section className={styles.mission}>
-        <div className={styles.wrap}>
-          <p className='section-label'>Our mission</p>
+      <section className={styles.wrap}>
+        <div className={styles.mission}>
+          <div>
+            <p className='section-label'>Our mission</p>
+            <h2 className={styles.title}>Real research, not just textbooks.</h2>
+          </div>
           <p className={styles.missionText}>
             Every student deserves the opportunity to experience real research,
             not just read about it in textbooks. We bridge the gap between
@@ -145,25 +172,36 @@ export default function AboutUs() {
       </section>
 
       {/* What we do */}
-      <section className={styles.dark}>
-        <div className={styles.wrap}>
-          <h2 className={styles.darkTitle}>What we do.</h2>
-          {WHAT_WE_DO.map((item) => (
-            <Link key={item.to} to={item.to} className={styles.row}>
-              <span className={styles.rowTitle}>{item.title}</span>
-              <span className={styles.rowText}>{item.desc}</span>
-              <span className={styles.rowArrow} aria-hidden='true'>
-                →
-              </span>
-            </Link>
-          ))}
+      <section className={styles.wrap}>
+        <div className={styles.what}>
+          <p className='section-label'>What we do</p>
+          <h2 className={styles.title}>Support that fits how you learn.</h2>
+          <div className={styles.cards}>
+            {WHAT_WE_DO.map((item, i) => (
+              <Link key={item.to} to={item.to} className={styles.card}>
+                <span className={styles.cardNum}>
+                  {String(i + 1).padStart(2, "0")} / {item.label}
+                </span>
+                <span className={styles.cardTitle}>{item.title}</span>
+                <span className={styles.cardText}>{item.desc}</span>
+                <span className={styles.cardMore}>
+                  Learn more <span aria-hidden='true'>→</span>
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Why HappyResearch */}
-      <section className={styles.why}>
+      <section className={styles.dark}>
         <div className={styles.wrap}>
-          <h2 className={styles.title}>Why HappyResearch.</h2>
+          <p className={`section-label ${styles.darkLabel}`}>
+            Why HappyResearch
+          </p>
+          <h2 className={styles.darkTitle}>
+            What makes mentorship here different.
+          </h2>
           <ol className={styles.whyGrid}>
             {WHY.map((item, i) => (
               <li key={item.title} className={styles.whyItem}>
