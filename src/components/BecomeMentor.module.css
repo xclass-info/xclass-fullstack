@@ -10,8 +10,16 @@
 }
 
 /* ---- Hero ---- */
+/* Heading left, intro + actions right (Figma "A more personal approach"). */
 .hero {
-  padding: 152px 0 88px;
+  padding: 140px 0 72px;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 32px 64px;
+  align-items: end;
 }
 
 .h1 {
@@ -21,24 +29,18 @@
   line-height: 1.15;
   letter-spacing: -0.01em;
   color: var(--ink);
-  max-width: 1100px;
-  margin-bottom: 44px;
+  margin-top: 16px;
 }
 
 .heroBottom {
   display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  justify-content: space-between;
-  align-items: flex-end;
-  border-top: 1px solid var(--rule);
-  padding-top: 28px;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .heroSub {
-  flex: 1 1 380px;
-  max-width: 560px;
-  font-size: 1.25rem;
+  max-width: 520px;
+  font-size: 1.15rem;
   line-height: 1.55;
   color: #4d564a;
 }
@@ -49,34 +51,69 @@
   flex-wrap: wrap;
 }
 
-/* ---- Who can apply / what it looks like ---- */
+/* ---- Sage strip ---- */
+.strip {
+  background: #e6ebe0;
+}
+
+.stripList {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 32px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.stripList li {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+/* ---- Who can apply / what it looks like: two tinted cards ---- */
 .twoCol {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 48px 64px;
-  padding-bottom: 120px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 120px 0;
 }
 
 .col {
-  flex: 1 1 360px;
+  background: #eceee4;
+  border-radius: 16px;
+  padding: 32px 32px 20px;
+}
+
+.col + .col {
+  background: #ece5d9;
+}
+
+.colLabel {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 28px;
 }
 
 .colTitle {
-  font-size: clamp(1.8rem, 3vw, 2.4rem);
-  letter-spacing: -0.01em;
-  line-height: 1.15;
-  margin-bottom: 24px;
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 18px;
 }
 
 .rows {
   list-style: none;
-  border-top: 1px solid var(--rule);
 }
 
 .rows li {
-  padding: 16px 0;
-  border-bottom: 1px solid #dcd7ca;
-  font-size: 1.1rem;
+  padding: 14px 0;
+  border-top: 1px solid rgba(42, 53, 44, 0.1);
+  font-size: 1.05rem;
+  color: #4d564a;
 }
 
 /* ---- How it works (dark) ---- */
@@ -87,11 +124,14 @@
 }
 
 .bigTitle {
-  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
-  letter-spacing: -0.01em;
-  line-height: 1;
-  margin-bottom: 0;
+  margin: 12px 0 0;
   max-width: 900px;
+}
+
+/* Dark band with numbered columns, like the Figma's
+   "From first conversation to next chapter". */
+.dark .darkLabel {
+  color: #c4cdc0;
 }
 
 .dark .bigTitle {
@@ -101,48 +141,42 @@
 
 .steps {
   list-style: none;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 40px 28px;
 }
 
 .step {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px 32px;
-  align-items: baseline;
-  padding: 28px 0;
-  border-top: 1px solid #566a59;
-}
-
-.step:last-child {
-  border-bottom: 1px solid #566a59;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid #5d7062;
+  padding-top: 20px;
 }
 
 .stepNum {
-  font-family: var(--font-display);
-  font-weight: 400;
-  color: var(--lime);
-  width: 40px;
+  font-size: 0.85rem;
+  color: #c4cdc0;
 }
 
 .stepTitle {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: 1.45rem;
   font-weight: 400;
-  letter-spacing: -0.01em;
-  flex: 1 1 260px;
+  line-height: 1.2;
 }
 
 .stepText {
-  flex: 1 1 380px;
-  font-size: 1.05rem;
-  line-height: 1.55;
+  font-size: 0.98rem;
+  line-height: 1.6;
   color: #d5ddd2;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .stepTime {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--lime);
 }
 
@@ -194,7 +228,6 @@
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 400;
-  letter-spacing: -0.01em;
   min-height: 32px;
 }
 
@@ -240,14 +273,12 @@
 }
 
 .applyTitle {
-  font-size: clamp(2.2rem, 3.63vw, 3.11rem);
-  letter-spacing: -0.01em;
-  line-height: 1.15;
-  margin-bottom: 24px;
+  margin: 12px 0 20px;
 }
 
 .applyText {
-  font-size: 1.2rem;
+  color: #4d564a;
+  font-size: 1.15rem;
   line-height: 1.55;
   max-width: 460px;
 }
@@ -256,7 +287,7 @@
   flex: 1 1 420px;
   max-width: 520px;
   background: var(--bg);
-  border-radius: 24px;
+  border-radius: 16px;
   padding: 36px;
 }
 
@@ -265,15 +296,40 @@
   color: var(--muted);
 }
 
+@media (max-width: 1000px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .heroGrid,
+  .twoCol {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 760px) {
   .hero {
-    padding: 120px 0 64px;
+    padding: 112px 0 48px;
   }
   .heroSub {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+  }
+  .stripList {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding-top: 22px;
+    padding-bottom: 22px;
   }
   .twoCol {
-    padding-bottom: 88px;
+    padding: 72px 0;
+  }
+  .col {
+    padding: 24px 22px 12px;
+  }
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
   }
   .dark,
   .faq,

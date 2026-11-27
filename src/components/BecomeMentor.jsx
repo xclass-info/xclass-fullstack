@@ -41,6 +41,12 @@ const STEPS = [
   },
 ];
 
+const STRIP = [
+  "Online, on your schedule",
+  "You propose the research topics",
+  "Paid per project",
+];
+
 const FAQ = [
   {
     q: "How much time does it take?",
@@ -149,12 +155,14 @@ export default function BecomeMentor() {
 
       {/* Hero */}
       <section className={styles.hero}>
-        <div className={styles.wrap}>
-          <p className='section-label'>Become a mentor</p>
-          <h1 className={styles.h1}>
-            Guide the next generation of{" "}
-            <span className='mark'>researchers</span>.
-          </h1>
+        <div className={`${styles.wrap} ${styles.heroGrid}`}>
+          <div>
+            <p className='section-label'>Become a mentor</p>
+            <h1 className={styles.h1}>
+              Guide the next generation of{" "}
+              <span className='mark'>researchers</span>.
+            </h1>
+          </div>
           <div className={styles.heroBottom}>
             <p className={styles.heroSub}>
               Mentor a motivated student through a real research project in your
@@ -172,10 +180,20 @@ export default function BecomeMentor() {
         </div>
       </section>
 
+      {/* Sage strip */}
+      <section className={styles.strip}>
+        <ul className={`${styles.wrap} ${styles.stripList}`}>
+          {STRIP.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
+      </section>
+
       {/* Who can apply + what it looks like */}
       <section className={styles.wrap}>
         <div className={styles.twoCol}>
           <div className={styles.col}>
+            <p className={styles.colLabel}>01 / Eligibility</p>
             <h2 className={styles.colTitle}>Who can apply.</h2>
             <ul className={styles.rows}>
               {MENTOR_TYPES.map((t) => (
@@ -184,6 +202,7 @@ export default function BecomeMentor() {
             </ul>
           </div>
           <div className={styles.col}>
+            <p className={styles.colLabel}>02 / The work</p>
             <h2 className={styles.colTitle}>What mentoring looks like.</h2>
             <ul className={styles.rows}>
               <li>10 one-hour online sessions over about 3 months</li>
@@ -201,6 +220,7 @@ export default function BecomeMentor() {
       {/* How it works */}
       <section className={styles.dark}>
         <div className={styles.wrap}>
+          <p className={`section-label ${styles.darkLabel}`}>How it works</p>
           <h2 className={styles.bigTitle}>
             From application to your first student.
           </h2>
@@ -225,6 +245,7 @@ export default function BecomeMentor() {
       <section className={styles.faq}>
         <div className={`${styles.wrap} ${styles.faqInner}`}>
           <div className={styles.faqHead}>
+            <p className='section-label'>Good to know</p>
             <h2 className={styles.bigTitle}>Questions.</h2>
             <p className={styles.faqNote}>
               More on how mentors work with students in our{" "}
@@ -246,6 +267,7 @@ export default function BecomeMentor() {
       <section id='apply' className={styles.apply}>
         <div className={`${styles.wrap} ${styles.applyInner}`}>
           <div className={styles.applyHead}>
+            <p className='section-label'>Apply</p>
             <h2 className={styles.applyTitle}>Start your application.</h2>
             <p className={styles.applyText}>
               Two minutes now. We'll email you a link to finish the rest, and
