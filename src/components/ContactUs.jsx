@@ -64,8 +64,10 @@ export default function ContactUs() {
       <Navbar />
 
       <header className={`${styles.wrap} ${styles.hero}`}>
-        <p className='section-label'>Contact</p>
-        <h1 className={styles.h1}>Talk to a real person.</h1>
+        <div>
+          <p className='section-label'>Contact</p>
+          <h1 className={styles.h1}>Talk to a real person.</h1>
+        </div>
         <p className={styles.sub}>
           Questions about programs, mentors or whether this is right for your
           student? Write to us, call, or message us on WeChat or WhatsApp.

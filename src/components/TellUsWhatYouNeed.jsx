@@ -117,8 +117,10 @@ export default function TellUsWhatYouNeed() {
       <Navbar />
 
       <header className={`${styles.wrap} ${styles.hero}`}>
-        <p className='section-label'>On-demand</p>
-        <h1 className={styles.h1}>Not sure where to start?</h1>
+        <div>
+          <p className='section-label'>On-demand</p>
+          <h1 className={styles.h1}>Not sure where to start?</h1>
+        </div>
         <p className={styles.sub}>
           Describe what you need, attach a photo of the homework or project if
           it helps, and we'll match you with the right mentor.
