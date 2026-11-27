@@ -1,10 +1,12 @@
 // src/components/HomeSections.jsx
-// The Concept C homepage blocks: live mentor strip, the four program paths,
-// newest student work, and the closing "apply" band.
+// The homepage blocks (Warm Practice / Figma style): the sage strip under the
+// hero, live mentor strip, the four program paths, newest student work, and
+// the closing "apply" band.
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, live, toMillis } from "../api";
 import { formatMentorName } from "../utils/mentorName";
+import { pickIcon } from "../utils/topicIcons";
 import styles from "./HomeSections.module.css";
 
 function initials(name = "") {
@@ -27,6 +29,25 @@ function VettingCard({ wide }) {
         live
       </p>
     </div>
+  );
+}
+
+const STRIP = [
+  "One student, one PhD mentor",
+  "Real questions, finished work",
+  "Fully online, from anywhere",
+];
+
+// The sage band of three short promises right under the hero.
+export function Strip() {
+  return (
+    <section className={styles.strip}>
+      <ul className={styles.stripList}>
+        {STRIP.map((t) => (
+          <li key={t}>{t}</li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -61,18 +82,21 @@ export function MentorStrip() {
             to={`/teacher/${m.id}`}
             className={styles.mentorCard}
           >
-            {/* Initials sit underneath; a photo that fails to load hides itself. */}
-            <span className={styles.mentorInitials} aria-hidden='true'>
-              {initials(m.name)}
+            {/* Arched portrait. Initials sit underneath; a photo that fails
+                to load hides itself. */}
+            <span className={styles.mentorPortrait}>
+              <span className={styles.mentorInitials} aria-hidden='true'>
+                {initials(m.name)}
+              </span>
+              {m.photoURL && (
+                <img
+                  src={m.photoURL}
+                  alt=''
+                  className={styles.mentorPhoto}
+                  onError={(e) => (e.currentTarget.style.display = "none")}
+                />
+              )}
             </span>
-            {m.photoURL && (
-              <img
-                src={m.photoURL}
-                alt=''
-                className={styles.mentorPhoto}
-                onError={(e) => (e.currentTarget.style.display = "none")}
-              />
-            )}
             <span className={styles.mentorInfo}>
               <span className={styles.mentorName}>
                 {formatMentorName(m.name, {
@@ -174,30 +198,41 @@ export function StudentWork() {
   if (!entries || entries.length === 0) return null;
   const [featured, ...rest] = entries;
 
-  const card = (s, big) => (
-    <Link
-      key={s.id}
-      to='/showcase'
-      className={`${styles.workCard} ${big ? styles.workFeatured : ""}`}
-    >
-      {s.fileType === "image" && s.fileUrl && (
-        <img src={s.fileUrl} alt='' className={styles.workImage} />
-      )}
-      <span className={styles.workInfo}>
-        <span className={styles.workMeta}>
-          {[s.outputType, s.studentName].filter(Boolean).join(" · ")}
+  const card = (s, big) => {
+    const hasImage = s.fileType === "image" && s.fileUrl;
+    const { Icon } = pickIcon(s.id);
+    return (
+      <Link
+        key={s.id}
+        to='/showcase'
+        className={`${styles.workCard} ${big ? styles.workFeatured : ""}`}
+      >
+        {hasImage ? (
+          <img src={s.fileUrl} alt='' className={styles.workImage} />
+        ) : (
+          <span className={styles.workIcon} aria-hidden='true'>
+            <Icon size={big ? 30 : 24} />
+          </span>
+        )}
+        <span className={styles.workInfo}>
+          <span className={styles.workMeta}>
+            {[s.outputType, s.studentName].filter(Boolean).join(" · ")}
+          </span>
+          <span className={big ? styles.workTitleBig : styles.workTitle}>
+            {s.title}
+          </span>
         </span>
-        <span className={big ? styles.workTitleBig : styles.workTitle}>
-          {s.title}
-        </span>
-      </span>
-    </Link>
-  );
+      </Link>
+    );
+  };
 
   return (
     <section id='work' className={styles.work}>
       <div className={styles.workHead}>
-        <h2 className={styles.bigTitle}>Made by students.</h2>
+        <div>
+          <p className='section-label'>Student work</p>
+          <h2 className={styles.bigTitle}>Made by students.</h2>
+        </div>
         <Link to='/showcase' className={styles.textLink}>
           All student work →
         </Link>
@@ -218,7 +253,12 @@ export function ApplyBand() {
   return (
     <section className={styles.apply}>
       <div className={styles.applyInner}>
+        <p className='section-label'>Your next step</p>
         <h2 className={styles.applyTitle}>Start with one question.</h2>
+        <p className={styles.applySub}>
+          Bring what you're curious about. We'll match you with a PhD mentor and
+          help you turn it into real research.
+        </p>
         <Link to='/student/register' className='btn-primary'>
           Start your application →
         </Link>

@@ -80,6 +80,7 @@ export default function Testimonials() {
   return (
     <section id='testimonials' className={styles.section}>
       <div className={`${styles.header} reveal`}>
+        <p className='section-label'>What families say</p>
         <h2 className={styles.title}>In their own words.</h2>
       </div>
 

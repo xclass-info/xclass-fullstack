@@ -1,8 +1,29 @@
-/* ---- Mentor strip ---- */
+/* ---- Sage strip under the hero (Figma) ---- */
+.strip {
+  background: #e6ebe0;
+}
+
+.stripList {
+  list-style: none;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 30px 24px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 32px;
+}
+
+.stripList li {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+/* ---- Mentor strip: tinted cards with arched portraits ---- */
 .mentors {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 24px 24px 120px;
+  padding: 96px 24px 120px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -11,25 +32,42 @@
 .mentorGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 
 .mentorCard {
-  position: relative;
-  background: var(--surface);
-  border-radius: 20px;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
+  background: #eceee4;
+  border-radius: 16px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   text-decoration: none;
   color: var(--ink);
-  transition: transform 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.mentorCard:nth-child(2) {
+  background: #ece5d9;
+}
+
+.mentorCard:nth-child(3) {
+  background: #efece5;
 }
 
 .mentorCard:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(42, 53, 44, 0.08);
+}
+
+.mentorPortrait {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  border-radius: 40% 40% 10px 10px / 34% 34% 10px 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .mentorPhoto {
@@ -46,40 +84,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-top: 10px;
   font-family: var(--font-display);
-  font-size: 4.5rem;
+  font-size: 4rem;
   font-weight: 400;
-  letter-spacing: -0.01em;
   color: #7b8576;
 }
 
 .mentorInfo {
-  position: relative;
-  margin: 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: rgba(249, 246, 240, 0.94);
+  padding: 16px 6px 4px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .mentorName {
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.2;
 }
 
 .mentorMeta {
   font-size: 0.875rem;
   color: var(--muted);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .vetting {
   background: var(--deep);
   color: var(--bg);
-  border-radius: 20px;
-  aspect-ratio: 4 / 5;
-  padding: 24px;
+  border-radius: 16px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -98,8 +133,7 @@
   font-family: var(--font-display);
   font-size: 1.75rem;
   font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
   max-width: 520px;
 }
 
@@ -117,11 +151,11 @@
 
 .textLink {
   align-self: flex-start;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink);
   text-decoration: underline;
   text-underline-offset: 4px;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
 }
 
 .textLink:hover {
@@ -251,10 +285,7 @@
 }
 
 .bigTitle {
-  font-size: clamp(2.2rem, 3.96vw, 3.24rem);
-  letter-spacing: -0.01em;
-  line-height: 1;
-  margin: 0;
+  margin: 12px 0 0;
 }
 
 .workGrid {
@@ -270,12 +301,13 @@
   gap: 16px;
 }
 
+/* Tinted cards (sage, sand, mist) with a topic icon when there's no poster. */
 .workCard {
   position: relative;
   flex: 1;
   min-height: 200px;
-  background: var(--surface);
-  border-radius: 20px;
+  background: #eceee4;
+  border-radius: 16px;
   overflow: hidden;
   padding: 24px;
   display: flex;
@@ -285,10 +317,43 @@
   color: var(--ink);
 }
 
+.workCard:hover {
+  box-shadow: 0 10px 24px rgba(42, 53, 44, 0.08);
+}
+
+.workSide .workCard:nth-child(1) {
+  background: #ece5d9;
+}
+
+.workSide .workCard:nth-child(2) {
+  background: #e3e9e1;
+}
+
 .workFeatured {
   flex: 2 1 520px;
   min-height: 420px;
   padding: 28px;
+}
+
+.workIcon {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workFeatured .workIcon {
+  top: 28px;
+  left: 28px;
+  width: 64px;
+  height: 64px;
 }
 
 .workImage {
@@ -314,8 +379,12 @@
 }
 
 .workMeta {
-  font-size: 0.875rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--muted);
+  margin-bottom: 4px;
 }
 
 .workTitle {
@@ -338,27 +407,37 @@
   background: var(--lime);
 }
 
+/* Centred, like the Figma's closing call to action. */
 .applyInner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 120px 24px;
+  padding: 104px 24px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .applyTitle {
-  font-size: clamp(2.2rem, 4.15vw, 3.63rem);
-  letter-spacing: -0.01em;
-  line-height: 1.15;
-  margin: 0;
-  flex: 1 1 560px;
+  margin: 12px 0 14px;
+}
+
+.applySub {
+  color: #4d564a;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  max-width: 520px;
+  margin-bottom: 28px;
 }
 
 @media (max-width: 760px) {
+  .stripList {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 22px 20px;
+  }
   .mentors {
+    padding-top: 64px;
     padding-bottom: 88px;
   }
   /* Phones: two mentor cards side by side, the checks card full width below. */
@@ -370,25 +449,22 @@
     display: none;
   }
   .mentorCard {
-    aspect-ratio: 3 / 4;
+    padding: 10px;
   }
   .mentorInitials {
     font-size: 2.6rem;
-    bottom: 45%;
   }
   .mentorInfo {
-    margin: 8px;
-    padding: 8px 10px;
+    padding: 12px 4px 2px;
   }
   .mentorName {
-    font-size: 0.9rem;
+    font-size: 1.05rem;
   }
   .mentorMeta {
     font-size: 0.75rem;
   }
   .vetting {
     grid-column: 1 / -1;
-    aspect-ratio: auto;
   }
   .pathsInner {
     padding-bottom: 88px;

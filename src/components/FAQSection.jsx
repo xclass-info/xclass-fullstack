@@ -104,6 +104,7 @@ export default function FAQSection() {
         }}
       >
         <div className='reveal' style={{ flex: "1 1 320px" }}>
+          <p className='section-label'>A few things to know</p>
           <h2
             style={{
               fontSize: "clamp(2rem, 3.6vw, 2.9rem)",

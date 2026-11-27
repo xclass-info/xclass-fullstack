@@ -1,7 +1,13 @@
 import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import { MentorStrip, Paths, StudentWork, ApplyBand } from "./components/HomeSections";
+import {
+  Strip,
+  MentorStrip,
+  Paths,
+  StudentWork,
+  ApplyBand,
+} from "./components/HomeSections";
 import Tutors from "./components/Tutors";
 import Testimonials from "./components/Testimonials";
 import Footer from "./components/Footer";
@@ -77,6 +83,7 @@ function HomePage() {
     <>
       <Navbar />
       <Hero />
+      <Strip />
       <MentorStrip />
       <Paths />
       <ActiveEnrolling />
@@ -107,7 +114,10 @@ export default function App() {
         <Route path='/mentor/continue' element={<MentorContinue />} />
         <Route path='/mentor/application' element={<MentorApplication />} />
         <Route path='/mentor/guidelines' element={<MentorGuidelines />} />
-        <Route path='/teacher/register' element={<Navigate to='/become-a-mentor' replace />} />
+        <Route
+          path='/teacher/register'
+          element={<Navigate to='/become-a-mentor' replace />}
+        />
         <Route path='/teacher/login' element={<TeacherLogin />} />
         <Route path='/teacher/dashboard' element={<TeacherDashboard />} />
         <Route path='/admin' element={<AdminDashboard />} />
