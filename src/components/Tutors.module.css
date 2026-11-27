@@ -1,29 +1,48 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 
+/* Soft tinted cards (sage, sand, stone, mist), like the Figma's
+   "Support that meets you where you are" cards. */
 .card {
-  background: #ffffff;
-  border-radius: 20px;
-  overflow: hidden;
+  background: #eceee4;
+  border-radius: 16px;
+  padding: 14px 14px 0;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   transition:
     opacity 0.6s ease,
-    transform 0.25s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:nth-child(4n + 2) {
+  background: #ece5d9;
+}
+
+.card:nth-child(4n + 3) {
+  background: #efece5;
+}
+
+.card:nth-child(4n + 4) {
+  background: #e3e9e1;
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(42, 53, 44, 0.08);
 }
 
+/* Arched portrait, echoing the hero photo. */
 .portrait {
   position: relative;
   aspect-ratio: 4 / 3;
-  background: var(--surface);
+  border-radius: 40% 40% 10px 10px / 46% 46% 10px 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .photo {
@@ -40,39 +59,49 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-top: 12px;
   font-family: var(--font-display);
-  font-size: 4rem;
+  font-size: 3.6rem;
   font-weight: 400;
-  letter-spacing: -0.01em;
   color: #7b8576;
 }
 
 .open {
   position: absolute;
-  left: 12px;
+  left: 50%;
   bottom: 12px;
-  background: var(--lime);
-  color: var(--ink);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: #ffffff;
+  color: var(--accent);
   border-radius: 999px;
   padding: 5px 12px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
 }
 
 .body {
-  padding: 20px 22px 22px;
+  padding: 20px 10px 22px;
   display: flex;
   flex-direction: column;
   gap: 6px;
   flex: 1;
 }
 
+.field {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
 .name {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 1.5rem;
   font-weight: 400;
-  letter-spacing: -0.008em;
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
 .nameLink {
@@ -83,26 +112,19 @@
 .card:hover .nameLink {
   text-decoration: underline;
   text-underline-offset: 4px;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
 }
 
 .meta {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: var(--muted);
-}
-
-.field {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--ink);
-  margin-top: 4px;
 }
 
 .bio {
   font-size: 0.95rem;
   color: #4d564a;
   line-height: 1.55;
-  margin-top: 6px;
+  margin-top: 8px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -112,8 +134,8 @@
 .more {
   margin-top: auto;
   padding-top: 14px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.88rem;
+  font-weight: 500;
   color: var(--ink);
 }
 

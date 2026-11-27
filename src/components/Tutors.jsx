@@ -225,6 +225,11 @@ export default function Tutors() {
           )}
         </div>
         <div className={styles.body}>
+          {(t.expertise || t.researchArea || t.major) && (
+            <p className={styles.field}>
+              {t.expertise || t.researchArea || t.major}
+            </p>
+          )}
           <h2 className={styles.name}>
             <Link
               to={`/teacher/${t.id}`}
@@ -237,11 +242,6 @@ export default function Tutors() {
           <p className={styles.meta}>
             {[t.degree, t.university].filter(Boolean).join(" · ")}
           </p>
-          {(t.expertise || t.researchArea || t.major) && (
-            <p className={styles.field}>
-              {t.expertise || t.researchArea || t.major}
-            </p>
-          )}
           {t.bio && <p className={styles.bio}>{t.bio}</p>}
           <span className={styles.more} aria-hidden='true'>
             View profile →
